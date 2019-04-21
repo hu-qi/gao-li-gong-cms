@@ -30,8 +30,8 @@ export default [
       {
         name: 'userManagement',
         icon: 'usergroup-delete',
-        path: '/userManagement',
-        component: './List/TableList',
+        path: '/user-management',
+        component: './User-management/TableList',
       },
       // 明星物种   
       {
@@ -72,8 +72,8 @@ export default [
       {
         name: 'aboutUs',
         icon: 'smile',
-        path: '/aboutUs',
-        // component: './List/TableList',
+        path: '/about-us',
+        component: './About-us/edit',
       },
       {
         path: '/dashboard',
