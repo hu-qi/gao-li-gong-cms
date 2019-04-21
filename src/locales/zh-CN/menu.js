@@ -33,7 +33,10 @@ export default {
   'menu.exception.not-find': '404',
   'menu.exception.server-error': '500',
   'menu.exception.trigger': '触发错误',
-  'menu.account': '个人页',
+  'menu.account': '用户管理',
+  'menu.account.list': '用户列表',
+  'menu.account.list.new': '新增用户',
+  'menu.account.list.preview': '用户详情预览',
   'menu.account.center': '个人中心',
   'menu.account.settings': '个人设置',
   'menu.account.trigger': '触发报错',
@@ -44,7 +47,6 @@ export default {
   'menu.editor.koni': '拓扑编辑器',
 
 
-  'menu.userManagement': '用户管理',
   'menu.starAnimals': '明星物种',
   'menu.news': '新闻管理',
   'menu.videoClip': '影视集锦',

@@ -48,18 +48,70 @@ const CreateForm = Form.create()(props => {
       handleAdd(fieldsValue);
     });
   };
+
   return (
     <Modal
       destroyOnClose
-      title="新建规则"
+      title="新建用户"
       visible={modalVisible}
       onOk={okHandle}
       onCancel={() => handleModalVisible()}
     >
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="描述">
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="用户名">
         {form.getFieldDecorator('desc', {
-          rules: [{ required: true, message: '请输入至少五个字符的规则描述！', min: 5 }],
-        })(<Input placeholder="请输入" />)}
+          rules: [{ required: true, message: '请输入至少五个字符！', min: 5 }],
+        })(<Input placeholder="请输入用户名" />)}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="手机号">
+        {form.getFieldDecorator('desc', {
+          rules: [{ required: true, message: '格式有误', min: 11 }],
+        })(<Input placeholder="请输入手机号" />)}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="邮箱">
+        {form.getFieldDecorator('email', {
+          rules: [{
+            type: 'email', message: '格式有误！',
+          }, {
+            required: true, message: '请输入邮箱地址！',
+          }],
+        })(<Input placeholder="请输入用户名" />)}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="微信">
+        {form.getFieldDecorator('desc', {
+          rules: [{ required: true, message: '请输入至少五个字符！', min: 5 }],
+        })(<Input placeholder="请输入用户名" />)}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="姓名">
+        {form.getFieldDecorator('desc', {
+          rules: [{ required: true, message: '请输入至少五个字符！', min: 5 }],
+        })(<Input placeholder="请输入用户名" />)}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="昵称">
+        {form.getFieldDecorator('desc', {
+          rules: [{ required: true, message: '请输入至少五个字符！', min: 5 }],
+        })(<Input placeholder="请输入用户名" />)}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="性别">
+        {form.getFieldDecorator('desc', {
+          rules: [{ required: true, message: '请输入至少五个字符！', min: 5 }],
+        })(<Input placeholder="请输入用户名" />)}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="头像">
+        {form.getFieldDecorator('desc', {
+          rules: [{ required: true, message: '请输入至少五个字符！', min: 5 }],
+        })(<Input placeholder="请输入用户名" />)}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="密码">
+        {form.getFieldDecorator('password', {
+          rules: [{ required: true, message: '请输入密码！' }, {
+              
+            }],
+        })(<Input placeholder="请输入用户名" />)}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="确认密码">
+        {form.getFieldDecorator('desc', {
+          rules: [{ required: true, message: '请再次输入密码！', min: 5 }],
+        })(<Input placeholder="请输入用户名" />)}
       </FormItem>
     </Modal>
   );
