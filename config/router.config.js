@@ -35,7 +35,7 @@ export default [
           {
             path: '/account/list',
             name: 'list',
-            component: './User-management/TableList',
+            component: './Account/User/TableList',
             hideChildrenInMenu: true,
             routes: [
               {
@@ -109,35 +109,30 @@ export default [
         name: 'starAnimals',
         icon: 'twitter',
         path: '/starAnimals',
-        // component: './List/TableList',
       },
       // 新闻管理   
       {
         name: 'news',
         icon: 'message',
         path: '/news',
-        // component: './List/TableList',
       },
       // 影视集锦   
       {
         name: 'videoClip',
         icon: 'video-camera',
         path: '/video',
-        // component: './List/TableList',
       },
       // 生物多样性   
       {
         name: 'biodiversity',
         icon: 'deployment-unit',
         path: '/biodiversity',
-        // component: './List/TableList',
       },
       // 标签
       {
         name: 'labels',
         icon: 'tags',
         path: '/labels',
-        // component: './List/TableList',
       },
       // 关于我们
       {

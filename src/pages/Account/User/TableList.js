@@ -39,84 +39,6 @@ const getValue = obj =>
 const statusMap = ['default', 'processing', 'success', 'error'];
 const status = ['关闭', '运行中', '已上线', '异常'];
 
-const CreateForm = Form.create()(props => {
-  const { modalVisible, form, handleAdd, handleModalVisible } = props;
-  const okHandle = () => {
-    form.validateFields((err, fieldsValue) => {
-      if (err) return;
-      form.resetFields();
-      handleAdd(fieldsValue);
-    });
-  };
-
-  return (
-    <Modal
-      destroyOnClose
-      title="新建用户"
-      visible={modalVisible}
-      onOk={okHandle}
-      onCancel={() => handleModalVisible()}
-    >
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="用户名">
-        {form.getFieldDecorator('desc', {
-          rules: [{ required: true, message: '请输入至少五个字符！', min: 5 }],
-        })(<Input placeholder="请输入用户名" />)}
-      </FormItem>
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="手机号">
-        {form.getFieldDecorator('desc', {
-          rules: [{ required: true, message: '格式有误', min: 11 }],
-        })(<Input placeholder="请输入手机号" />)}
-      </FormItem>
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="邮箱">
-        {form.getFieldDecorator('email', {
-          rules: [{
-            type: 'email', message: '格式有误！',
-          }, {
-            required: true, message: '请输入邮箱地址！',
-          }],
-        })(<Input placeholder="请输入用户名" />)}
-      </FormItem>
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="微信">
-        {form.getFieldDecorator('desc', {
-          rules: [{ required: true, message: '请输入至少五个字符！', min: 5 }],
-        })(<Input placeholder="请输入用户名" />)}
-      </FormItem>
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="姓名">
-        {form.getFieldDecorator('desc', {
-          rules: [{ required: true, message: '请输入至少五个字符！', min: 5 }],
-        })(<Input placeholder="请输入用户名" />)}
-      </FormItem>
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="昵称">
-        {form.getFieldDecorator('desc', {
-          rules: [{ required: true, message: '请输入至少五个字符！', min: 5 }],
-        })(<Input placeholder="请输入用户名" />)}
-      </FormItem>
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="性别">
-        {form.getFieldDecorator('desc', {
-          rules: [{ required: true, message: '请输入至少五个字符！', min: 5 }],
-        })(<Input placeholder="请输入用户名" />)}
-      </FormItem>
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="头像">
-        {form.getFieldDecorator('desc', {
-          rules: [{ required: true, message: '请输入至少五个字符！', min: 5 }],
-        })(<Input placeholder="请输入用户名" />)}
-      </FormItem>
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="密码">
-        {form.getFieldDecorator('password', {
-          rules: [{ required: true, message: '请输入密码！' }, {
-              
-            }],
-        })(<Input placeholder="请输入用户名" />)}
-      </FormItem>
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="确认密码">
-        {form.getFieldDecorator('desc', {
-          rules: [{ required: true, message: '请再次输入密码！', min: 5 }],
-        })(<Input placeholder="请输入用户名" />)}
-      </FormItem>
-    </Modal>
-  );
-});
-
 @Form.create()
 class UpdateForm extends PureComponent {
   static defaultProps = {
@@ -327,9 +249,9 @@ class UpdateForm extends PureComponent {
 
 /* eslint react/no-multi-comp:0 */
 @connect(models => {
-  const { userManagement, loading } = models;
+  const { rule, loading } = models;
   return ({
-    userManagement,
+    rule,
     loading: loading.models.rule,
   })
 })
@@ -516,6 +438,7 @@ class TableList extends PureComponent {
   };
 
   handleModalVisible = flag => {
+    console.log('新建角色');
     this.setState({
       modalVisible: !!flag,
     });
@@ -693,10 +616,6 @@ class TableList extends PureComponent {
       </Menu>
     );
 
-    const parentMethods = {
-      handleAdd: this.handleAdd,
-      handleModalVisible: this.handleModalVisible,
-    };
     const updateMethods = {
       handleUpdateModalVisible: this.handleUpdateModalVisible,
       handleUpdate: this.handleUpdate,
@@ -708,7 +627,7 @@ class TableList extends PureComponent {
             <div className={styles.tableListForm}>{this.renderForm()}</div>
             <div className={styles.tableListOperator}>
               <Button icon="plus" type="primary" onClick={() => this.handleModalVisible(true)}>
-                新建
+                新建用户
               </Button>
               {selectedRows.length > 0 && (
                 <span>
@@ -731,7 +650,6 @@ class TableList extends PureComponent {
             />
           </div>
         </Card>
-        <CreateForm {...parentMethods} modalVisible={modalVisible} />
         {stepFormValues && Object.keys(stepFormValues).length ? (
           <UpdateForm
             {...updateMethods}
