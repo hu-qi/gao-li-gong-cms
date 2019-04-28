@@ -6,7 +6,7 @@ import { ChartCard, MiniArea, MiniBar, MiniProgress, Field } from '@/components/
 import Trend from '@/components/Trend';
 import numeral from 'numeral';
 import Yuan from '@/utils/Yuan';
-
+console.log(12)
 const topColResponsiveProps = {
   xs: 24,
   sm: 12,
@@ -15,7 +15,6 @@ const topColResponsiveProps = {
   xl: 6,
   style: { marginBottom: 24 },
 };
-
 const IntroduceRow = memo(({ loading, visitData }) => (
   <Row gutter={24}>
     <Col {...topColResponsiveProps}>

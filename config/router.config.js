@@ -35,7 +35,7 @@ export default [
           {
             path: '/account/list',
             name: 'list',
-            component: './Account/User/TableList',
+            component: './Account/User/TableList.tmp',
             hideChildrenInMenu: true,
             routes: [
               {
