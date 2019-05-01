@@ -41,14 +41,11 @@ export default [
               {
                 path: '/account/new',
                 name: 'new',
+                // component: './Account/User/Create',
               },
               {
                 path: '/account/preview',
                 name: 'preview',
-              },
-              {
-                path: '/account/new',
-                name: 'new',
               },
             ],
           },

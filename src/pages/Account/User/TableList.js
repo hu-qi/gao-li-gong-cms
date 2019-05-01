@@ -39,6 +39,32 @@ const getValue = obj =>
 const statusMap = ['default', 'processing', 'success', 'error'];
 const status = ['关闭', '运行中', '已上线', '异常'];
 
+const CreateForm = Form.create()(props => {
+  const { modalVisible, form, handleAdd, handleModalVisible } = props;
+  const okHandle = () => {
+    form.validateFields((err, fieldsValue) => {
+      if (err) return;
+      form.resetFields();
+      handleAdd(fieldsValue);
+    });
+  };
+  return (
+    <Modal
+      destroyOnClose
+      title="新建规则"
+      visible={modalVisible}
+      onOk={okHandle}
+      onCancel={() => handleModalVisible()}
+    >
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="描述">
+        {form.getFieldDecorator('desc', {
+          rules: [{ required: true, message: '请输入至少五个字符的规则描述！', min: 5 }],
+        })(<Input placeholder="请输入" />)}
+      </FormItem>
+    </Modal>
+  );
+});
+
 @Form.create()
 class UpdateForm extends PureComponent {
   static defaultProps = {
@@ -248,13 +274,10 @@ class UpdateForm extends PureComponent {
 }
 
 /* eslint react/no-multi-comp:0 */
-@connect(models => {
-  const { rule, loading } = models;
-  return ({
-    rule,
-    loading: loading.models.rule,
-  })
-})
+@connect(({ rule, loading }) => ({
+  rule,
+  loading: loading.models.rule,
+}))
 @Form.create()
 class TableList extends PureComponent {
   state = {
@@ -438,7 +461,6 @@ class TableList extends PureComponent {
   };
 
   handleModalVisible = flag => {
-    console.log('新建角色');
     this.setState({
       modalVisible: !!flag,
     });
@@ -604,10 +626,9 @@ class TableList extends PureComponent {
 
   render() {
     const {
-      rule: { data } = { data: []},
+      rule: { data },
       loading,
     } = this.props;
-  
     const { selectedRows, modalVisible, updateModalVisible, stepFormValues } = this.state;
     const menu = (
       <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
@@ -616,6 +637,10 @@ class TableList extends PureComponent {
       </Menu>
     );
 
+    const parentMethods = {
+      handleAdd: this.handleAdd,
+      handleModalVisible: this.handleModalVisible,
+    };
     const updateMethods = {
       handleUpdateModalVisible: this.handleUpdateModalVisible,
       handleUpdate: this.handleUpdate,
@@ -627,7 +652,7 @@ class TableList extends PureComponent {
             <div className={styles.tableListForm}>{this.renderForm()}</div>
             <div className={styles.tableListOperator}>
               <Button icon="plus" type="primary" onClick={() => this.handleModalVisible(true)}>
-                新建用户
+                新建
               </Button>
               {selectedRows.length > 0 && (
                 <span>
@@ -650,6 +675,7 @@ class TableList extends PureComponent {
             />
           </div>
         </Card>
+        <CreateForm {...parentMethods} modalVisible={modalVisible} />
         {stepFormValues && Object.keys(stepFormValues).length ? (
           <UpdateForm
             {...updateMethods}

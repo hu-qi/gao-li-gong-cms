@@ -11,11 +11,10 @@ import {
   Button,
   message,
   Badge,
-  Divider, Avatar, Modal, Radio, DatePicker, Steps,
+  Divider, Avatar,
 } from 'antd';
 import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import NewUser from './NewUser';
 
 import styles from './TableList.less';
 
@@ -27,29 +26,6 @@ const getValue = obj =>
     .join(',');
 const statusMap = ['default', 'processing', 'success', 'error'];
 const status = ['关闭', '运行中', '已上线', '异常'];
-
-const CreateForm = Form.create()(props => {
-  const { modalVisible, form, handleAdd, handleModalVisible } = props;
-  const okHandle = () => {
-    form.validateFields((err, fieldsValue) => {
-      if (err) return;
-      form.resetFields();
-      handleAdd(fieldsValue);
-    });
-  };
-
-  return (
-    <Modal
-      destroyOnClose
-      title="新增用户"
-      visible={modalVisible}
-      onOk={okHandle}
-      onCancel={() => handleModalVisible()}
-    >
-      <NewUser />
-    </Modal>
-  );
-});
 
 /* eslint react/no-multi-comp:0 */
 @connect(models => {
@@ -64,19 +40,13 @@ class TableList extends PureComponent {
   state = {
     selectedRows: [],
     formValues: {},
-    modalVisible: false, // 新建用户
   };
 
-  // 列表配置
   columns = [
     {
       title: '用户',
       dataIndex: 'avatar',
       render: url => <Avatar src={url} shape="square" size="large" />,
-    },
-    {
-      title: '用户名',
-      dataIndex: 'name',
     },
     {
       title: '描述',
@@ -125,23 +95,20 @@ class TableList extends PureComponent {
       title: '创建时间',
       dataIndex: 'createdAt',
       sorter: true,
-      render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm')}</span>,
+      render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
     },
     {
       title: '更新时间',
       dataIndex: 'updatedAt',
       sorter: true,
-      render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm')}</span>,
+      render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
     },
     {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.handleModalVisible(true, record)}>编辑</a>
+          <a onClick={() => this.handleUpdateModalVisible(true, record)}>配置</a>
           <Divider type="vertical" />
-          <a href="">停用</a>
-          <Divider type="vertical" />
-          <a href="">删除</a>
         </Fragment>
       ),
     },
@@ -216,11 +183,8 @@ class TableList extends PureComponent {
     });
   };
 
-  handleModalVisible = flag => {
+  handleModalVisible = () => {
     console.log('新建角色');
-    this.setState({
-      modalVisible: !!flag,
-    });
   };
 
   handleUpdateModalVisible = () => {
@@ -305,16 +269,10 @@ class TableList extends PureComponent {
       loading,
     } = this.props;
   
-    const { selectedRows, modalVisible } = this.state;
-
-    const parentMethods = {
-      handleAdd: this.handleAdd,
-      handleModalVisible: this.handleModalVisible,
-    };
+    const { selectedRows } = this.state;
 
     return (
       <PageHeaderWrapper title="用户列表">
-        <CreateForm {...parentMethods} modalVisible={modalVisible} />
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderAdvancedForm()}</div>
