@@ -11,11 +11,11 @@ import {
   Button,
   message,
   Badge,
-  Divider, Avatar, Modal, Radio, DatePicker, Steps,
+  Divider, Avatar, Modal,
 } from 'antd';
 import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import NewUser from './NewUser';
+import UserInfo from './UserInfo';
 
 import styles from './TableList.less';
 
@@ -46,7 +46,7 @@ const CreateForm = Form.create()(props => {
       onOk={okHandle}
       onCancel={() => handleModalVisible()}
     >
-      <NewUser />
+      <UserInfo />
     </Modal>
   );
 });
@@ -228,6 +228,7 @@ class TableList extends PureComponent {
   };
 
   handleAdd = fields => {
+    console.log('add: ', fields);
     const { dispatch } = this.props;
     dispatch({
       type: 'rule/add',

@@ -2,7 +2,7 @@ import { Form, Input, Upload, Icon } from 'antd';
 import React, { PureComponent, Fragment } from 'react';
 
 @Form.create()
-class NewUser extends React.Component {
+class UserInfo extends React.Component {
 
   state = {
     confirmDirty: false,
@@ -109,4 +109,4 @@ class NewUser extends React.Component {
   }
 }
 
-export default Form.create()(NewUser);
+export default UserInfo;
