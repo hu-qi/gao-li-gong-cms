@@ -124,6 +124,7 @@ export default [
         name: 'biodiversity',
         icon: 'deployment-unit',
         path: '/biodiversity',
+        component: './Biodiversity/CardList',
       },
       // 标签
       {
