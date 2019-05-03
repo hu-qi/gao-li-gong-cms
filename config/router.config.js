@@ -26,35 +26,35 @@ export default [
         path: '/home',
         component: './Dashboard/Workplace',
       },
-      // 用户管理   
+      // 用户管理
       {
         name: 'userManagement',
         icon: 'usergroup-delete',
         path: '/user-management',
         component: './User-management/TableList',
       },
-      // 明星物种   
+      // 明星物种
       {
         name: 'starAnimals',
         icon: 'twitter',
         path: '/starAnimals',
         // component: './List/TableList',
       },
-      // 新闻管理   
+      // 新闻管理
       {
         name: 'news',
-        icon: 'message',
+        icon: 'read',
         path: '/news',
-        // component: './List/TableList',
+        component: './News/NewsList',
       },
-      // 影视集锦   
+      // 影视集锦
       {
         name: 'videoClip',
         icon: 'video-camera',
         path: '/video',
         // component: './List/TableList',
       },
-      // 生物多样性   
+      // 生物多样性
       {
         name: 'biodiversity',
         icon: 'deployment-unit',

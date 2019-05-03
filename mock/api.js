@@ -321,6 +321,37 @@ function getFakeCaptcha(req, res) {
   return res.json('captcha-xxx');
 }
 
+const fakeNews = [
+  {
+    id: new Date().getTime(),
+    title: '123',
+    description: '123',
+    link: 'http://12345',
+  },
+  {
+    id: new Date().getTime(),
+    title: '123',
+    description: '123',
+    link: 'http://12345',
+  },
+  {
+    id: new Date().getTime(),
+    title: '123',
+    description: '123',
+    link: 'http://12345',
+  },
+  {
+    id: new Date().getTime(),
+    title: '123',
+    description: '123',
+    link: 'http://12345',
+  },
+];
+
+function getNews(req, res) {
+  return res.json(fakeNews);
+}
+
 export default {
   'GET /api/project/notice': getNotice,
   'GET /api/activities': getActivities,
@@ -333,4 +364,5 @@ export default {
   'GET /api/fake_list': getFakeList,
   'POST /api/fake_list': postFakeList,
   'GET /api/captcha': getFakeCaptcha,
+  'GET /api/fake_news': getNews,
 };
