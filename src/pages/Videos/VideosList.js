@@ -35,7 +35,7 @@ class VideosList extends PureComponent {
     dispatch({
       type: 'videos/delete',
       payload: {
-        id: id,
+        id,
       },
     });
   };

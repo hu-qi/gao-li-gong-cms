@@ -17,7 +17,7 @@ export default class NewPage extends React.Component {
   prompt = () => {
     notification.open({
       message: 'We got value:',
-      description: <span dangerouslySetInnerHTML={{ __html: this.state.value }}></span>,
+      description: <span dangerouslySetInnerHTML={{ __html: this.state.value }} />,
     });
   };
 

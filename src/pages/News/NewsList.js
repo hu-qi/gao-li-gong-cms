@@ -35,7 +35,7 @@ class NewsList extends PureComponent {
     dispatch({
       type: 'news/delete',
       payload: {
-        id: id,
+        id,
       },
     });
   };
