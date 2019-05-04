@@ -46,10 +46,15 @@ export default {
   'menu.editor.mind': '脑图编辑器',
   'menu.editor.koni': '拓扑编辑器',
 
+  'menu.userManagement': '用户管理',
 
   'menu.starAnimals': '明星物种',
   'menu.news': '新闻管理',
-  'menu.videoClip': '影视集锦',
+  'menu.news.news-add': '新闻管理新增',
+  'menu.news.news-edit': '新闻管理编辑',
+  'menu.videos': '影视集锦',
+  'menu.videos.videos-add': '影视集锦新增',
+  'menu.videos.videos-edit': '影视集锦编辑',
   'menu.biodiversity': '生物多样性',
   'menu.labels': '标签',
   'menu.aboutUs': '关于我们',

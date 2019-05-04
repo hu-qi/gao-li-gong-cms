@@ -100,26 +100,69 @@ export default [
             ],
           },
         ],
-      }, 
+      },
       // 明星物种   
       {
         name: 'starAnimals',
         icon: 'twitter',
         path: '/starAnimals',
+        // component: './List/TableList',
       },
-      // 新闻管理   
+      // 新闻管理
       {
         name: 'news',
-        icon: 'message',
+        icon: 'read',
         path: '/news',
+        hideChildrenInMenu: true,
+        routes: [
+          {
+            path: '/news',
+            redirect: '/news/news-list',
+          },
+          {
+            path: '/news/news-list',
+            component: './News/NewsList',
+          },
+          {
+            path: '/news/news-add',
+            name: 'news-add',
+            component: './News/NewsEdit',
+          },
+          {
+            path: '/news/news-edit/:id',
+            name: 'news-edit',
+            component: './News/NewsEdit',
+          },
+        ],
       },
-      // 影视集锦   
+      // 影视集锦
       {
-        name: 'videoClip',
+        name: 'videos',
         icon: 'video-camera',
-        path: '/video',
+        path: '/videos',
+        hideChildrenInMenu: true,
+        routes: [
+          {
+            path: '/videos',
+            redirect: '/videos/videos-list',
+          },
+          {
+            path: '/videos/videos-list',
+            component: './Videos/VideosList',
+          },
+          {
+            path: '/videos/videos-add',
+            name: 'videos-add',
+            component: './Videos/VideosEdit',
+          },
+          {
+            path: '/videos/videos-edit/:id',
+            name: 'videos-edit',
+            component: './Videos/VideosEdit',
+          },
+        ],
       },
-      // 生物多样性   
+      // 生物多样性
       {
         name: 'biodiversity',
         icon: 'deployment-unit',
