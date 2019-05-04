@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import moment from 'moment';
 import { connect } from 'dva';
-import { Row, Col, Form, Card, Select, List } from 'antd';
+import { Row, Col, Form, Card, Select, List, Icon } from 'antd';
 import { FormattedMessage } from 'umi-plugin-react/locale';
 
 import TagSelect from '@/components/TagSelect';
@@ -68,6 +68,7 @@ class CoverCardList extends PureComponent {
               className={styles.card}
               hoverable
               cover={<img alt={item.title} src={item.cover} />}
+              actions={[<Icon type="eye" />, <Icon type="edit" />]}
             >
               <Card.Meta
                 title={<a>{item.title}</a>}
@@ -119,15 +120,6 @@ class CoverCardList extends PureComponent {
                     <TagSelect.Option value="cat1">类目一</TagSelect.Option>
                     <TagSelect.Option value="cat2">类目二</TagSelect.Option>
                     <TagSelect.Option value="cat3">类目三</TagSelect.Option>
-                    <TagSelect.Option value="cat4">类目四</TagSelect.Option>
-                    <TagSelect.Option value="cat5">类目五</TagSelect.Option>
-                    <TagSelect.Option value="cat6">类目六</TagSelect.Option>
-                    <TagSelect.Option value="cat7">类目七</TagSelect.Option>
-                    <TagSelect.Option value="cat8">类目八</TagSelect.Option>
-                    <TagSelect.Option value="cat9">类目九</TagSelect.Option>
-                    <TagSelect.Option value="cat10">类目十</TagSelect.Option>
-                    <TagSelect.Option value="cat11">类目十一</TagSelect.Option>
-                    <TagSelect.Option value="cat12">类目十二</TagSelect.Option>
                   </TagSelect>
                 )}
               </FormItem>
@@ -138,17 +130,7 @@ class CoverCardList extends PureComponent {
                   <FormItem {...formItemLayout} label="作者">
                     {getFieldDecorator('author', {})(
                       <Select placeholder="不限" style={{ maxWidth: 200, width: '100%' }}>
-                        <Option value="lisa">王昭君</Option>
-                      </Select>
-                    )}
-                  </FormItem>
-                </Col>
-                <Col lg={8} md={10} sm={10} xs={24}>
-                  <FormItem {...formItemLayout} label="好评度">
-                    {getFieldDecorator('rate', {})(
-                      <Select placeholder="不限" style={{ maxWidth: 200, width: '100%' }}>
-                        <Option value="good">优秀</Option>
-                        <Option value="normal">普通</Option>
+                        <Option value="lisa">123</Option>
                       </Select>
                     )}
                   </FormItem>

@@ -131,6 +131,7 @@ export default [
         name: 'labels',
         icon: 'tags',
         path: '/labels',
+        component: './Tags/Index',
       },
       // 关于我们
       {
