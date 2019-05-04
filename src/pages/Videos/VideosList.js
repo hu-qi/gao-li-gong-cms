@@ -5,17 +5,17 @@ import { connect } from 'dva';
 
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import ArticleListContent from '@/components/ArticleListContent';
-import styles from './NewsList.less';
+import styles from './VideosList.less';
 
-@connect(({ news, loading }) => ({
-  list: news,
+@connect(({ videos, loading }) => ({
+  list: videos,
   loading: loading.models.list,
 }))
-class NewsList extends PureComponent {
+class VideosList extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'news/fetch',
+      type: 'videos/fetch',
       payload: {
         count: 10,
       },
@@ -24,16 +24,16 @@ class NewsList extends PureComponent {
 
   toEditPage = param => {
     if (typeof param === 'object') {
-      router.push(`/news/news-add`);
+      router.push(`/videos/videos-add`);
       return;
     }
-    router.push(`/news/news-edit/id/${param}`);
+    router.push(`/videos/videos-edit/id/${param}`);
   };
 
   delete = id => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'news/delete',
+      type: 'videos/delete',
       payload: {
         id: id,
       },
@@ -92,4 +92,4 @@ class NewsList extends PureComponent {
   }
 }
 
-export default NewsList;
+export default VideosList;

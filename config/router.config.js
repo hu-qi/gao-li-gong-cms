@@ -45,14 +45,54 @@ export default [
         name: 'news',
         icon: 'read',
         path: '/news',
-        component: './News/NewsList',
+        hideChildrenInMenu: true,
+        routes: [
+          {
+            path: '/news',
+            redirect: '/news/news-list',
+          },
+          {
+            path: '/news/news-list',
+            component: './News/NewsList',
+          },
+          {
+            path: '/news/news-add',
+            name: 'news-add',
+            component: './News/NewsEdit',
+          },
+          {
+            path: '/news/news-edit/:id',
+            name: 'news-edit',
+            component: './News/NewsEdit',
+          },
+        ],
       },
       // 影视集锦
       {
-        name: 'videoClip',
+        name: 'videos',
         icon: 'video-camera',
-        path: '/video',
-        // component: './List/TableList',
+        path: '/videos',
+        hideChildrenInMenu: true,
+        routes: [
+          {
+            path: '/videos',
+            redirect: '/videos/videos-list',
+          },
+          {
+            path: '/videos/videos-list',
+            component: './Videos/VideosList',
+          },
+          {
+            path: '/videos/videos-add',
+            name: 'videos-add',
+            component: './Videos/VideosEdit',
+          },
+          {
+            path: '/videos/videos-edit/:id',
+            name: 'videos-edit',
+            component: './Videos/VideosEdit',
+          },
+        ],
       },
       // 生物多样性
       {

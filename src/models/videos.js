@@ -1,7 +1,7 @@
-import { getFakeNews, deleteFakeNews } from '@/services/api';
+import { getFakeVideos, deleteFakeVideos } from '@/services/api';
 
 export default {
-  namespace: 'news',
+  namespace: 'videos',
 
   state: {
     list: [],
@@ -9,14 +9,14 @@ export default {
 
   effects: {
     *fetch({ payload }, { call, put }) {
-      const response = yield call(getFakeNews, payload);
+      const response = yield call(getFakeVideos, payload);
       yield put({
         type: 'queryList',
         payload: Array.isArray(response) ? response : [],
       });
     },
     *delete({ payload }, { call, put }) {
-      const response = yield call(deleteFakeNews, payload);
+      const response = yield call(deleteFakeVideos, payload);
       yield put({
         type: 'queryList',
         payload: Array.isArray(response) ? response : [],

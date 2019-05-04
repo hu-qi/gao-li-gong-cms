@@ -1,4 +1,5 @@
 import mockjs from 'mockjs';
+// import parse from 'co-busboy';
 
 const titles = [
   'Alipay',
@@ -321,27 +322,27 @@ function getFakeCaptcha(req, res) {
   return res.json('captcha-xxx');
 }
 
-const fakeNews = [
+let fakeNews = [
   {
-    id: new Date().getTime(),
+    id: Math.random() * 1000,
     title: '123',
     description: '123',
     link: 'http://12345',
   },
   {
-    id: new Date().getTime(),
+    id: Math.random() * 1000,
     title: '123',
     description: '123',
     link: 'http://12345',
   },
   {
-    id: new Date().getTime(),
+    id: Math.random() * 1000,
     title: '123',
     description: '123',
     link: 'http://12345',
   },
   {
-    id: new Date().getTime(),
+    id: Math.random() * 1000,
     title: '123',
     description: '123',
     link: 'http://12345',
@@ -350,6 +351,44 @@ const fakeNews = [
 
 function getNews(req, res) {
   return res.json(fakeNews);
+}
+
+function deleteNews(req, res) {
+  const params = req.query;
+
+  const id = params.id;
+
+  fakeNews.splice(
+    fakeNews.findIndex(el => {
+      return el.id === id;
+    })
+  );
+
+  return res.json(fakeNews);
+}
+
+function upload(req, res) {
+  // try {
+  // const parts = parse(res, {
+  //   autoFields: true
+  // });
+  // let part, files = [];
+  // while (part = yield parts) {
+  //   files.push(part.filename);
+  //   part.resume();
+  // }
+  // let ret = '';
+  // res.status = 200;
+  // res.set('Content-Type', 'text/html');
+  // if (parts.fields[0] && parts.fields[0][0] === '_documentDomain') {
+  //   ret += '<script>document.domain="' + parts.fields[0][1] + '";</script>';
+  // }
+  // ret += JSON.stringify(files);
+  // res.body = ret;
+  // } catch (e) {
+  //   res.body = e.stack;
+  // }
+  return res.json();
 }
 
 export default {
@@ -365,4 +404,8 @@ export default {
   'POST /api/fake_list': postFakeList,
   'GET /api/captcha': getFakeCaptcha,
   'GET /api/fake_news': getNews,
+  'GET /api/delete_news': deleteNews,
+  'GET /api/fake_videos': getNews,
+  'GET /api/delete_videos': deleteNews,
+  'POST /api/upload': upload,
 };

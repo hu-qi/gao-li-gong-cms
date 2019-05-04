@@ -1,5 +1,6 @@
 import { stringify } from 'qs';
 import request from '@/utils/request';
+import { async } from 'q';
 
 export async function queryProjectNotice() {
   return request('/api/project/notice');
@@ -127,4 +128,16 @@ export async function getFakeCaptcha(mobile) {
 
 export async function getFakeNews() {
   return request(`/api/fake_news`);
+}
+
+export async function deleteFakeNews(params) {
+  return request(`/api/delete_news?${stringify(params)}`);
+}
+
+export async function getFakeVideos() {
+  return request(`/api/fake_videos`);
+}
+
+export async function deleteFakeVideos(params) {
+  return request(`/api/delete_videos?${stringify(params)}`);
 }
