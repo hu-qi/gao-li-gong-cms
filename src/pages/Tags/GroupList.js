@@ -1,15 +1,8 @@
 import React, { PureComponent } from 'react';
-import numeral from 'numeral';
 import { connect } from 'dva/index';
-import { FormattedMessage } from 'umi-plugin-react/locale/index';
-import { Row, Col, Form, Card, Select, Icon, Avatar, List, Tooltip, Dropdown, Menu, Button, Ellipsis } from 'antd/lib/index';
-import TagSelect from '@/components/TagSelect';
-import StandardFormRow from '@/components/StandardFormRow';
+import { Form, Card, Icon, List, Button } from 'antd/lib/index';
 
 import styles from './GroupList.less';
-
-const { Option } = Select;
-const FormItem = Form.Item;
 
 @connect(({ list, loading }) => ({
   list,
@@ -44,17 +37,7 @@ class FilterCardList extends PureComponent {
     const {
       list: { list },
       loading,
-      form,
     } = this.props;
-    const { getFieldDecorator } = form;
-
-    const CardInfo = ({ activeUser, newUser }) => (
-      <div className={styles.cardInfo}>
-        <div>
-          <p>关联物种数量： {activeUser}</p>
-        </div>
-      </div>
-    );
 
     return (
       <div className={styles.filterCardList}>

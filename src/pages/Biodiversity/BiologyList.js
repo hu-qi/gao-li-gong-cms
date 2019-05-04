@@ -2,9 +2,8 @@ import React, { PureComponent } from 'react';
 import moment from 'moment';
 import { connect } from 'dva';
 import { Row, Col, Form, Card, Select, List, Icon } from 'antd';
-import { FormattedMessage } from 'umi-plugin-react/locale';
+import router from 'umi/router';
 
-import TagSelect from '@/components/TagSelect';
 import AvatarList from '@/components/AvatarList';
 import Ellipsis from '@/components/Ellipsis';
 import StandardFormRow from '@/components/StandardFormRow';
@@ -48,6 +47,11 @@ class CoverCardList extends PureComponent {
     });
   }
 
+  preview() {
+    const BiologyId = '123';
+    router.push(`/Biodiversity/${BiologyId}`);
+  }
+
   render() {
     const {
       allBiology: { list = [] } = {},
@@ -68,7 +72,7 @@ class CoverCardList extends PureComponent {
               className={styles.card}
               hoverable
               cover={<img alt={item.title} src={item.cover} />}
-              actions={[<Icon type="eye" />, <Icon type="edit" />]}
+              actions={[<Icon type="eye" onClick={this.preview}  />, <Icon type="edit" onClick={this.preview} />]}
             >
               <Card.Meta
                 title={<a>{item.title}</a>}
@@ -101,30 +105,11 @@ class CoverCardList extends PureComponent {
       },
     };
 
-    const actionsTextMap = {
-      expandText: <FormattedMessage id="component.tagSelect.expand" defaultMessage="Expand" />,
-      collapseText: (
-        <FormattedMessage id="component.tagSelect.collapse" defaultMessage="Collapse" />
-      ),
-      selectAllText: <FormattedMessage id="component.tagSelect.all" defaultMessage="All" />,
-    };
-
     return (
       <div className={styles.coverCardList}>
         <Card bordered={false}>
           <Form layout="inline">
-            <StandardFormRow title="所属类目" block style={{ paddingBottom: 11 }}>
-              <FormItem>
-                {getFieldDecorator('category')(
-                  <TagSelect expandable actionsText={actionsTextMap}>
-                    <TagSelect.Option value="cat1">类目一</TagSelect.Option>
-                    <TagSelect.Option value="cat2">类目二</TagSelect.Option>
-                    <TagSelect.Option value="cat3">类目三</TagSelect.Option>
-                  </TagSelect>
-                )}
-              </FormItem>
-            </StandardFormRow>
-            <StandardFormRow title="其它选项" grid last>
+            <StandardFormRow grid last>
               <Row gutter={16}>
                 <Col lg={8} md={10} sm={10} xs={24}>
                   <FormItem {...formItemLayout} label="作者">

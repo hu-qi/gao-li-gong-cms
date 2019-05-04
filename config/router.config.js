@@ -124,7 +124,13 @@ export default [
         name: 'biodiversity',
         icon: 'deployment-unit',
         path: '/biodiversity',
-        component: './Biodiversity/CardList',
+        component: './Biodiversity/BiologyList',
+      },
+      {
+        path: '/biodiversity/:id',
+        name: 'biology',
+        hideInMenu: true,
+        component: './Biodiversity/Biology',
       },
       // 标签
       {
