@@ -1,4 +1,5 @@
 import mockjs from 'mockjs';
+// import parse from 'co-busboy';
 
 const titles = [
   'Alipay',
@@ -35,13 +36,14 @@ const avatars2 = [
 ];
 
 const covers = [
+  'https://cn.bing.com/sa/simg/hpb/LaDigue_EN-CA1115245085_1920x1080.jpg',
   'https://gw.alipayobjects.com/zos/rmsportal/uMfMFlvUuceEyPpotzlq.png',
   'https://gw.alipayobjects.com/zos/rmsportal/iZBVOIhGJiAnhplqjvZW.png',
   'https://gw.alipayobjects.com/zos/rmsportal/iXjVmWVHbCJAyqvDxdtx.png',
   'https://gw.alipayobjects.com/zos/rmsportal/gLaIAoVWTtLbBWZNYEMg.png',
 ];
 const desc = [
-  '那是一种内在的东西， 他们到达不了，也无法触及的',
+  '那是一种内在的东西， 他们到达不了，也无法触及的, 那是一种内在的东西， 他们到达不了，也无法触及的',
   '希望是一个好东西，也许是最好的，好东西是不会消亡的',
   '生命就像一盒巧克力，结果往往出人意料',
   '城镇中有那么多的酒馆，她却偏偏走进了我的酒馆',
@@ -321,6 +323,75 @@ function getFakeCaptcha(req, res) {
   return res.json('captcha-xxx');
 }
 
+const fakeNews = [
+  {
+    id: Math.random() * 1000,
+    title: '123',
+    description: '123',
+    link: 'http://12345',
+  },
+  {
+    id: Math.random() * 1000,
+    title: '123',
+    description: '123',
+    link: 'http://12345',
+  },
+  {
+    id: Math.random() * 1000,
+    title: '123',
+    description: '123',
+    link: 'http://12345',
+  },
+  {
+    id: Math.random() * 1000,
+    title: '123',
+    description: '123',
+    link: 'http://12345',
+  },
+];
+
+function getNews(req, res) {
+  return res.json(fakeNews);
+}
+
+function deleteNews(req, res) {
+  const params = req.query;
+
+  const id = params.id;
+
+  fakeNews.splice(
+    fakeNews.findIndex(el => {
+      return el.id === id;
+    })
+  );
+
+  return res.json(fakeNews);
+}
+
+function upload(req, res) {
+  // try {
+  // const parts = parse(res, {
+  //   autoFields: true
+  // });
+  // let part, files = [];
+  // while (part = yield parts) {
+  //   files.push(part.filename);
+  //   part.resume();
+  // }
+  // let ret = '';
+  // res.status = 200;
+  // res.set('Content-Type', 'text/html');
+  // if (parts.fields[0] && parts.fields[0][0] === '_documentDomain') {
+  //   ret += '<script>document.domain="' + parts.fields[0][1] + '";</script>';
+  // }
+  // ret += JSON.stringify(files);
+  // res.body = ret;
+  // } catch (e) {
+  //   res.body = e.stack;
+  // }
+  return res.json();
+}
+
 export default {
   'GET /api/project/notice': getNotice,
   'GET /api/activities': getActivities,
@@ -333,4 +404,9 @@ export default {
   'GET /api/fake_list': getFakeList,
   'POST /api/fake_list': postFakeList,
   'GET /api/captcha': getFakeCaptcha,
+  'GET /api/fake_news': getNews,
+  'GET /api/delete_news': deleteNews,
+  'GET /api/fake_videos': getNews,
+  'GET /api/delete_videos': deleteNews,
+  'POST /api/upload': upload,
 };

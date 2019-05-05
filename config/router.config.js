@@ -26,12 +26,80 @@ export default [
         path: '/home',
         component: './Dashboard/Workplace',
       },
-      // 用户管理   
+      // 账户管理
       {
-        name: 'userManagement',
+        name: 'account',
         icon: 'usergroup-delete',
-        path: '/user-management',
-        component: './User-management/TableList',
+        path: '/account',
+        routes: [
+          {
+            path: '/account/list',
+            name: 'list',
+            component: './Account/User/TableList.tmp',
+            hideChildrenInMenu: true,
+            routes: [
+              {
+                path: '/account/new',
+                name: 'new',
+                // component: './Account/User/Create',
+              },
+              {
+                path: '/account/preview',
+                name: 'preview',
+              },
+            ],
+          },
+          {
+            path: '/account/center',
+            name: 'center',
+            component: './Account/Center/Center',
+            routes: [
+              {
+                path: '/account/center',
+                redirect: '/account/center/articles',
+              },
+              {
+                path: '/account/center/articles',
+                component: './Account/Center/Articles',
+              },
+              {
+                path: '/account/center/applications',
+                component: './Account/Center/Applications',
+              },
+              {
+                path: '/account/center/projects',
+                component: './Account/Center/Projects',
+              },
+            ],
+          },
+          {
+            path: '/account/settings',
+            name: 'settings',
+            component: './Account/Settings/Info',
+            routes: [
+              {
+                path: '/account/settings',
+                redirect: '/account/settings/base',
+              },
+              {
+                path: '/account/settings/base',
+                component: './Account/Settings/BaseView',
+              },
+              {
+                path: '/account/settings/security',
+                component: './Account/Settings/SecurityView',
+              },
+              {
+                path: '/account/settings/binding',
+                component: './Account/Settings/BindingView',
+              },
+              {
+                path: '/account/settings/notification',
+                component: './Account/Settings/NotificationView',
+              },
+            ],
+          },
+        ],
       },
       // 明星物种   
       {
@@ -40,33 +108,79 @@ export default [
         path: '/starAnimals',
         // component: './List/TableList',
       },
-      // 新闻管理   
+      // 新闻管理
       {
         name: 'news',
-        icon: 'message',
+        icon: 'read',
         path: '/news',
-        // component: './List/TableList',
+        hideChildrenInMenu: true,
+        routes: [
+          {
+            path: '/news',
+            redirect: '/news/news-list',
+          },
+          {
+            path: '/news/news-list',
+            component: './News/NewsList',
+          },
+          {
+            path: '/news/news-add',
+            name: 'news-add',
+            component: './News/NewsEdit',
+          },
+          {
+            path: '/news/news-edit/:id',
+            name: 'news-edit',
+            component: './News/NewsEdit',
+          },
+        ],
       },
-      // 影视集锦   
+      // 影视集锦
       {
-        name: 'videoClip',
+        name: 'videos',
         icon: 'video-camera',
-        path: '/video',
-        // component: './List/TableList',
+        path: '/videos',
+        hideChildrenInMenu: true,
+        routes: [
+          {
+            path: '/videos',
+            redirect: '/videos/videos-list',
+          },
+          {
+            path: '/videos/videos-list',
+            component: './Videos/VideosList',
+          },
+          {
+            path: '/videos/videos-add',
+            name: 'videos-add',
+            component: './Videos/VideosEdit',
+          },
+          {
+            path: '/videos/videos-edit/:id',
+            name: 'videos-edit',
+            component: './Videos/VideosEdit',
+          },
+        ],
       },
-      // 生物多样性   
+      // 生物多样性
       {
         name: 'biodiversity',
         icon: 'deployment-unit',
         path: '/biodiversity',
-        // component: './List/TableList',
+        component: './Biodiversity/BiologyList',
+      },
+      {
+        path: '/biodiversity/:id',
+        name: 'biology',
+        hideInMenu: true,
+        component: './Biodiversity/Biology',
       },
       // 标签
       {
         name: 'labels',
         icon: 'tags',
         path: '/labels',
-        // component: './List/TableList',
+        component: './Tags/Index',
       },
       // 关于我们
       {
@@ -257,63 +371,6 @@ export default [
             name: 'trigger',
             hideInMenu: true,
             component: './Exception/TriggerException',
-          },
-        ],
-      },
-      {
-        name: 'account',
-        icon: 'user',
-        path: '/account',
-        routes: [
-          {
-            path: '/account/center',
-            name: 'center',
-            component: './Account/Center/Center',
-            routes: [
-              {
-                path: '/account/center',
-                redirect: '/account/center/articles',
-              },
-              {
-                path: '/account/center/articles',
-                component: './Account/Center/Articles',
-              },
-              {
-                path: '/account/center/applications',
-                component: './Account/Center/Applications',
-              },
-              {
-                path: '/account/center/projects',
-                component: './Account/Center/Projects',
-              },
-            ],
-          },
-          {
-            path: '/account/settings',
-            name: 'settings',
-            component: './Account/Settings/Info',
-            routes: [
-              {
-                path: '/account/settings',
-                redirect: '/account/settings/base',
-              },
-              {
-                path: '/account/settings/base',
-                component: './Account/Settings/BaseView',
-              },
-              {
-                path: '/account/settings/security',
-                component: './Account/Settings/SecurityView',
-              },
-              {
-                path: '/account/settings/binding',
-                component: './Account/Settings/BindingView',
-              },
-              {
-                path: '/account/settings/notification',
-                component: './Account/Settings/NotificationView',
-              },
-            ],
           },
         ],
       },

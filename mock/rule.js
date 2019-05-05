@@ -2,7 +2,7 @@ import { parse } from 'url';
 
 // mock tableListDataSource
 let tableListDataSource = [];
-for (let i = 0; i < 46; i += 1) {
+for (let i = 0; i < 16; i += 1) {
   tableListDataSource.push({
     key: i,
     disabled: i % 6 === 0,
@@ -11,7 +11,7 @@ for (let i = 0; i < 46; i += 1) {
       'https://gw.alipayobjects.com/zos/rmsportal/eeHMaZBwmTvLdIwMfBpg.png',
       'https://gw.alipayobjects.com/zos/rmsportal/udxAbMEhpwthVVcjLXik.png',
     ][i % 2],
-    name: `TradeCode ${i}`,
+    name: `kkxujq ${i}`,
     title: `一个任务名称 ${i}`,
     owner: '曲丽丽',
     desc: '这是一段描述1',
@@ -20,6 +20,9 @@ for (let i = 0; i < 46; i += 1) {
     updatedAt: new Date(`2017-07-${Math.floor(i / 2) + 1}`),
     createdAt: new Date(`2017-07-${Math.floor(i / 2) + 1}`),
     progress: Math.ceil(Math.random() * 100),
+    phone: '1221212121',
+    email: 'fwf@123.com',
+    weChat: 'kkxujq'
   });
 }
 

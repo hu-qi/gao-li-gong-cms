@@ -274,13 +274,10 @@ class UpdateForm extends PureComponent {
 }
 
 /* eslint react/no-multi-comp:0 */
-@connect(models => {
-  const { userManagement, loading } = models;
-  return ({
-    userManagement,
-    loading: loading.models.rule,
-  })
-})
+@connect(({ rule, loading }) => ({
+  rule,
+  loading: loading.models.rule,
+}))
 @Form.create()
 class TableList extends PureComponent {
   state = {
@@ -629,10 +626,9 @@ class TableList extends PureComponent {
 
   render() {
     const {
-      rule: { data } = { data: []},
+      rule: { data },
       loading,
     } = this.props;
-  
     const { selectedRows, modalVisible, updateModalVisible, stepFormValues } = this.state;
     const menu = (
       <Menu onClick={this.handleMenuClick} selectedKeys={[]}>

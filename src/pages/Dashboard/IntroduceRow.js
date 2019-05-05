@@ -15,7 +15,6 @@ const topColResponsiveProps = {
   xl: 6,
   style: { marginBottom: 24 },
 };
-
 const IntroduceRow = memo(({ loading, visitData }) => (
   <Row gutter={24}>
     <Col {...topColResponsiveProps}>
