@@ -79,9 +79,9 @@ const BiologyCount = biology.length,
 function fakeList(count = 0) {
   const list = [];
 
-  for (; count --; ) {
+  for (; count--;) {
     list.push({
-      id: `${1000 + count}`,
+      id: `${ 1000 + count }`,
       name: biology[count % BiologyCount],
       species: species[count % SpeciesCount],
       subDesc: desc[count % DescCount],
@@ -100,11 +100,58 @@ function fakeList(count = 0) {
 }
 
 export default {
-  'GET /api/queryBiologyList':  (req, res) => {
+  'GET /api/queryBiologyList': (req, res) => {
     const resData = [];
 
     resData.push(...fakeList(Number.parseInt(Math.random() * 20, 10) + 5));
 
     res.send(resData);
+  },
+
+  'GET /api/getBiologyById': (req, res) => {
+    res.send({
+      name: '小熊猫',
+      desc: '天行长臂猿（学名：Hoolock tianxing）：成年天行长臂猿的体长600-900厘米，后足长140-153厘米，颅全长93-99厘米；体重6-8.5千克。雄性和雌性的体型差别不大，但雄性有长阴毛；对生而短的拇指；弯曲的手指悬挂时可牢固抓握。无尾。前肢明显长于后肢，用来悬挂和在树间荡臂。',
+      classify: {
+        protection: ['国家一级'],
+        endangered: ['极度濒危'],
+        species: ['鸟类', '走禽', '会跑'],
+      },
+    });
+  },
+
+  'GET /api/getClassify': (req, res) => {
+    res.send({
+      protection: [{
+        text: '国家一级',
+        id: 'level1',
+      }, {
+        text: '国家二级',
+        id: 'level2',
+      }, {
+        text: '国家三级',
+        id: 'level3',
+      }],
+      endangered: [{
+        text: '极度濒危',
+        id: 'level1',
+      }, {
+        text: '比较濒危',
+        id: 'level2',
+      }, {
+        text: '有点濒危',
+        id: 'level3',
+      }],
+      species: [{
+        text: '鸟类',
+        id: 'bird',
+      }, {
+        text: '走禽',
+        id: 'bird1',
+      }, {
+        text: '会跑',
+        id: 'bird2',
+      }],
+    });
   },
 };
