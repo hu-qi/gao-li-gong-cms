@@ -322,7 +322,7 @@ function getFakeCaptcha(req, res) {
   return res.json('captcha-xxx');
 }
 
-let fakeNews = [
+const fakeNews = [
   {
     id: Math.random() * 1000,
     title: '123',

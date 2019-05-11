@@ -14,7 +14,7 @@ import {
   Tooltip,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from './style.less';
+import styles from './Biology.less';
 
 const FormItem = Form.Item;
 const { Option } = Select;

@@ -64,7 +64,7 @@ class SearchList extends Component {
         title="搜索标签"
         content={mainSearch}
         tabList={tabList}
-        tabActiveKey={'protection'}
+        tabActiveKey="protection"
         onTabChange={this.handleTabChange}
       >
         <GroupList />

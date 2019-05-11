@@ -8,7 +8,7 @@ import AvatarList from '@/components/AvatarList';
 import Ellipsis from '@/components/Ellipsis';
 import StandardFormRow from '@/components/StandardFormRow';
 
-import styles from './CardList.less';
+import styles from './BiologyList.less';
 
 const { Option } = Select;
 const FormItem = Form.Item;
@@ -71,12 +71,12 @@ class CoverCardList extends PureComponent {
             <Card
               className={styles.card}
               hoverable
-              cover={<img alt={item.title} src={item.cover} />}
+              cover={<img alt={item.name} src={item.cover} />}
               actions={[<Icon type="eye" onClick={this.preview}  />, <Icon type="edit" onClick={this.preview} />]}
             >
               <Card.Meta
-                title={<a>{item.title}</a>}
-                description={<Ellipsis lines={2}>{item.subDescription}</Ellipsis>}
+                title={<a>{item.name}</a>}
+                description={<Ellipsis lines={2}>{item.subDesc}</Ellipsis>}
               />
               <div className={styles.cardItemContent}>
                 <span>{moment(item.updatedAt).fromNow()}</span>

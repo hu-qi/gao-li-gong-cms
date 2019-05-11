@@ -3,11 +3,11 @@ import { connect } from 'dva';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
 import { Form, Input, Button, Card, Select, Icon, Upload } from 'antd';
 
+import PageHeaderWrapper from '@/components/PageHeaderWrapper';
+
 const { TextArea } = Input;
 
 const FormItem = Form.Item;
-
-import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 
 @connect(({ loading }) => ({
   submitting: loading.effects['form/submitRegularForm'],

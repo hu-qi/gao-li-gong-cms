@@ -1,5 +1,3 @@
-import mockjs from 'mockjs';
-
 const biology = [
   '天行长臂猿',
   '大熊猫',
@@ -51,12 +49,35 @@ const covers = [
   'http://www.kunming.cn/attachement/jpg/site22/20171212/eca86b6b05bc1b996a3f35.jpg',
 ];
 
-function fakeList(count) {
+const user = [
+  '高黎贡',
+  '林中鸣',
+  '驴哥',
+  '悟空',
+  '大师兄',
+  '高黎',
+  '高贡山',
+  '自然保',
+];
+
+const avatars = [
+  'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png',
+  'https://gw.alipayobjects.com/zos/rmsportal/cnrhVkzwxjPwAaCfPbdc.png',
+  'https://gw.alipayobjects.com/zos/rmsportal/ZiESqWwCXBRQoaPONSJe.png',
+  'https://gw.alipayobjects.com/zos/rmsportal/tBOxZPlITHqwlGjsJWaF.png',
+  'https://gw.alipayobjects.com/zos/rmsportal/tBOxZPlITHqwlGjsJWaF.png',
+  'https://gw.alipayobjects.com/zos/rmsportal/sBxjgqiuHMGRkIjqlQCd.png',
+];
+
+const BiologyCount = biology.length,
+  SpeciesCount = species.length,
+  DescCount = desc.length,
+  CoversCount = covers.length,
+  AvatarCount = avatars.length,
+  UserCount = user.length;
+
+function fakeList(count = 0) {
   const list = [];
-  const BiologyCount = biology.length,
-    SpeciesCount = species.length,
-    DescCount = desc.length,
-    CoversCount = covers.length;
 
   for (; count --; ) {
     list.push({
@@ -67,6 +88,11 @@ function fakeList(count) {
       cover: covers[count % CoversCount],
       updatedAt: new Date(new Date().getTime() - 1000 * 60 * 60 * count),
       createdAt: new Date(new Date().getTime() - 1000 * 60 * 60 * count),
+      members: new Array(Math.ceil(Math.random() * 10 % 3)).fill().map(() => ({
+        avatar: avatars[Number.parseInt(Math.random() * 10, 10) % AvatarCount],
+        name: user[Number.parseInt(Math.random() * 10, 10) % UserCount],
+        id: (100 + Number.parseInt(Math.random() * 10, 10)).toString(),
+      })),
     });
   }
 
@@ -77,49 +103,7 @@ export default {
   'GET /api/queryBiologyList':  (req, res) => {
     const resData = [];
 
-    for (let i = 8; i --; ) {
-      resData.push(
-        {
-          id: `10011${i}`,
-          title: '大蜘蛛',
-          avatar: 'https://gw.alipayobjects.com/zos/rmsportal/WdGqmHpayyMjiEhcKoVE.png',
-          cover: 'https://gw.alipayobjects.com/zos/rmsportal/uMfMFlvUuceEyPpotzlq.png',
-          // status: ['active', 'exception', 'normal'][i % 3],
-          // percent: Math.ceil(Math.random() * 50) + 50,
-          logo: 'https://gw.alipayobjects.com/zos/rmsportal/WdGqmHpayyMjiEhcKoVE.png',
-          href: '/',
-          updatedAt: new Date(new Date().getTime() - 1000 * 60 * 60 * 2 * i),
-          createdAt: new Date(new Date().getTime() - 1000 * 60 * 60 * 2 * i),
-          subDescription: '那是一种内在的东西， 他们到达不了，也无法触及的, 那是一种内在的东西， 他们到达不了，也无法触及的',
-          description:
-            '在中台产品的研发过程中，会出现不同的设计规范和实现方式，但其中往往存在很多类似的页面和组件，这些类似的组件会被抽离成一套标准规范。',
-          activeUser: Math.ceil(Math.random() * 100000) + 100000,
-          newUser: Math.ceil(Math.random() * 1000) + 1000,
-          star: Math.ceil(Math.random() * 100) + 100,
-          like: Math.ceil(Math.random() * 100) + 100,
-          message: Math.ceil(Math.random() * 10) + 10,
-          content:
-            '段落示意：蚂蚁金服设计平台 ant.design，用最小的工作量，无缝接入蚂蚁金服生态，提供跨越设计与开发的体验解决方案。蚂蚁金服设计平台 ant.design，用最小的工作量，无缝接入蚂蚁金服生态，提供跨越设计与开发的体验解决方案。',
-          members: [
-            {
-              avatar: 'https://gw.alipayobjects.com/zos/rmsportal/ZiESqWwCXBRQoaPONSJe.png',
-              name: '曲丽丽',
-              id: 'member1',
-            },
-            {
-              avatar: 'https://gw.alipayobjects.com/zos/rmsportal/tBOxZPlITHqwlGjsJWaF.png',
-              name: '王昭君',
-              id: 'member2',
-            },
-            {
-              avatar: 'https://gw.alipayobjects.com/zos/rmsportal/sBxjgqiuHMGRkIjqlQCd.png',
-              name: '董娜娜',
-              id: 'member3',
-            },
-          ],
-        }
-      );
-    }
+    resData.push(...fakeList(Number.parseInt(Math.random() * 20, 10) + 5));
 
     res.send(resData);
   },
