@@ -35,4 +35,6 @@ export default {
   'form.publicUsers.option.B': '同事乙',
   'form.publicUsers.option.C': '同事丙',
   'form.thumbnail.label': '缩略图',
+  'form.description.label': '摘要',
+  'form.description.placeholder': '请输入相关摘要',
 };

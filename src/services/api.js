@@ -1,6 +1,5 @@
 import { stringify } from 'qs';
 import request from '@/utils/request';
-import { async } from 'q';
 
 export async function queryProjectNotice() {
   return request('/api/project/notice');
@@ -142,6 +141,14 @@ export async function deleteFakeVideos(params) {
   return request(`/api/delete_videos?${stringify(params)}`);
 }
 
+export async function getFakeSliders() {
+  return request(`/api/fake_sliders`);
+}
+
+export async function deleteFakeSliders(params) {
+  return request(`/api/delete_sliders?${stringify(params)}`);
+}
+
 export async function queryBiologyList() {
   return request(`/api/queryBiologyList`);
 }
@@ -152,4 +159,12 @@ export async function getBiologyById(params) {
 
 export async function getClassify() {
   return request(`/api/getClassify`);
+}
+
+export async function getStarAnimals() {
+  return request(`/api/starAnimals`);
+}
+
+export async function getStarAnimalByName(name) {
+  return request(`/api/starAnimals/${name}`);
 }

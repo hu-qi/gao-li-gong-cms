@@ -3,23 +3,23 @@ import { connect } from 'dva';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
 import { Form, Input, Button, Card, Select, Icon, Upload } from 'antd';
 
-import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-
 const { TextArea } = Input;
-
 const FormItem = Form.Item;
+
+import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 
 @connect(({ loading }) => ({
   submitting: loading.effects['form/submitRegularForm'],
 }))
 @Form.create()
-class VideosEdit extends PureComponent {
+class SliderEdit extends PureComponent {
   normFile = e => {
     if (Array.isArray(e)) {
       return e;
     }
     return e && e.fileList;
   };
+
   render() {
     const { submitting } = this.props;
     const {
@@ -49,37 +49,24 @@ class VideosEdit extends PureComponent {
       <PageHeaderWrapper>
         <Card bordered={false}>
           <Form onSubmit={this.handleSubmit} hideRequiredMark style={{ marginTop: 8 }}>
-            <FormItem {...formItemLayout} label={<FormattedMessage id="form.title.label" />}>
-              {getFieldDecorator('title', {
-                rules: [
-                  {
-                    required: true,
-                    message: formatMessage({ id: 'validation.title.required' }),
-                  },
-                ],
-              })(<Input placeholder={formatMessage({ id: 'form.videos.title.placeholder' })} />)}
-            </FormItem>
-            <FormItem
-              {...formItemLayout}
-              label={<FormattedMessage id="form.videos.description.label" />}
-            >
+            <FormItem {...formItemLayout} label={<FormattedMessage id="form.description.label" />}>
               {
                 <TextArea
                   rows={4}
-                  placeholder={formatMessage({ id: 'form.videos.description.placeholder' })}
+                  placeholder={formatMessage({ id: 'form.description.placeholder' })}
                 />
               }
             </FormItem>
-            <FormItem {...formItemLayout} label={<FormattedMessage id="form.videos.link.label" />}>
+            <FormItem {...formItemLayout} label={<FormattedMessage id="form.news.link.label" />}>
               {getFieldDecorator('link', {
                 rules: [
                   {
                     type: 'url',
                     required: true,
-                    message: formatMessage({ id: 'validation.videos.link.required' }),
+                    message: formatMessage({ id: 'validation.news.link.required' }),
                   },
                 ],
-              })(<Input placeholder={formatMessage({ id: 'form.videos.link.placeholder' })} />)}
+              })(<Input placeholder={formatMessage({ id: 'form.news.link.placeholder' })} />)}
             </FormItem>
             <FormItem {...formItemLayout} label={<FormattedMessage id="form.thumbnail.label" />}>
               {getFieldDecorator('thumbnail', {
@@ -105,4 +92,4 @@ class VideosEdit extends PureComponent {
   }
 }
 
-export default VideosEdit;
+export default SliderEdit;

@@ -19,12 +19,52 @@ export default [
     routes: [
       // dashboard
       { path: '/', redirect: '/dashboard/analysis', authority: ['admin', 'user'] },
-      // 首页
+      // 首页管理
       {
-        name: 'home',
+        name: 'index',
         icon: 'home',
         path: '/home',
-        component: './Dashboard/Workplace',
+        routes: [
+          {
+            path: '/home/slider',
+            name: 'slider',
+            hideChildrenInMenu: true,
+            routes: [
+              {
+                path: '/home/slider',
+                component: './Home/Slider',
+              },
+              {
+                path: '/home/slider/slider-add',
+                name: 'slider-add',
+                component: './Home/SliderEdit',
+              },
+              {
+                path: '/home/slider/slider-edit/:id',
+                name: 'slider-edit',
+                component: './Home/SliderEdit',
+              },
+            ],
+          },
+          {
+            path: '/home/partner',
+            name: 'partner',
+            component: './Home/Partner',
+            hideChildrenInMenu: true,
+            routes: [
+              {
+                path: '/home/slider/partner-add',
+                name: 'partner-add',
+                component: './Home/PartnerEdit',
+              },
+              {
+                path: '/home/slider/partner-edit',
+                name: 'partner-edit',
+                component: './Home/PartnerEdit',
+              },
+            ],
+          },
+        ],
       },
       // 账户管理
       {
@@ -101,12 +141,19 @@ export default [
           },
         ],
       },
-      // 明星物种   
+      // 明星物种
       {
         name: 'starAnimals',
         icon: 'twitter',
         path: '/starAnimals',
-        // component: './List/TableList',
+        component: './StarAnimals',
+        hideChildrenInMenu: true,
+      },
+      {
+        path: '/starAnimals/edit/:name',
+        component: './StarAnimals/edit',
+        name: 'starAnimals',
+        hideInMenu: true,
       },
       // 新闻管理
       {
@@ -136,32 +183,32 @@ export default [
         ],
       },
       // 影视集锦
-      {
-        name: 'videos',
-        icon: 'video-camera',
-        path: '/videos',
-        hideChildrenInMenu: true,
-        routes: [
-          {
-            path: '/videos',
-            redirect: '/videos/videos-list',
-          },
-          {
-            path: '/videos/videos-list',
-            component: './Videos/VideosList',
-          },
-          {
-            path: '/videos/videos-add',
-            name: 'videos-add',
-            component: './Videos/VideosEdit',
-          },
-          {
-            path: '/videos/videos-edit/:id',
-            name: 'videos-edit',
-            component: './Videos/VideosEdit',
-          },
-        ],
-      },
+      // {
+      //   name: 'videos',
+      //   icon: 'video-camera',
+      //   path: '/videos',
+      //   hideChildrenInMenu: true,
+      //   routes: [
+      //     {
+      //       path: '/videos',
+      //       redirect: '/videos/videos-list',
+      //     },
+      //     {
+      //       path: '/videos/videos-list',
+      //       component: './Videos/VideosList',
+      //     },
+      //     {
+      //       path: '/videos/videos-add',
+      //       name: 'videos-add',
+      //       component: './Videos/VideosEdit',
+      //     },
+      //     {
+      //       path: '/videos/videos-edit/:id',
+      //       name: 'videos-edit',
+      //       component: './Videos/VideosEdit',
+      //     },
+      //   ],
+      // },
       // 生物多样性
       {
         name: 'biodiversity',
