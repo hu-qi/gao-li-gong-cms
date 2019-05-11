@@ -19,12 +19,52 @@ export default [
     routes: [
       // dashboard
       { path: '/', redirect: '/dashboard/analysis', authority: ['admin', 'user'] },
-      // 首页
+      // 首页管理
       {
-        name: 'home',
+        name: 'index',
         icon: 'home',
         path: '/home',
-        component: './Dashboard/Workplace',
+        routes: [
+          {
+            path: '/home/slider',
+            name: 'slider',
+            hideChildrenInMenu: true,
+            routes: [
+              {
+                path: '/home/slider',
+                component: './Home/Slider',
+              },
+              {
+                path: '/home/slider/slider-add',
+                name: 'slider-add',
+                component: './Home/SliderEdit',
+              },
+              {
+                path: '/home/slider/slider-edit/:id',
+                name: 'slider-edit',
+                component: './Home/SliderEdit',
+              },
+            ],
+          },
+          {
+            path: '/home/partner',
+            name: 'partner',
+            component: './Home/Partner',
+            hideChildrenInMenu: true,
+            routes: [
+              {
+                path: '/home/slider/partner-add',
+                name: 'partner-add',
+                component: './Home/PartnerEdit',
+              },
+              {
+                path: '/home/slider/partner-edit',
+                name: 'partner-edit',
+                component: './Home/PartnerEdit',
+              },
+            ],
+          },
+        ],
       },
       // 账户管理
       {

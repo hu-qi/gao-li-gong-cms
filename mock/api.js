@@ -367,6 +367,56 @@ function deleteNews(req, res) {
   return res.json(fakeNews);
 }
 
+let fakeSliders = [
+  {
+    id: Math.random() * 1000,
+    imgSrc:
+      'http://b.hiphotos.baidu.com/image/h%3D300/sign=92afee66fd36afc3110c39658318eb85/908fa0ec08fa513db777cf78376d55fbb3fbd9b3.jpg',
+    description:
+      '123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123',
+    link: 'http://12345',
+  },
+  {
+    id: Math.random() * 1000,
+    imgSrc:
+      'http://b.hiphotos.baidu.com/image/h%3D300/sign=92afee66fd36afc3110c39658318eb85/908fa0ec08fa513db777cf78376d55fbb3fbd9b3.jpg',
+    description: '123',
+    link: 'http://12345',
+  },
+  {
+    id: Math.random() * 1000,
+    imgSrc:
+      'http://b.hiphotos.baidu.com/image/h%3D300/sign=92afee66fd36afc3110c39658318eb85/908fa0ec08fa513db777cf78376d55fbb3fbd9b3.jpg',
+    description: '123',
+    link: 'http://12345',
+  },
+  {
+    id: Math.random() * 1000,
+    imgSrc:
+      'http://b.hiphotos.baidu.com/image/h%3D300/sign=92afee66fd36afc3110c39658318eb85/908fa0ec08fa513db777cf78376d55fbb3fbd9b3.jpg',
+    description: '123',
+    link: 'http://12345',
+  },
+];
+
+function getSliders(req, res) {
+  return res.json(fakeSliders);
+}
+
+function deleteSliders(req, res) {
+  const params = req.query;
+
+  const id = params.id;
+
+  fakeSliders.splice(
+    fakeSliders.findIndex(el => {
+      return el.id === id;
+    })
+  );
+
+  return res.json(fakeSliders);
+}
+
 function upload(req, res) {
   return res.json();
 }
@@ -387,5 +437,7 @@ export default {
   'GET /api/delete_news': deleteNews,
   'GET /api/fake_videos': getNews,
   'GET /api/delete_videos': deleteNews,
+  'GET /api/fake_sliders': getSliders,
+  'GET /api/delete_sliders': deleteSliders,
   'POST /api/upload': upload,
 };
