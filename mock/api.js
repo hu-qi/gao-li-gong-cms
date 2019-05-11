@@ -1,5 +1,4 @@
 import mockjs from 'mockjs';
-// import parse from 'co-busboy';
 
 const titles = [
   'Alipay',
@@ -369,26 +368,6 @@ function deleteNews(req, res) {
 }
 
 function upload(req, res) {
-  // try {
-  // const parts = parse(res, {
-  //   autoFields: true
-  // });
-  // let part, files = [];
-  // while (part = yield parts) {
-  //   files.push(part.filename);
-  //   part.resume();
-  // }
-  // let ret = '';
-  // res.status = 200;
-  // res.set('Content-Type', 'text/html');
-  // if (parts.fields[0] && parts.fields[0][0] === '_documentDomain') {
-  //   ret += '<script>document.domain="' + parts.fields[0][1] + '";</script>';
-  // }
-  // ret += JSON.stringify(files);
-  // res.body = ret;
-  // } catch (e) {
-  //   res.body = e.stack;
-  // }
   return res.json();
 }
 

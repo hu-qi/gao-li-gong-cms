@@ -14,6 +14,12 @@ import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 }))
 @Form.create()
 class VideosEdit extends PureComponent {
+  normFile = e => {
+    if (Array.isArray(e)) {
+      return e;
+    }
+    return e && e.fileList;
+  };
   render() {
     const { submitting } = this.props;
     const {

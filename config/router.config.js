@@ -101,7 +101,7 @@ export default [
           },
         ],
       },
-      // 明星物种   
+      // 明星物种
       {
         name: 'starAnimals',
         icon: 'twitter',
@@ -136,32 +136,32 @@ export default [
         ],
       },
       // 影视集锦
-      {
-        name: 'videos',
-        icon: 'video-camera',
-        path: '/videos',
-        hideChildrenInMenu: true,
-        routes: [
-          {
-            path: '/videos',
-            redirect: '/videos/videos-list',
-          },
-          {
-            path: '/videos/videos-list',
-            component: './Videos/VideosList',
-          },
-          {
-            path: '/videos/videos-add',
-            name: 'videos-add',
-            component: './Videos/VideosEdit',
-          },
-          {
-            path: '/videos/videos-edit/:id',
-            name: 'videos-edit',
-            component: './Videos/VideosEdit',
-          },
-        ],
-      },
+      // {
+      //   name: 'videos',
+      //   icon: 'video-camera',
+      //   path: '/videos',
+      //   hideChildrenInMenu: true,
+      //   routes: [
+      //     {
+      //       path: '/videos',
+      //       redirect: '/videos/videos-list',
+      //     },
+      //     {
+      //       path: '/videos/videos-list',
+      //       component: './Videos/VideosList',
+      //     },
+      //     {
+      //       path: '/videos/videos-add',
+      //       name: 'videos-add',
+      //       component: './Videos/VideosEdit',
+      //     },
+      //     {
+      //       path: '/videos/videos-edit/:id',
+      //       name: 'videos-edit',
+      //       component: './Videos/VideosEdit',
+      //     },
+      //   ],
+      // },
       // 生物多样性
       {
         name: 'biodiversity',
