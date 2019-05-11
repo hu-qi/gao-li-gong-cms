@@ -145,3 +145,11 @@ export async function deleteFakeVideos(params) {
 export async function queryBiologyList() {
   return request(`/api/queryBiologyList`);
 }
+
+export async function getBiologyById(params) {
+  return request(`/api/getBiologyById`);
+}
+
+export async function getClassify() {
+  return request(`/api/getClassify`);
+}
