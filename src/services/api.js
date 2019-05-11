@@ -141,6 +141,14 @@ export async function deleteFakeVideos(params) {
   return request(`/api/delete_videos?${stringify(params)}`);
 }
 
+export async function getFakeSliders() {
+  return request(`/api/fake_sliders`);
+}
+
+export async function deleteFakeSliders(params) {
+  return request(`/api/delete_sliders?${stringify(params)}`);
+}
+
 export async function queryBiologyList() {
   return request(`/api/queryBiologyList`);
 }
