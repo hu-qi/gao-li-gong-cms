@@ -1,4 +1,4 @@
-import { queryBiologyList } from '@/services/api';
+import { queryBiologyList, getBiologyById, getClassify } from '@/services/api';
 
 export default {
   namespace: 'biology',
@@ -7,6 +7,8 @@ export default {
     data: {
       list: [],
       pagination: {},
+      biology: {},
+      classify: {},
     } ,
   },
 
@@ -15,9 +17,25 @@ export default {
       const response = yield call(queryBiologyList, payload);
       yield put({
         type: 'queryList',
-        payload: Array.isArray(response) ? response : [],
+        payload: response,
       });
     },
+
+    *fetchBiologyById({ payload }, { call, put }) {
+      const response = yield call(getBiologyById, payload);
+      yield put({
+        type: 'getBiologyById',
+        payload: response,
+      });
+    },
+
+    *fetchClassify({ payload }, { call, put }) {
+      const response = yield call(getClassify, payload);
+      yield put({
+        type: 'getClassify',
+        payload: response,
+      });
+    }
   },
 
   reducers: {
@@ -31,6 +49,20 @@ export default {
       return {
         ...state,
         list: state.list.concat(action.payload),
+      };
+    },
+
+    getBiologyById(state, action) {
+      return {
+        ...state,
+        biology: action.payload,
+      };
+    },
+
+    getClassify(state, action) {
+      return {
+        ...state,
+        classify: action.payload,
       };
     },
   },

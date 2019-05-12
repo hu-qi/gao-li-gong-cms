@@ -149,7 +149,14 @@ export default [
         name: 'starAnimals',
         icon: 'twitter',
         path: '/starAnimals',
-        // component: './List/TableList',
+        component: './StarAnimals',
+        hideChildrenInMenu: true,
+      },
+      {
+        path: '/starAnimals/edit/:name',
+        component: './StarAnimals/edit',
+        name: 'starAnimals',
+        hideInMenu: true,
       },
       // 新闻管理
       {
