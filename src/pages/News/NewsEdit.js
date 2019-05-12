@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
-import { Form, Input, Button, Card, Select, Icon, Upload } from 'antd';
+import { Form, Input, Button, Card, Select, Icon, Upload, DatePicker  } from 'antd';
 
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 
@@ -81,6 +81,9 @@ class NewsEdit extends PureComponent {
                   },
                 ],
               })(<Input placeholder={formatMessage({ id: 'form.news.link.placeholder' })} />)}
+            </FormItem>
+            <FormItem {...formItemLayout} label={<FormattedMessage id="form.datepicker.label" />}>
+              <DatePicker showTime placeholder={formatMessage({ id: 'form.datepicker.placeholder' })} />
             </FormItem>
             <FormItem {...formItemLayout} label={<FormattedMessage id="form.thumbnail.label" />}>
               {getFieldDecorator('thumbnail', {

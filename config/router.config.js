@@ -49,16 +49,19 @@ export default [
           {
             path: '/home/partner',
             name: 'partner',
-            component: './Home/Partner',
             hideChildrenInMenu: true,
             routes: [
               {
-                path: '/home/slider/partner-add',
+                path: '/home/partner',
+                component: './Home/Partner',
+              },
+              {
+                path: '/home/partner/partner-add',
                 name: 'partner-add',
                 component: './Home/PartnerEdit',
               },
               {
-                path: '/home/slider/partner-edit',
+                path: '/home/partner/partner-edit',
                 name: 'partner-edit',
                 component: './Home/PartnerEdit',
               },

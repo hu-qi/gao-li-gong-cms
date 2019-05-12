@@ -3,6 +3,7 @@ import exception from './zh-CN/exception';
 import form from './zh-CN/form';
 import news from './zh-CN/news';
 import videos from './zh-CN/videos';
+import partner from './zh-CN/partner';
 import globalHeader from './zh-CN/globalHeader';
 import login from './zh-CN/login';
 import menu from './zh-CN/menu';
@@ -27,6 +28,7 @@ export default {
   ...exception,
   ...form,
   ...news,
+  ...partner,
   ...videos,
   ...globalHeader,
   ...login,

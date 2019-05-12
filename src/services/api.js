@@ -150,6 +150,14 @@ export async function deleteFakeSliders(params) {
   return request(`/api/delete_sliders?${stringify(params)}`);
 }
 
+export async function getFakePartners() {
+  return request(`/api/fake_partners`);
+}
+
+export async function deleteFakePartners(params) {
+  return request(`/api/delete_partners?${stringify(params)}`);
+}
+
 export async function queryBiologyList() {
   return request(`/api/queryBiologyList`);
 }

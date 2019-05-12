@@ -417,6 +417,45 @@ function deleteSliders(req, res) {
   return res.json(fakeSliders);
 }
 
+let fakePartners = [
+  {
+    id: Math.random() * 1000,
+    type: '主办方',
+    avatar: 'https://gw.alipayobjects.com/zos/rmsportal/dURIMkkrRFpPgTuzkwnB.png',
+    link: 'http://12345',
+  },
+  {
+    id: Math.random() * 1000,
+    type: '支持单位',
+    avatar: 'https://gw.alipayobjects.com/zos/rmsportal/dURIMkkrRFpPgTuzkwnB.png',
+    link: 'http://12345',
+  },
+  {
+    id: Math.random() * 1000,
+    type: '摄影师',
+    name: 'Richard',
+    link: 'http://12345',
+  },
+];
+
+function getPartners(req, res) {
+  return res.json(fakePartners);
+}
+
+function deletePartners(req, res) {
+  const params = req.query;
+
+  const id = params.id;
+
+  fakePartners.splice(
+    fakePartners.findIndex(el => {
+      return el.id === id;
+    })
+  );
+
+  return res.json(fakePartners);
+}
+
 function upload(req, res) {
   return res.json();
 }
@@ -439,5 +478,7 @@ export default {
   'GET /api/delete_videos': deleteNews,
   'GET /api/fake_sliders': getSliders,
   'GET /api/delete_sliders': deleteSliders,
+  'GET /api/fake_partners': getPartners,
+  'GET /api/delete_partners': deletePartners,
   'POST /api/upload': upload,
 };
