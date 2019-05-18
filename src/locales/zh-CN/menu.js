@@ -63,6 +63,9 @@ export default {
   // 'menu.videos.videos-add': '影视集锦新增',
   // 'menu.videos.videos-edit': '影视集锦编辑',
   'menu.biodiversity': '生物多样性',
+  'menu.timeline': '时间线',
+  'menu.timeline.timeline-add': '时间线新增',
+  'menu.timeline.timeline-edit': '时间线编辑',
   'menu.labels': '标签',
   'menu.aboutUs': '关于我们',
 };

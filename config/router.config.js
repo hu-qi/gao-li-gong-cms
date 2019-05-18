@@ -225,6 +225,29 @@ export default [
         hideInMenu: true,
         component: './Biodiversity/Biology',
       },
+      // 时间线
+      {
+        name: 'timeline',
+        icon: 'calendar',
+        hideChildrenInMenu: true,
+        path: '/timeline',
+        routes: [
+          {
+            path: '/timeline',
+            component: './Timeline/Timeline',
+          },
+          {
+            path: '/timeline/timeline-add',
+            name: 'timeline-add',
+            component: './Timeline/TimelineEdit',
+          },
+          {
+            path: '/timeline/timeline-edit/:id',
+            name: 'timeline-edit',
+            component: './Timeline/TimelineEdit',
+          }
+        ]
+      },
       // 标签
       {
         name: 'labels',

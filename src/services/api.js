@@ -157,6 +157,14 @@ export async function deleteFakePartners(params) {
   return request(`/api/delete_partners?${stringify(params)}`);
 }
 
+export async function getFakeTimelines() {
+  return request(`/api/fake_timelines`);
+}
+
+export async function deleteFakeTimeline(params) {
+  return request(`/api/delete_timeline?${stringify(params)}`);
+}
+
 export async function queryBiologyList() {
   return request(`/api/queryBiologyList`);
 }
