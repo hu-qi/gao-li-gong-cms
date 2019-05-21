@@ -1,4 +1,5 @@
 import mockjs from 'mockjs';
+import { debug } from 'util';
 
 const titles = [
   'Alipay',
@@ -481,6 +482,7 @@ function getTimelines(req, res) {
 }
 
 function deleteTimelines(req, res) {
+  console.dir(req);
   const params = req.query;
 
   const id = params.id;
@@ -518,7 +520,8 @@ export default {
   'GET /api/delete_sliders': deleteSliders,
   'GET /api/fake_partners': getPartners,
   'GET /api/delete_partners': deletePartners,
-  'GET /api/fake_timelines': getTimelines,
-  'GET /api/delete_timelines': deleteTimelines,
+  'GET /api/timeline': getTimelines,
+  'DELETE /api/timeline/{id}': deleteTimelines,
+  'POST /api/timeline': deleteTimelines,
   'POST /api/upload': upload,
 };

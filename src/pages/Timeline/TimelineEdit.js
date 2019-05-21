@@ -65,7 +65,7 @@ class TimelineEdit extends PureComponent {
                 valuePropName: 'fileList',
                 getValueFromEvent: this.normFile,
               })(
-                <Upload name="logo" action="/upload.do" listType="picture">
+                <Upload name="logo" action="/upload/image" listType="picture">
                   <Button>
                     <Icon type="upload" /> Click to upload
                   </Button>
