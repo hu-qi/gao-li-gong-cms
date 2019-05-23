@@ -20,6 +20,19 @@ class TimelineEdit extends PureComponent {
     return e && e.fileList;
   };
 
+  handleSubmit = e => {
+    const { dispatch, form } = this.props;
+    e.preventDefault();
+    form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        dispatch({
+          type: 'timeline/add',
+          payload: values,
+        });
+      }
+    });
+  };
+
   render() {
     const { submitting } = this.props;
     const {
@@ -50,24 +63,27 @@ class TimelineEdit extends PureComponent {
         <Card bordered={false}>
           <Form onSubmit={this.handleSubmit} hideRequiredMark style={{ marginTop: 8 }}>
             <FormItem {...formItemLayout} label={<FormattedMessage id="form.description.label" />}>
-              {
+              {getFieldDecorator('description')(
                 <TextArea
                   rows={4}
                   placeholder={formatMessage({ id: 'form.description.placeholder' })}
                 />
-              }
+              )}
             </FormItem>
             <FormItem {...formItemLayout} label={<FormattedMessage id="form.datepicker.label" />}>
-              <DatePicker placeholder={formatMessage({ id: 'form.datepicker.placeholder' })} />
+              {getFieldDecorator('time')(
+                <DatePicker placeholder={formatMessage({ id: 'form.datepicker.placeholder' })} />
+              )}
             </FormItem>
             <FormItem {...formItemLayout} label={<FormattedMessage id="form.thumbnail.label" />}>
-              {getFieldDecorator('thumbnail', {
+              {getFieldDecorator('imgUrl', {
                 valuePropName: 'fileList',
                 getValueFromEvent: this.normFile,
+                rules: [{}],
               })(
-                <Upload name="logo" action="/upload/image" listType="picture">
+                <Upload name="logo" action="/upload/image" listType="picture" accept="image/*">
                   <Button>
-                    <Icon type="upload" /> Click to upload
+                    <Icon type="upload" /> 点击上传
                   </Button>
                 </Upload>
               )}

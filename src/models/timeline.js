@@ -1,4 +1,6 @@
-import { getTimelines, deleteTimeline } from '@/services/api';
+import { routerRedux } from 'dva/router';
+import { message } from 'antd';
+import { getTimelines, deleteTimeline, addTimeline } from '@/services/api';
 
 export default {
   namespace: 'timeline',
@@ -21,6 +23,16 @@ export default {
         type: 'queryList',
         payload: Array.isArray(response) ? response : [],
       });
+    },
+    *add({ payload }, { call, put }) {
+      const response = yield call(addTimeline, payload);
+      debugger;
+      if (response.isError) {
+        message.error(response.error.message);
+      } else {
+        message.success('提交成功');
+        yield put(routerRedux.push('/timeline'));
+      }
     },
   },
 

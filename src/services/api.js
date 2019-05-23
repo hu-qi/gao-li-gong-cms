@@ -1,6 +1,10 @@
 import { stringify } from 'qs';
+import { extend } from 'umi-request';
 import request from '@/utils/request';
-request.baseUrl = 'www.baidu.com';
+import { debug } from 'util';
+extend({
+  mode: 'no-cors',
+});
 
 export async function queryProjectNotice() {
   return request('/api/project/notice');
@@ -163,11 +167,14 @@ export async function getTimelines() {
 }
 
 export async function deleteTimeline(params) {
-  return request(`/api/timeline/${params.id}`, {method: 'DELETE'});
+  return request(`/api/timeline/${params.id}`, { method: 'DELETE' });
 }
 
-export async function addTimeline() {
-  return request(`/api/timeline`);
+export async function addTimeline(params) {
+  return request(`/api/timeline`, {
+    method: 'POST',
+    data: params,
+  });
 }
 
 export async function queryBiologyList() {

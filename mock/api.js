@@ -461,13 +461,15 @@ let fakeTimelines = [
   {
     id: Math.random() * 1000,
     description: '主办方',
-    avatar: 'http://b.hiphotos.baidu.com/image/h%3D300/sign=92afee66fd36afc3110c39658318eb85/908fa0ec08fa513db777cf78376d55fbb3fbd9b3.jpg',
+    avatar:
+      'http://b.hiphotos.baidu.com/image/h%3D300/sign=92afee66fd36afc3110c39658318eb85/908fa0ec08fa513db777cf78376d55fbb3fbd9b3.jpg',
     timestamp: 'http://12345',
   },
   {
     id: Math.random() * 1000,
     description: '支持单位',
-    avatar: 'http://b.hiphotos.baidu.com/image/h%3D300/sign=92afee66fd36afc3110c39658318eb85/908fa0ec08fa513db777cf78376d55fbb3fbd9b3.jpg',
+    avatar:
+      'http://b.hiphotos.baidu.com/image/h%3D300/sign=92afee66fd36afc3110c39658318eb85/908fa0ec08fa513db777cf78376d55fbb3fbd9b3.jpg',
     timestamp: 'http://12345',
   },
   {
@@ -520,8 +522,8 @@ export default {
   'GET /api/delete_sliders': deleteSliders,
   'GET /api/fake_partners': getPartners,
   'GET /api/delete_partners': deletePartners,
-  'GET /api/timeline': getTimelines,
-  'DELETE /api/timeline/{id}': deleteTimelines,
-  'POST /api/timeline': deleteTimelines,
+  // 'GET /api/timeline': getTimelines,
+  // 'DELETE /api/timeline/{id}': deleteTimelines,
+  // 'POST /api/timeline': deleteTimelines,
   'POST /api/upload': upload,
 };
