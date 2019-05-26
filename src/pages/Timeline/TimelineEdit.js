@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
+import moment from 'moment';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
 import { Form, Input, Button, Card, DatePicker, Select, Icon, Upload } from 'antd';
 
@@ -25,9 +26,14 @@ class TimelineEdit extends PureComponent {
     e.preventDefault();
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
+        let {imgUrl, time, ...restValues} = values;
         dispatch({
           type: 'timeline/add',
-          payload: values,
+          payload: {
+            imgUrl: imgUrl[0].response,
+            time: time.format('YYYY-MM-DD h:mm:ss'),
+            ...restValues
+          },
         });
       }
     });
@@ -78,10 +84,9 @@ class TimelineEdit extends PureComponent {
             <FormItem {...formItemLayout} label={<FormattedMessage id="form.thumbnail.label" />}>
               {getFieldDecorator('imgUrl', {
                 valuePropName: 'fileList',
-                getValueFromEvent: this.normFile,
-                rules: [{}],
+                getValueFromEvent: this.normFile
               })(
-                <Upload name="logo" action="/upload/image" listType="picture" accept="image/*">
+                <Upload name="file" action="/api/upload/image" listType="picture" accept="image/*">
                   <Button>
                     <Icon type="upload" /> 点击上传
                   </Button>

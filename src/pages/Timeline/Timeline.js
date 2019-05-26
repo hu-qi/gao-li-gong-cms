@@ -58,7 +58,7 @@ class Timeline extends PureComponent {
                   <Card
                     hoverable
                     className={styles.card}
-                    cover={<img alt={item.title} src={item.avatar} />}
+                    cover={<img alt={item.title} src={item.imgUrl} />}
                     actions={[
                       <a onClick={() => this.toEditPage(item.id)}>编辑</a>,
                       <Popconfirm title="确定要删除吗?" onConfirm={() => this.delete(item.id)}>

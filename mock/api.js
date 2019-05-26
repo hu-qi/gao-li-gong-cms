@@ -525,5 +525,5 @@ export default {
   // 'GET /api/timeline': getTimelines,
   // 'DELETE /api/timeline/{id}': deleteTimelines,
   // 'POST /api/timeline': deleteTimelines,
-  'POST /api/upload': upload,
+  // 'POST /api/upload': upload,
 };

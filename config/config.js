@@ -79,7 +79,7 @@ export default {
   },
   proxy: [
     {
-      context: ['/api/', '/upload/image/'],
+      context: ['/api/', '/2019/'],
       target: 'http://47.96.116.169',
       changeOrigin: true,
     },

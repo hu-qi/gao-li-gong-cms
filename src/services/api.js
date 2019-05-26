@@ -130,12 +130,26 @@ export async function getFakeCaptcha(mobile) {
   return request(`/api/captcha?mobile=${mobile}`);
 }
 
-export async function getFakeNews() {
-  return request(`/api/fake_news`);
+export async function getNews(params) {
+  return request(`/api/news?page=${params.page}&size=${params.size}`);
 }
 
-export async function deleteFakeNews(params) {
-  return request(`/api/delete_news?${stringify(params)}`);
+export async function deleteNews(params) {
+  return request(`/api/news/${params.id}`, { method: 'DELETE' });
+}
+
+export async function changeNews(params) {
+  return request(`/api/news/${params.id}`, {
+    method: 'PUT',
+    data: params
+  });
+}
+
+export async function addNews(params) {
+  return request(`/api/news`, {
+    method: 'POST',
+    data: params,
+  });
 }
 
 export async function getFakeVideos() {

@@ -20,6 +20,29 @@ class NewsEdit extends PureComponent {
     }
     return e && e.fileList;
   };
+  componentDidMount() {
+    const {params} = this.props.match;
+    const {dispatch} = this.props;
+    if (params.id) {
+      // dispatch({
+      //   type: 'news/add',
+      //   payload: values,
+      // });
+    }
+  }
+
+  handleSubmit = e => {
+    const { dispatch, form } = this.props;
+    e.preventDefault();
+    form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        dispatch({
+          type: 'news/add',
+          payload: values,
+        });
+      }
+    });
+  };
 
   render() {
     const { submitting } = this.props;
@@ -50,12 +73,12 @@ class NewsEdit extends PureComponent {
       <PageHeaderWrapper>
         <Card bordered={false}>
           <Form onSubmit={this.handleSubmit} hideRequiredMark style={{ marginTop: 8 }}>
-            <FormItem {...formItemLayout} label={<FormattedMessage id="form.title.label" />}>
+            <FormItem {...formItemLayout} label={<FormattedMessage id="form.news.title.label" />}>
               {getFieldDecorator('title', {
                 rules: [
                   {
                     required: true,
-                    message: formatMessage({ id: 'validation.title.required' }),
+                    message: formatMessage({ id: 'validation.news.title.required' }),
                   },
                 ],
               })(<Input placeholder={formatMessage({ id: 'form.news.title.placeholder' })} />)}
@@ -64,12 +87,16 @@ class NewsEdit extends PureComponent {
               {...formItemLayout}
               label={<FormattedMessage id="form.news.description.label" />}
             >
-              {
-                <TextArea
+              {getFieldDecorator('brief', {
+                rules: [{
+                  required: true,
+                  message: formatMessage({ id: 'validation.news.description.required' }),
+                }]
+              })(<TextArea
                   rows={4}
                   placeholder={formatMessage({ id: 'form.news.description.placeholder' })}
                 />
-              }
+              )}
             </FormItem>
             <FormItem {...formItemLayout} label={<FormattedMessage id="form.news.link.label" />}>
               {getFieldDecorator('link', {
@@ -83,7 +110,9 @@ class NewsEdit extends PureComponent {
               })(<Input placeholder={formatMessage({ id: 'form.news.link.placeholder' })} />)}
             </FormItem>
             <FormItem {...formItemLayout} label={<FormattedMessage id="form.datepicker.label" />}>
-              <DatePicker showTime placeholder={formatMessage({ id: 'form.datepicker.placeholder' })} />
+              {getFieldDecorator('time')(
+                <DatePicker showTime placeholder={formatMessage({ id: 'form.datepicker.placeholder' })} />
+              )}
             </FormItem>
             <FormItem {...formItemLayout} label={<FormattedMessage id="form.thumbnail.label" />}>
               {getFieldDecorator('thumbnail', {
@@ -92,7 +121,7 @@ class NewsEdit extends PureComponent {
               })(
                 <Upload name="logo" action="/upload/image" listType="picture">
                   <Button>
-                    <Icon type="upload" /> Click to upload
+                    <Icon type="upload" /> 点击上传
                   </Button>
                 </Upload>
               )}

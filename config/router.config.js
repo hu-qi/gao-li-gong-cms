@@ -179,7 +179,7 @@ export default [
             component: './News/NewsEdit',
           },
           {
-            path: '/news/news-edit/:id',
+            path: '/news/news-edit/id/:id',
             name: 'news-edit',
             component: './News/NewsEdit',
           },
@@ -242,7 +242,7 @@ export default [
             component: './Timeline/TimelineEdit',
           },
           {
-            path: '/timeline/timeline-edit/:id',
+            path: '/timeline/timeline-edit/id/:id',
             name: 'timeline-edit',
             component: './Timeline/TimelineEdit',
           },

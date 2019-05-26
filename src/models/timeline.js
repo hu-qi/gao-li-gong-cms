@@ -12,21 +12,28 @@ export default {
   effects: {
     *fetch({ payload }, { call, put }) {
       const response = yield call(getTimelines, payload);
-      yield put({
-        type: 'queryList',
-        payload: Array.isArray(response) ? response : [],
-      });
+      if (response.isError) {
+        message.error(response.error.message);
+      } else {
+        const data = response.data;
+        yield put({
+          type: 'queryList',
+          payload: Array.isArray(data) ? data : [],
+        });
+      }
     },
     *delete({ payload }, { call, put }) {
       const response = yield call(deleteTimeline, payload);
-      yield put({
-        type: 'queryList',
-        payload: Array.isArray(response) ? response : [],
-      });
+      if (response.isError) {
+        message.error(response.error.message);
+      } else {
+        yield put({
+          type: 'fetch'
+        });
+      }
     },
     *add({ payload }, { call, put }) {
       const response = yield call(addTimeline, payload);
-      debugger;
       if (response.isError) {
         message.error(response.error.message);
       } else {

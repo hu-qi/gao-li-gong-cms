@@ -6,18 +6,28 @@ import { connect } from 'dva';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import ArticleListContent from '@/components/ArticleListContent';
 import styles from './NewsList.less';
+import { debug } from 'util';
 
 @connect(({ news, loading }) => ({
-  list: news,
+  ...news,
   loading: loading.models.list,
 }))
+
 class NewsList extends PureComponent {
+  state = {
+    pagination: {
+      current: 1,
+      pageSize: 6
+    }
+  }
   componentDidMount() {
     const { dispatch } = this.props;
+    const { pagination } = this.state;
     dispatch({
       type: 'news/fetch',
       payload: {
-        count: 10,
+        page: pagination.current,
+        size: pagination.pageSize
       },
     });
   }
@@ -31,30 +41,56 @@ class NewsList extends PureComponent {
   };
 
   delete = id => {
-    const { dispatch } = this.props;
+    const { 
+      dispatch,
+      list,
+    } = this.props;
+    const { pagination } = this.state;
     dispatch({
       type: 'news/delete',
       payload: {
         id,
+        list,
+        pagination
       },
+    });
+  };
+  handleStandardTableChange = pagination => {
+    const { dispatch } = this.props;
+    const { formValues } = this.state;
+
+    const params = {
+      page: pagination.current,
+      size: pagination.pageSize,
+    };
+
+    dispatch({
+      type: 'news/fetch',
+      payload: params,
     });
   };
 
   render() {
     const {
-      list: { list },
+      list,
+      pagination,
       loading,
     } = this.props;
+    if (pagination) {
+      this.setState({
+        pagination: pagination
+      })
+    }
 
     const columns = [
       {
         title: '标题',
-        key: 'title',
+        width: 200,
         dataIndex: 'title',
       },
       {
         title: '摘要',
-        dataIndex: 'desciription',
+        dataIndex: 'brief',
       },
       {
         title: '外链',
@@ -63,6 +99,7 @@ class NewsList extends PureComponent {
       {
         title: '操作',
         dataIndex: 'action',
+        width: 120,
         render: (text, record) => (
           <span>
             <a onClick={() => this.toEditPage(record.id)}>编辑</a>
@@ -85,7 +122,13 @@ class NewsList extends PureComponent {
           bordered={false}
           bodyStyle={{ padding: '8px 32px 32px 32px' }}
         >
-          <Table columns={columns} dataSource={list} />
+          <Table
+            rowKey="id"
+            columns={columns}
+            dataSource={list}
+            pagination={this.state.pagination}
+            onChange={this.handleStandardTableChange}
+          />
         </Card>
       </PageHeaderWrapper>
     );
