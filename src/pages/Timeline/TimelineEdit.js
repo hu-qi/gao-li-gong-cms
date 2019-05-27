@@ -21,6 +21,18 @@ class TimelineEdit extends PureComponent {
     return e && e.fileList;
   };
 
+  beforeUpload = file => {
+    const isJPG = file.type.indexOf('image/') > -1;
+    if (!isJPG) {
+      message.error('仅支持上传图片');
+    }
+    const isLt1M = file.size / 1024 / 1024 <= 1;
+    if (!isLt1M) {
+      message.error('图片大小必须小于 1MB!');
+    }
+    return isJPG && isLt1M;
+  }
+
   handleSubmit = e => {
     const { dispatch, form } = this.props;
     e.preventDefault();
@@ -86,7 +98,13 @@ class TimelineEdit extends PureComponent {
                 valuePropName: 'fileList',
                 getValueFromEvent: this.normFile
               })(
-                <Upload name="file" action="/api/upload/image" listType="picture" accept="image/*">
+                <Upload
+                  name="file"
+                  action="/api/upload/image"
+                  listType="picture"
+                  accept="image/*"
+                  beforeUpload={this.beforeUpload}
+                >
                   <Button>
                     <Icon type="upload" /> 点击上传
                   </Button>

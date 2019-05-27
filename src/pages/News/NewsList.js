@@ -17,7 +17,8 @@ class NewsList extends PureComponent {
   state = {
     pagination: {
       current: 1,
-      pageSize: 6
+      pageSize: 10,
+      showSizeChanger: true
     }
   }
   componentDidMount() {

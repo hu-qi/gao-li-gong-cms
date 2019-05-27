@@ -12,6 +12,7 @@ const FormItem = Form.Item;
 @connect(({ loading }) => ({
   submitting: loading.effects['form/submitRegularForm'],
 }))
+
 @Form.create()
 class NewsEdit extends PureComponent {
   normFile = e => {
@@ -31,14 +32,31 @@ class NewsEdit extends PureComponent {
     }
   }
 
+  beforeUpload = file => {
+    const isJPG = file.type.indexOf('image/') > -1;
+    if (!isJPG) {
+      message.error('仅支持上传图片');
+    }
+    const isLt1M = file.size / 1024 / 1024 <= 1;
+    if (!isLt1M) {
+      message.error('图片大小必须小于 1MB!');
+    }
+    return isJPG && isLt1M;
+  }
+
   handleSubmit = e => {
     const { dispatch, form } = this.props;
     e.preventDefault();
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
+        let {thumbnail, time, ...restValues} = values;
         dispatch({
           type: 'news/add',
-          payload: values,
+          payload: {
+            thumbnail: thumbnail ? thumbnail[0].response : '',
+            time: time ? time.format('YYYY-MM-DD h:mm:ss') : '',
+            ...restValues
+          },
         });
       }
     });
@@ -119,7 +137,13 @@ class NewsEdit extends PureComponent {
                 valuePropName: 'fileList',
                 getValueFromEvent: this.normFile,
               })(
-                <Upload name="logo" action="/upload/image" listType="picture">
+                <Upload
+                  name="file"
+                  action="/api/upload/image"
+                  listType="picture"
+                  accept="image/*"
+                  beforeUpload={this.beforeUpload}
+                >
                   <Button>
                     <Icon type="upload" /> 点击上传
                   </Button>
