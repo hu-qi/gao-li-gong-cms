@@ -9,17 +9,37 @@ const FormItem = Form.Item;
 
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 
-@connect(({ loading }) => ({
+@connect(({ timeline, loading }) => ({
+  ...timeline,
   submitting: loading.effects['form/submitRegularForm'],
 }))
 @Form.create()
 class TimelineEdit extends PureComponent {
+  state = {
+    id: null
+  }
   normFile = e => {
     if (Array.isArray(e)) {
       return e;
     }
     return e && e.fileList;
   };
+
+  componentDidMount() {
+    const {params} = this.props.match;
+    const {dispatch} = this.props;
+    if (params.id) {
+      this.setState({
+        id: params.id
+      })
+      dispatch({
+        type: 'timeline/get',
+        payload: {
+          id: params.id
+        },
+      });
+    }
+  }
 
   beforeUpload = file => {
     const isJPG = file.type.indexOf('image/') > -1;
@@ -39,10 +59,11 @@ class TimelineEdit extends PureComponent {
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         let {imgUrl, time, ...restValues} = values;
+        const type = id ? 'timeline/modify' : 'timeline/add';
         dispatch({
-          type: 'timeline/add',
+          type: type,
           payload: {
-            imgUrl: imgUrl[0].response,
+            imgUrl: imgUrl && imgUrl.length ? imgUrl[0].response : '',
             time: time.format('YYYY-MM-DD h:mm:ss'),
             ...restValues
           },
@@ -55,6 +76,9 @@ class TimelineEdit extends PureComponent {
     const { submitting } = this.props;
     const {
       form: { getFieldDecorator, getFieldValue },
+      description,
+      imgUrl,
+      time
     } = this.props;
 
     const formItemLayout = {
@@ -81,7 +105,15 @@ class TimelineEdit extends PureComponent {
         <Card bordered={false}>
           <Form onSubmit={this.handleSubmit} hideRequiredMark style={{ marginTop: 8 }}>
             <FormItem {...formItemLayout} label={<FormattedMessage id="form.description.label" />}>
-              {getFieldDecorator('description')(
+              {getFieldDecorator('description', {
+                initialValue: description,
+                rules: [
+                  {
+                    required: true,
+                    message: formatMessage({ id: 'validation.timeline.description.required' }),
+                  },
+                ],
+              })(
                 <TextArea
                   rows={4}
                   placeholder={formatMessage({ id: 'form.description.placeholder' })}
@@ -89,7 +121,15 @@ class TimelineEdit extends PureComponent {
               )}
             </FormItem>
             <FormItem {...formItemLayout} label={<FormattedMessage id="form.datepicker.label" />}>
-              {getFieldDecorator('time')(
+              {getFieldDecorator('time', {
+                initialValue: moment(time, 'YYYY-MM-DD'),
+                rules: [
+                  {
+                    required: true,
+                    message: formatMessage({ id: 'form.datepicker.required' }),
+                  },
+                ],
+              })(
                 <DatePicker placeholder={formatMessage({ id: 'form.datepicker.placeholder' })} />
               )}
             </FormItem>

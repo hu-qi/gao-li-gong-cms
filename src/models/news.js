@@ -1,6 +1,7 @@
 import { routerRedux } from 'dva/router';
 import { message } from 'antd';
-import { getNews, deleteNews, addNews, changeNews } from '@/services/api';
+import { getNews, getNewsById, deleteNews, addNews, changeNews } from '@/services/api';
+import { debug } from 'util';
 
 export default {
   namespace: 'news',
@@ -26,6 +27,17 @@ export default {
               total: response.data.total
             }
           }
+        });
+      }
+    },
+    *get({ payload }, { call, put }) {
+      const response = yield call(getNewsById, payload);
+      if (response.isError) {
+        message.error(response.error.message);
+      } else {
+        yield put({
+          type: 'queryNews',
+          payload: response.data
         });
       }
     },
@@ -72,6 +84,12 @@ export default {
 
   reducers: {
     queryList(state, action) {
+      return {
+        ...state,
+        ...action.payload,
+      };
+    },
+    queryNews(state, action) {
       return {
         ...state,
         ...action.payload,

@@ -134,6 +134,10 @@ export async function getNews(params) {
   return request(`/api/news?page=${params.page}&size=${params.size}`);
 }
 
+export async function getNewsById(params) {
+  return request(`/api/news/${params.id}`);
+}
+
 export async function deleteNews(params) {
   return request(`/api/news/${params.id}`, { method: 'DELETE' });
 }
@@ -180,6 +184,10 @@ export async function getTimelines() {
   return request(`/api/timeline`);
 }
 
+export async function getTimelineById(params) {
+  return request(`/api/timeline/${params.id}`);
+}
+
 export async function deleteTimeline(params) {
   return request(`/api/timeline/${params.id}`, { method: 'DELETE' });
 }
@@ -188,6 +196,13 @@ export async function addTimeline(params) {
   return request(`/api/timeline`, {
     method: 'POST',
     data: params,
+  });
+}
+
+export async function changeTimeline(params) {
+  return request(`/api/timeline/${params.id}`, {
+    method: 'PUT',
+    data: params
   });
 }
 

@@ -73,7 +73,7 @@ class Timeline extends PureComponent {
                         </Ellipsis>
                       }
                     />
-                    <span>{moment(item.updatedAt).fromNow()}</span>
+                    <span>{moment(item.time).format('YYYY-MM-DD')}</span>
                   </Card>
                 </List.Item>
               ) : (

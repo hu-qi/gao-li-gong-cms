@@ -9,12 +9,16 @@ const { TextArea } = Input;
 
 const FormItem = Form.Item;
 
-@connect(({ loading }) => ({
+@connect(({ news, loading }) => ({
+  ...news,
   submitting: loading.effects['form/submitRegularForm'],
 }))
 
 @Form.create()
 class NewsEdit extends PureComponent {
+  state = {
+    id: null
+  }
   normFile = e => {
     if (Array.isArray(e)) {
       return e;
@@ -25,10 +29,15 @@ class NewsEdit extends PureComponent {
     const {params} = this.props.match;
     const {dispatch} = this.props;
     if (params.id) {
-      // dispatch({
-      //   type: 'news/add',
-      //   payload: values,
-      // });
+      this.setState({
+        id: params.id
+      })
+      dispatch({
+        type: 'news/get',
+        payload: {
+          id: params.id
+        },
+      });
     }
   }
 
@@ -45,14 +54,16 @@ class NewsEdit extends PureComponent {
   }
 
   handleSubmit = e => {
-    const { dispatch, form } = this.props;
+    const { dispatch, form, id } = this.props;
     e.preventDefault();
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         let {thumbnail, time, ...restValues} = values;
+        const type = id ? 'news/modify' : 'news/add';
         dispatch({
-          type: 'news/add',
+          type: type,
           payload: {
+            id: id,
             thumbnail: thumbnail ? thumbnail[0].response : '',
             time: time ? time.format('YYYY-MM-DD h:mm:ss') : '',
             ...restValues
@@ -66,6 +77,11 @@ class NewsEdit extends PureComponent {
     const { submitting } = this.props;
     const {
       form: { getFieldDecorator, getFieldValue },
+      title,
+      brief,
+      link,
+      time,
+      thumbnail
     } = this.props;
 
     const formItemLayout = {
@@ -93,6 +109,7 @@ class NewsEdit extends PureComponent {
           <Form onSubmit={this.handleSubmit} hideRequiredMark style={{ marginTop: 8 }}>
             <FormItem {...formItemLayout} label={<FormattedMessage id="form.news.title.label" />}>
               {getFieldDecorator('title', {
+                initialValue: title,
                 rules: [
                   {
                     required: true,
@@ -106,6 +123,7 @@ class NewsEdit extends PureComponent {
               label={<FormattedMessage id="form.news.description.label" />}
             >
               {getFieldDecorator('brief', {
+                initialValue: brief,
                 rules: [{
                   required: true,
                   message: formatMessage({ id: 'validation.news.description.required' }),
@@ -118,6 +136,7 @@ class NewsEdit extends PureComponent {
             </FormItem>
             <FormItem {...formItemLayout} label={<FormattedMessage id="form.news.link.label" />}>
               {getFieldDecorator('link', {
+                initialValue: link,
                 rules: [
                   {
                     type: 'url',
@@ -128,7 +147,9 @@ class NewsEdit extends PureComponent {
               })(<Input placeholder={formatMessage({ id: 'form.news.link.placeholder' })} />)}
             </FormItem>
             <FormItem {...formItemLayout} label={<FormattedMessage id="form.datepicker.label" />}>
-              {getFieldDecorator('time')(
+              {getFieldDecorator('time', {
+                initialValue: time
+              })(
                 <DatePicker showTime placeholder={formatMessage({ id: 'form.datepicker.placeholder' })} />
               )}
             </FormItem>

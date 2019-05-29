@@ -14,6 +14,7 @@ export default {
   'form.date.label': '起止日期',
   'form.datepicker.label': '日期',
   'form.datepicker.placeholder': '请选择日期',
+  'form.datepicker.required': '请选择日期',
   'form.date.placeholder.start': '开始日期',
   'form.date.placeholder.end': '结束日期',
   'form.goal.label': '物种简介',

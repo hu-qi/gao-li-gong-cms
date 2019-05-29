@@ -1,6 +1,6 @@
 import { routerRedux } from 'dva/router';
 import { message } from 'antd';
-import { getTimelines, deleteTimeline, addTimeline } from '@/services/api';
+import { getTimelines, getTimelineById, deleteTimeline, addTimeline, changeTimeline } from '@/services/api';
 
 export default {
   namespace: 'timeline',
@@ -19,6 +19,17 @@ export default {
         yield put({
           type: 'queryList',
           payload: Array.isArray(data) ? data : [],
+        });
+      }
+    },
+    *get({ payload }, { call, put }) {
+      const response = yield call(getTimelineById, payload);
+      if (response.isError) {
+        message.error(response.error.message);
+      } else {
+        yield put({
+          type: 'queryTimeline',
+          payload: response.data
         });
       }
     },
@@ -41,6 +52,15 @@ export default {
         yield put(routerRedux.push('/timeline'));
       }
     },
+    *modify({ payload }, { call, put }) {
+      const response = yield call(changeTimeline, payload);
+      if (response.isError) {
+        message.error(response.error.message);
+      } else {
+        message.success('修改成功');
+        yield put(routerRedux.push('/news'));
+      }
+    },
   },
 
   reducers: {
@@ -48,6 +68,12 @@ export default {
       return {
         ...state,
         list: action.payload,
+      };
+    },
+    queryTimeline(state, action) {
+      return {
+        ...state,
+        ...action.payload,
       };
     },
   },
