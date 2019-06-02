@@ -54,7 +54,7 @@ class TimelineEdit extends PureComponent {
   }
 
   handleSubmit = e => {
-    const { dispatch, form } = this.props;
+    const { dispatch, form, id } = this.props;
     e.preventDefault();
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
@@ -63,7 +63,9 @@ class TimelineEdit extends PureComponent {
         dispatch({
           type: type,
           payload: {
-            imgUrl: imgUrl && imgUrl.length ? imgUrl[0].response : '',
+            id: id,
+            // imgUrl: imgUrl && imgUrl.length ? imgUrl[0].response : '',
+            imgUrl: imgUrl && imgUrl.length && imgUrl[0],
             time: time.format('YYYY-MM-DD h:mm:ss'),
             ...restValues
           },
@@ -122,7 +124,7 @@ class TimelineEdit extends PureComponent {
             </FormItem>
             <FormItem {...formItemLayout} label={<FormattedMessage id="form.datepicker.label" />}>
               {getFieldDecorator('time', {
-                initialValue: moment(time, 'YYYY-MM-DD'),
+                initialValue: time ? moment(time, 'YYYY-MM-DD') : null,
                 rules: [
                   {
                     required: true,

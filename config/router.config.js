@@ -40,7 +40,7 @@ export default [
                 component: './Home/SliderEdit',
               },
               {
-                path: '/home/slider/slider-edit/:id',
+                path: '/home/slider/slider-edit/id/:id',
                 name: 'slider-edit',
                 component: './Home/SliderEdit',
               },
@@ -61,7 +61,7 @@ export default [
                 component: './Home/PartnerEdit',
               },
               {
-                path: '/home/partner/partner-edit',
+                path: '/home/partner/partner-edit/id/:id',
                 name: 'partner-edit',
                 component: './Home/PartnerEdit',
               },

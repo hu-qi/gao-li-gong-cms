@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
+import moment from 'moment';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
 import { Form, Input, Button, Card, Select, Icon, Upload, DatePicker  } from 'antd';
 
@@ -64,7 +65,7 @@ class NewsEdit extends PureComponent {
           type: type,
           payload: {
             id: id,
-            thumbnail: thumbnail ? thumbnail[0].response : '',
+            thumbnail: thumbnail && thumbnail.length && JSON.stringify(thumbnail[0]),
             time: time ? time.format('YYYY-MM-DD h:mm:ss') : '',
             ...restValues
           },
@@ -148,7 +149,7 @@ class NewsEdit extends PureComponent {
             </FormItem>
             <FormItem {...formItemLayout} label={<FormattedMessage id="form.datepicker.label" />}>
               {getFieldDecorator('time', {
-                initialValue: time
+                initialValue: time ? moment(time) : null
               })(
                 <DatePicker showTime placeholder={formatMessage({ id: 'form.datepicker.placeholder' })} />
               )}

@@ -38,6 +38,7 @@ export default {
       if (response.isError) {
         message.error(response.error.message);
       } else {
+        message.success("删除成功");
         yield put({
           type: 'fetch'
         });
@@ -58,7 +59,7 @@ export default {
         message.error(response.error.message);
       } else {
         message.success('修改成功');
-        yield put(routerRedux.push('/news'));
+        yield put(routerRedux.push('/timeline'));
       }
     },
   },

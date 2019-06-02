@@ -172,12 +172,30 @@ export async function deleteFakeSliders(params) {
   return request(`/api/delete_sliders?${stringify(params)}`);
 }
 
-export async function getFakePartners() {
-  return request(`/api/fake_partners`);
+export async function getPartners() {
+  return request(`/api/partners/list`);
 }
 
-export async function deleteFakePartners(params) {
-  return request(`/api/delete_partners?${stringify(params)}`);
+export async function getPartnerById(params) {
+  return request(`/api/partner/${params.id}`);
+}
+
+export async function deletePartner(params) {
+  return request(`/api/partner/${params.id}`, { method: 'DELETE' });
+}
+
+export async function addPartner(params) {
+  return request(`/api/partner`, {
+    method: 'POST',
+    data: params,
+  });
+}
+
+export async function changePartner(params) {
+  return request(`/api/partner/${params.id}`, {
+    method: 'PUT',
+    data: params
+  });
 }
 
 export async function getTimelines() {

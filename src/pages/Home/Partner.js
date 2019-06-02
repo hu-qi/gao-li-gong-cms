@@ -66,12 +66,7 @@ class Partner extends PureComponent {
                   >
                     <Card.Meta
                       avatar={<img alt="" className={styles.cardAvatar} src={item.avatar} />}
-                      title={item.type}
-                      description={
-                        <Ellipsis className={styles.item} lines={3}>
-                          {item.name}
-                        </Ellipsis>
-                      }
+                      title={item.description}
                     />
                   </Card>
                 </List.Item>
