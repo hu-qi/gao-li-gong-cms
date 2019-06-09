@@ -243,3 +243,49 @@ export async function getStarAnimals() {
 export async function getStarAnimalByName(name) {
   return request(`/api/starAnimals/${name}`);
 }
+
+
+/**
+ * 获取用户列表信息, 同时支持nickname和姓名的模糊查询
+ * @param params
+ * @returns {Promise<void>}
+ */
+export async function userList(params) {
+  return request(`/api/users/list?${stringify(params)}`);
+}
+
+/**
+ * 新增用户
+ * @param params
+ * @returns {Promise<void>}
+ */
+export async function userPost(params) {
+  return request(`/api/users`, {
+    method: 'POST',
+    data: params,
+  });
+}
+
+/**
+ * 修改用户
+ * @param params
+ * @returns {Promise<void>}
+ */
+export async function userPut(params) {
+  return request(`/api/users/${params.id}`, {
+    method: 'PUT',
+    data: params,
+  });
+}
+
+/**
+ * 删除用户
+ * @param params
+ * @returns {Promise<void>}
+ */
+export async function userDelete(params) {
+  return request(`/api/users/${params.id}`, {
+    method: 'DELETE',
+  });
+}
+
