@@ -4,28 +4,30 @@ export default {
   namespace: 'biology',
 
   state: {
-    data: {
-      list: [],
-      pagination: {},
-      biology: {},
-      classify: {},
-    } ,
+    list: [],
+    pagination: {},
+    biology: {},
+    classify: {},
   },
 
   effects: {
     *fetch({ payload }, { call, put }) {
-      const response = yield call(queryBiologyList, payload);
+      const {
+        data: { dateList: list = [], total} = {},
+      } = yield call(queryBiologyList, payload);
+
       yield put({
         type: 'queryList',
-        payload: response,
+        payload: list,
       });
     },
 
     *fetchBiologyById({ payload }, { call, put }) {
-      const response = yield call(getBiologyById, payload);
+      const { data } = yield call(getBiologyById, payload);
+
       yield put({
         type: 'getBiologyById',
-        payload: response,
+        payload: data,
       });
     },
 
