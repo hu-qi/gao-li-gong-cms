@@ -1,73 +1,65 @@
 import React, { Component } from 'react';
-import router from 'umi/router';
 import { connect } from 'dva';
 import { Input } from 'antd';
+import Debounce from 'lodash-decorators/debounce';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import GroupList from './GroupList';
+import { tabList } from './constant';
 
 @connect()
 class SearchList extends Component {
-  handleTabChange = key => {
-    const { match } = this.props;
-    switch (key) {
-      case 'articles':
-        router.push(`${match.url}/articles`);
-        break;
-      case 'applications':
-        router.push(`${match.url}/applications`);
-        break;
-      case 'projects':
-        router.push(`${match.url}/projects`);
-        break;
-      default:
-        break;
-    }
+  state = {
+    activeTabKey: tabList[0].key,
+    searchVal: null,
+  };
+  
+  handleTabChange = activeTabKey => {
+    this.setState({
+      activeTabKey,
+      searchVal: null
+    });
   };
 
-  handleFormSubmit = value => {
-    // eslint-disable-next-line
-    console.log(value);
+  @Debounce(200)
+  handleSearchSubmit = () => {
+    this.child.fetchData();
+  };
+
+  handleSearchChange(searchVal) {
+    this.setState({ searchVal },
+      this.handleSearchSubmit
+    );
   };
 
   render() {
-    const tabList = [
-      {
-        key: 'protection',
-        tab: '保护等级',
-      },
-      {
-        key: 'endangered',
-        tab: '濒危等级',
-      },
-      {
-        key: 'Species',
-        tab: '物种分类',
-      },
-    ];
+    const { 
+      activeTabKey,
+      searchVal,
+    } = this.state;
 
     const mainSearch = (
       <div style={{ textAlign: 'center' }}>
         <Input.Search
-          placeholder="请输入"
-          enterButton="搜索"
-          size="large"
-          onSearch={this.handleFormSubmit}
+          placeholder='请输入标签关键字'
+          enterButton='搜索'
+          size='large'
+          value={searchVal}
+          onChange={e => this.handleSearchChange(e.target.value)}
+          onSearch={this.handleSearchSubmit}
           style={{ width: 522 }}
         />
       </div>
     );
 
-    const { match, children, location } = this.props;
-
     return (
       <PageHeaderWrapper
-        title="搜索标签"
+        title='搜索标签'
         content={mainSearch}
         tabList={tabList}
-        tabActiveKey="protection"
+        tabActiveKey={activeTabKey}
         onTabChange={this.handleTabChange}
       >
-        <GroupList />
+        <GroupList onRef={ref => void (this.child = ref)} tabActiveKey={activeTabKey} searchVal={searchVal} />
       </PageHeaderWrapper>
     );
   }

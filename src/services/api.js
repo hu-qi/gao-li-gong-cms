@@ -224,13 +224,7 @@ export async function changeTimeline(params) {
   });
 }
 
-export async function queryBiologyList() {
-  return request(`/api/queryBiologyList`);
-}
 
-export async function getBiologyById(params) {
-  return request(`/api/getBiologyById`);
-}
 
 export async function getClassify() {
   return request(`/api/getClassify`);
@@ -286,6 +280,66 @@ export async function userPut(params) {
 export async function userDelete(params) {
   return request(`/api/users/${params.id}`, {
     method: 'DELETE',
+  });
+}
+
+/**
+ * 生物多样性 列表查
+ * @param params
+ * @returns {Promise<void>}
+ */
+export async function queryBiologyList(params) {
+  return request(`/api/biodiversity/list?${stringify(params)}`);
+}
+
+/**
+ * 生物多样性 个体查
+ * @param params
+ * @returns {Promise<void>}
+ */
+export async function getBiologyById({id}) {
+  return request(`/api/biodiversity/${id}`);
+}
+
+/**
+ * 标签查
+ * @param params { name, type, page, size }
+ * @returns {Promise<void>}
+ */
+export async function queryLabelList(params) {
+  return request(`/api/label/list?${stringify(params)}`);
+}
+
+/**
+ * 标签 增
+ * @param params
+ * @returns {Promise<void>}
+ */
+export async function postLabel(params) {
+  return request(`/api/label`, {
+    method: 'POST',
+    data: params,
+  });
+}
+
+/**
+ * 标签 删
+ * @param id
+ * @returns {Promise<void>}
+ */
+export async function delLabel({ id }) {
+  return request(`/api/label/${id}`);
+}
+
+/**
+ * 标签 改
+ * @param params
+ * @returns {Promise<void>}
+ */
+export async function putLabel(params) {
+  return request(`/api/label`, {
+    method: 'PUT',
+    data: params,
   });
 }
 

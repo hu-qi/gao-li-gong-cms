@@ -36,6 +36,7 @@ module.exports = {
     'no-plusplus': 0,
     'one-var': 0,
     'no-param-reassign': 0,
+    'no-void': 0,
   },
   settings: {
     polyfills: ['fetch', 'promises', 'url', 'object-assign'],

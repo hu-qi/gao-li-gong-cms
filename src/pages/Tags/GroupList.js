@@ -1,11 +1,11 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva/index';
 import { Form, Card, Icon, List, Button } from 'antd/lib/index';
-
+import { tabList } from './constant';
 import styles from './GroupList.less';
 
-@connect(({ list, loading }) => ({
-  list,
+@connect(({ tags, loading }) => ({
+  tags,
   loading: loading.models.list,
 }))
 @Form.create({
@@ -15,27 +15,50 @@ import styles from './GroupList.less';
     console.log(changedValues, allValues);
     // 模拟查询表单生效
     dispatch({
-      type: 'list/fetch',
+      type: 'tags/fetch',
       payload: {
-        count: 8,
+        // type: tabList.find(({ key }) => key === tabActiveKey).tab
       },
     });
   },
 })
 class FilterCardList extends PureComponent {
+  state = {
+    tabActiveKey: null,
+  };
+
   componentDidMount() {
-    const { dispatch } = this.props;
+    const { tabActiveKey, onRef } = this.props;
+
+    onRef(this);
+    this.setState({ tabActiveKey }, this.fetchData);
+  }
+
+  componentWillReceiveProps(props) {
+    const { tabActiveKey } = props;
+    const {
+      tabActiveKey: curTabActiveKey
+    } = this.state;
+
+    if (curTabActiveKey === tabActiveKey) return;
+
+    this.setState( { tabActiveKey }, this.fetchData);
+  }
+
+  fetchData() {
+    const { dispatch, searchVal: name } = this.props;
+    const { tabActiveKey } = this.state;
+    const { tab: type } = tabList.find(({ key }) => key === tabActiveKey) || {};
+
     dispatch({
-      type: 'list/fetch',
-      payload: {
-        count: 8,
-      },
+      type: 'tags/fetch',
+      payload: { type, name },
     });
   }
 
   render() {
     const {
-      list: { list },
+      tags: { list },
       loading,
     } = this.props;
 
@@ -51,12 +74,12 @@ class FilterCardList extends PureComponent {
             <List.Item key={item.id}>
               <Card actions={[<Icon type="bg-colors" />, <Icon type="font-colors" />, <Icon type="ordered-list" />, <Icon type="ellipsis" />]}>
                 <Card.Meta
-                  avatar={<Button shape="round" type="primary">Primary</Button>}
+                  avatar={<Button shape="round" type="primary">{item.name}</Button>}
                 />
               </Card>
             </List.Item>
           )}
-        />p
+        />
       </div>
     );
   }
