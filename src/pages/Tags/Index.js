@@ -69,7 +69,6 @@ class SearchList extends Component {
   };
 
   renderNewTag() {
-    console.log(111, this.child.ref.state)
     const { dispatch } = this.props;
     const { newTag } = this.state;
     const {
