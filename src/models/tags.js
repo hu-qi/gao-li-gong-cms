@@ -23,21 +23,30 @@ export default {
 
     *add({ payload, callback = () => void 0 }, { call, put }) {
       yield call(postLabel, payload);
-      yield put();
+      yield put({
+        type: 'fetch',
+        payload: { type: payload.type },
+      });
 
       callback();
     },
 
     *remove({ payload, callback = () => void 0 }, { call, put }) {
       yield call(delLabel, payload);
-      yield put();
+      yield put({
+        type: 'fetch',
+        payload: { type: payload.type },
+      });
 
       callback();
     },
 
     *update({ payload, callback = () => void 0 }, { call, put }) {
       yield call(putLabel, payload);
-      yield put();
+      yield put({
+        type: 'fetch',
+        payload: { type: payload.type },
+      });
 
       callback();
     },

@@ -328,7 +328,9 @@ export async function postLabel(params) {
  * @returns {Promise<void>}
  */
 export async function delLabel({ id }) {
-  return request(`/api/label/${id}`);
+  return request(`/api/label/${id}`, {
+    method: 'DELETE',
+  });
 }
 
 /**
@@ -337,7 +339,7 @@ export async function delLabel({ id }) {
  * @returns {Promise<void>}
  */
 export async function putLabel(params) {
-  return request(`/api/label`, {
+  return request(`/api/label/${params.id}`, {
     method: 'PUT',
     data: params,
   });
