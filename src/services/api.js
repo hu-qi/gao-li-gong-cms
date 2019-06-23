@@ -302,6 +302,25 @@ export async function getBiologyById({id}) {
 }
 
 /**
+ * 生物多样性 删
+ * @param id
+ * @returns {Promise<void>}
+ */
+export async function delBilology({id}) {
+  return request(`/api/biodiversity/${id}`, {
+    method: 'DELETE',
+  });
+}
+
+/**
+ * 获取物种类别
+ * @returns {Promise<void>}
+ */
+export async function getSpecies() {
+  return request('api/species')
+}
+
+/**
  * 标签查
  * @param params { name, type, page, size }
  * @returns {Promise<void>}

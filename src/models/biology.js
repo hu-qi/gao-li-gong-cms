@@ -1,28 +1,41 @@
-import { queryBiologyList, getBiologyById, getClassify } from '@/services/api';
+import { queryBiologyList, getBiologyById, delBilology, getSpecies, queryLabelList } from '@/services/api';
 
 export default {
   namespace: 'biology',
 
   state: {
     list: [],
-    pagination: {},
+    pagination: {
+      total: 0,
+      page: 1,
+      size: 5,
+    },
     biology: {},
-    classify: {},
+    species: [],
+    tags: [],
+    search: {
+      name: '',
+      speciesId: null,
+    }
   },
 
   effects: {
-    *fetch({ payload }, { call, put }) {
+    * fetch({ payload }, { call, put }) {
       const {
-        data: { dateList: list = [], total} = {},
+        data: { dateList: list = [], total } = {},
       } = yield call(queryBiologyList, payload);
 
       yield put({
         type: 'queryList',
-        payload: list,
+        payload: {
+          list,
+          total,
+          ...payload,
+        },
       });
     },
 
-    *fetchBiologyById({ payload }, { call, put }) {
+    * fetchBiologyById({ payload }, { call, put }) {
       const { data } = yield call(getBiologyById, payload);
 
       yield put({
@@ -31,20 +44,64 @@ export default {
       });
     },
 
-    *fetchClassify({ payload }, { call, put }) {
-      const response = yield call(getClassify, payload);
+    * remove({ payload, callback = () => void 0 }, { call, put }) {
+      yield call(delBilology, payload);
       yield put({
-        type: 'getClassify',
-        payload: response,
+        type: 'fetch',
+        payload,
       });
-    }
+
+      callback();
+    },
+
+    * fetchSpecies({ payload, callback = () => void 0 }, { call, put }) {
+      const { data = [] } = yield call(getSpecies, payload);
+
+      yield put({
+        type: 'setSpecies',
+        payload: data,
+      });
+
+      callback();
+    },
+
+    * fetchLabelList({ payload, callback = () => void 0 }, { call, put }) {
+      const {
+        data: { dateList = [] } = {},
+      } = yield call(queryLabelList, payload);
+
+      yield put({
+        type: 'setTags',
+        payload: dateList,
+      });
+
+      callback();
+    },
   },
 
   reducers: {
     queryList(state, action) {
+      const {
+        list,
+        total,
+        page,
+        size,
+        name,
+        speciesId,
+      } = action.payload;
+
       return {
         ...state,
-        list: action.payload,
+        list,
+        search: {
+          name,
+          speciesId,
+        },
+        pagination: {
+          total,
+          page,
+          size,
+        },
       };
     },
     appendList(state, action) {
@@ -61,10 +118,17 @@ export default {
       };
     },
 
-    getClassify(state, action) {
+    setSpecies(state, action) {
       return {
         ...state,
-        classify: action.payload,
+        species: action.payload,
+      };
+    },
+
+    setTags(state, action) {
+      return {
+        ...state,
+        tags: action.payload,
       };
     },
   },
