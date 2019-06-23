@@ -77,7 +77,7 @@ class Slider extends PureComponent {
               ) : (
                 <List.Item>
                   <Button type="dashed" className={styles.newButton} onClick={this.toEditPage}>
-                    <Icon type="plus" /> 新建产品
+                    <Icon type="plus" /> 新建轮播图
                   </Button>
                 </List.Item>
               )

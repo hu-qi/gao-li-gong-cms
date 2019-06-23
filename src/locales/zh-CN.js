@@ -3,6 +3,7 @@ import exception from './zh-CN/exception';
 import form from './zh-CN/form';
 import news from './zh-CN/news';
 import videos from './zh-CN/videos';
+import partner from './zh-CN/partner';
 import globalHeader from './zh-CN/globalHeader';
 import login from './zh-CN/login';
 import menu from './zh-CN/menu';
@@ -13,6 +14,7 @@ import settings from './zh-CN/settings';
 import pwa from './zh-CN/pwa';
 import component from './zh-CN/component';
 import editor from './zh-CN/editor';
+import timeline from './zh-CN/timeline';
 
 export default {
   'navBar.lang': '语言',
@@ -27,6 +29,7 @@ export default {
   ...exception,
   ...form,
   ...news,
+  ...partner,
   ...videos,
   ...globalHeader,
   ...login,
@@ -38,4 +41,5 @@ export default {
   ...pwa,
   ...component,
   ...editor,
+  ...timeline
 };

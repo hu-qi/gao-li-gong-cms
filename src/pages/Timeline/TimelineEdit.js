@@ -2,21 +2,19 @@ import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import moment from 'moment';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
-import { Form, Input, Button, Card, Select, Icon, Upload, DatePicker  } from 'antd';
+import { Form, Input, Button, Card, DatePicker, Select, Icon, Upload } from 'antd';
+
+const { TextArea } = Input;
+const FormItem = Form.Item;
 
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 
-const { TextArea } = Input;
-
-const FormItem = Form.Item;
-
-@connect(({ news, loading }) => ({
-  ...news,
+@connect(({ timeline, loading }) => ({
+  ...timeline,
   submitting: loading.effects['form/submitRegularForm'],
 }))
-
 @Form.create()
-class NewsEdit extends PureComponent {
+class TimelineEdit extends PureComponent {
   state = {
     id: null
   }
@@ -26,6 +24,7 @@ class NewsEdit extends PureComponent {
     }
     return e && e.fileList;
   };
+
   componentDidMount() {
     const {params} = this.props.match;
     const {dispatch} = this.props;
@@ -34,7 +33,7 @@ class NewsEdit extends PureComponent {
         id: params.id
       })
       dispatch({
-        type: 'news/get',
+        type: 'timeline/get',
         payload: {
           id: params.id
         },
@@ -59,14 +58,15 @@ class NewsEdit extends PureComponent {
     e.preventDefault();
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        let {thumbnail, time, ...restValues} = values;
-        const type = id ? 'news/modify' : 'news/add';
+        let {imgUrl, time, ...restValues} = values;
+        const type = id ? 'timeline/modify' : 'timeline/add';
         dispatch({
           type: type,
           payload: {
             id: id,
-            thumbnail: thumbnail && thumbnail.length && JSON.stringify(thumbnail[0]),
-            time: time ? time.format('YYYY-MM-DD h:mm:ss') : '',
+            // imgUrl: imgUrl && imgUrl.length ? imgUrl[0].response : '',
+            imgUrl: imgUrl && imgUrl.length && imgUrl[0],
+            time: time.format('YYYY-MM-DD h:mm:ss'),
             ...restValues
           },
         });
@@ -78,11 +78,9 @@ class NewsEdit extends PureComponent {
     const { submitting } = this.props;
     const {
       form: { getFieldDecorator, getFieldValue },
-      title,
-      brief,
-      link,
-      time,
-      thumbnail
+      description,
+      imgUrl,
+      time
     } = this.props;
 
     const formItemLayout = {
@@ -108,56 +106,39 @@ class NewsEdit extends PureComponent {
       <PageHeaderWrapper>
         <Card bordered={false}>
           <Form onSubmit={this.handleSubmit} hideRequiredMark style={{ marginTop: 8 }}>
-            <FormItem {...formItemLayout} label={<FormattedMessage id="form.news.title.label" />}>
-              {getFieldDecorator('title', {
-                initialValue: title,
+            <FormItem {...formItemLayout} label={<FormattedMessage id="form.description.label" />}>
+              {getFieldDecorator('description', {
+                initialValue: description,
                 rules: [
                   {
                     required: true,
-                    message: formatMessage({ id: 'validation.news.title.required' }),
+                    message: formatMessage({ id: 'validation.timeline.description.required' }),
                   },
                 ],
-              })(<Input placeholder={formatMessage({ id: 'form.news.title.placeholder' })} />)}
-            </FormItem>
-            <FormItem
-              {...formItemLayout}
-              label={<FormattedMessage id="form.news.description.label" />}
-            >
-              {getFieldDecorator('brief', {
-                initialValue: brief,
-                rules: [{
-                  required: true,
-                  message: formatMessage({ id: 'validation.news.description.required' }),
-                }]
-              })(<TextArea
+              })(
+                <TextArea
                   rows={4}
-                  placeholder={formatMessage({ id: 'form.news.description.placeholder' })}
+                  placeholder={formatMessage({ id: 'form.description.placeholder' })}
                 />
               )}
             </FormItem>
-            <FormItem {...formItemLayout} label={<FormattedMessage id="form.news.link.label" />}>
-              {getFieldDecorator('link', {
-                initialValue: link,
-                rules: [
-                  {
-                    type: 'url',
-                    required: true,
-                    message: formatMessage({ id: 'validation.news.link.required' }),
-                  },
-                ],
-              })(<Input placeholder={formatMessage({ id: 'form.news.link.placeholder' })} />)}
-            </FormItem>
             <FormItem {...formItemLayout} label={<FormattedMessage id="form.datepicker.label" />}>
               {getFieldDecorator('time', {
-                initialValue: time ? moment(time) : null
+                initialValue: time ? moment(time, 'YYYY-MM-DD') : null,
+                rules: [
+                  {
+                    required: true,
+                    message: formatMessage({ id: 'form.datepicker.required' }),
+                  },
+                ],
               })(
-                <DatePicker showTime placeholder={formatMessage({ id: 'form.datepicker.placeholder' })} />
+                <DatePicker placeholder={formatMessage({ id: 'form.datepicker.placeholder' })} />
               )}
             </FormItem>
             <FormItem {...formItemLayout} label={<FormattedMessage id="form.thumbnail.label" />}>
-              {getFieldDecorator('thumbnail', {
+              {getFieldDecorator('imgUrl', {
                 valuePropName: 'fileList',
-                getValueFromEvent: this.normFile,
+                getValueFromEvent: this.normFile
               })(
                 <Upload
                   name="file"
@@ -184,4 +165,4 @@ class NewsEdit extends PureComponent {
   }
 }
 
-export default NewsEdit;
+export default TimelineEdit;

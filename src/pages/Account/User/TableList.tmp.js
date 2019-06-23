@@ -1,17 +1,16 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
-import moment from 'moment';
 import {
   Row,
   Col,
   Card,
   Form,
   Input,
-  Select,
   Button,
   message,
-  Badge,
+  notification,
   Divider, Avatar, Modal,
+  Typography,
 } from 'antd';
 import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
@@ -20,43 +19,22 @@ import UserInfo from './UserInfo';
 import styles from './TableList.less';
 
 const FormItem = Form.Item;
-const { Option } = Select;
+const { Text } = Typography;
 const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
     .join(',');
-const statusMap = ['default', 'processing', 'success', 'error'];
-const status = ['关闭', '运行中', '已上线', '异常'];
-
-const CreateForm = Form.create()(props => {
-  const { modalVisible, form, handleAdd, handleModalVisible } = props;
-  const okHandle = () => {
-    form.validateFields((err, fieldsValue) => {
-      if (err) return;
-      form.resetFields();
-      handleAdd(fieldsValue);
-    });
-  };
-
-  return (
-    <Modal
-      destroyOnClose
-      title="新增用户"
-      visible={modalVisible}
-      onOk={okHandle}
-      onCancel={() => handleModalVisible()}
-    >
-      <UserInfo />
-    </Modal>
-  );
-});
+const ModalType = {
+  NEW: 'post',
+  UPDATE: 'put',
+};
 
 /* eslint react/no-multi-comp:0 */
 @connect(models => {
-  const { rule, loading } = models;
+  const { account, loading } = models;
   return ({
-    rule,
-    loading: loading.models.rule,
+    account,
+    loading: loading.models.account,
   })
 })
 @Form.create()
@@ -65,6 +43,9 @@ class TableList extends PureComponent {
     selectedRows: [],
     formValues: {},
     modalVisible: false, // 新建用户
+    pageSize: 10,
+    currentPage: 1,
+    updateFieldsValue: {},
   };
 
   // 列表配置
@@ -72,15 +53,15 @@ class TableList extends PureComponent {
     {
       title: '用户',
       dataIndex: 'avatar',
-      render: url => <Avatar src={url} shape="square" size="large" />,
+      render: url => <Avatar src={url} shape='square' size='large' />,
     },
     {
       title: '用户名',
       dataIndex: 'name',
     },
     {
-      title: '描述',
-      dataIndex: 'desc',
+      title: '昵称',
+      dataIndex: 'nickname',
     },
     {
       title: '手机号',
@@ -89,70 +70,186 @@ class TableList extends PureComponent {
     },
     {
       title: 'email',
-      dataIndex: 'email',
-      render: email => <a href={`mailto:${email}?subject=来自高黎贡山 CMS`}>{email}</a>,
+      dataIndex: 'mail',
+      render: mail => <a href={`mailto:${mail}?subject=来自高黎贡山 CMS`}>{mail}</a>,
     },
     {
       title: '微信',
-      dataIndex: 'weChat',
-    },
-    {
-      title: '状态',
-      dataIndex: 'status',
-      filters: [
-        {
-          text: status[0],
-          value: 0,
-        },
-        {
-          text: status[1],
-          value: 1,
-        },
-        {
-          text: status[2],
-          value: 2,
-        },
-        {
-          text: status[3],
-          value: 3,
-        },
-      ],
-      render(val) {
-        return <Badge status={statusMap[val]} text={status[val]} />;
-      },
-    },
-    {
-      title: '创建时间',
-      dataIndex: 'createdAt',
-      sorter: true,
-      render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm')}</span>,
-    },
-    {
-      title: '更新时间',
-      dataIndex: 'updatedAt',
-      sorter: true,
-      render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm')}</span>,
+      dataIndex: 'wechatId',
+      render: wechat => <a onClick={() => this.onCopyClipboard(wechat)}>{wechat}</a>
     },
     {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.handleModalVisible(true, record)}>编辑</a>
-          <Divider type="vertical" />
-          <a href="">停用</a>
-          <Divider type="vertical" />
-          <a href="">删除</a>
+          <a onClick={() => this.handleUpdate(record)}>编辑</a>
+          <Divider type='vertical' />
+          <a onClick={() => this.handleDelete(record)}>删除</a>
         </Fragment>
       ),
     },
   ];
 
   componentDidMount() {
+    this.fetchData();
+  }
+
+  fetchData() {
     const { dispatch } = this.props;
+    const { pageSize: size, currentPage: page } = this.state;
+
     dispatch({
-      type: 'rule/fetch',
+      type: 'account/fetch',
+      payload: {
+        page,
+        size,
+      }
     });
   }
+
+  onCopyClipboard = (webchat) => {
+    const input = document.createElement('input');
+    document.body.appendChild(input);
+
+    input.setAttribute('value', webchat);
+    input.select();
+
+    if (document.execCommand('copy')) {
+      document.execCommand('copy');
+
+      notification.info({
+        message: <React.Fragment>已复制微信号：<a href='javascript: void 0;'>${webchat}</a> 到粘贴板😀</React.Fragment>,
+        onClick: () => void 0,
+        duration: 2,
+      });
+    }
+
+    input.setAttribute('style','display:none');
+  };
+
+  handleModalVisible = flag => {
+    this.setState({
+      modalVisible: !!flag,
+    });
+  };
+
+  handleUpdate = fields => {
+    this.setState({
+      updateFieldsValue: fields,
+    });
+
+    this.handleModalVisible(true);
+  };
+
+  handleDelete = user => {
+    const { dispatch } = this.props;
+
+    Modal.confirm({
+      title: <p>确定删除 <Text type='warning'>{user.name}</Text> 吗？</p>,
+      content: <Text type='danger'>删除后不可恢复</Text>,
+      cancelText: '取消',
+      okText: '确定',
+      onOk: () => {
+        dispatch({
+          type: 'account/delete',
+          payload: { id: user.id },
+          callback: ({isError}) => {
+            if (!isError) {
+              message.success('账号删除成功！');
+            } else {
+              message.warning('账号删除失败，请重试！')
+            }
+
+            this.fetchData();
+          }
+        });
+      },
+      onCancel() {},
+    });
+  };
+
+  modalChange = (fields, type) => {
+    const { dispatch } = this.props;
+
+    dispatch({
+      type: `account/${ModalType[type]}`,
+      payload: fields,
+      callback: ({isError}) => {
+        if (!isError) {
+          message.success('数据修改成功');
+          this.handleModalVisible();
+        } else {
+          message.warning('数据修改失败，请重试！')
+        }
+
+        this.fetchData();
+      }
+    });
+  };
+
+  renderAdvancedForm() {
+    const {
+      form: { getFieldDecorator },
+    } = this.props;
+    return (
+      <Form onSubmit={this.handleSearch} layout='inline'>
+        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
+          <Col md={10} sm={24}>
+            <FormItem label='用户名/昵称'>
+              {getFieldDecorator('name')(<Input placeholder='请输入用户名或昵称' />)}
+            </FormItem>
+          </Col>
+          <Col>
+            <Button type='primary' htmlType='submit'>
+              查询
+            </Button>
+            <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
+              重置
+            </Button>
+          </Col>
+        </Row>
+        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
+          <Button style={{ marginLeft: 10, marginBottom: 10, }} icon='plus' type='primary' onClick={() => this.handleModalVisible(true)}>
+            新建用户
+          </Button>
+        </Row>
+      </Form>
+    );
+  }
+
+  handleFormReset = () => {
+    const { form } = this.props;
+
+    form.resetFields();
+
+    this.setState({
+      formValues: {},
+    });
+
+    this.fetchData();
+  };
+
+  handleSearch = e => {
+    e.preventDefault();
+    const { dispatch, form } = this.props;
+
+    form.validateFields((err, fieldsValue) => {
+      if (err) return;
+
+      const values = {
+        ...fieldsValue,
+      };
+
+      this.setState({
+        formValues: values,
+      });
+
+      dispatch({
+        type: 'account/fetch',
+        payload: values,
+      });
+    });
+  };
 
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch } = this.props;
@@ -165,157 +262,61 @@ class TableList extends PureComponent {
     }, {});
 
     const params = {
-      currentPage: pagination.current,
-      pageSize: pagination.pageSize,
+      page: pagination.current,
+      size: pagination.pageSize,
       ...formValues,
       ...filters,
     };
+
     if (sorter.field) {
       params.sorter = `${sorter.field}_${sorter.order}`;
     }
 
     dispatch({
-      type: 'rule/fetch',
+      type: 'account/fetch',
       payload: params,
     });
   };
 
-  handleFormReset = () => {
-    const { form, dispatch } = this.props;
-    form.resetFields();
-    this.setState({
-      formValues: {},
-    });
-    dispatch({
-      type: 'rule/fetch',
-      payload: {},
-    });
-  };
-
-  handleSearch = e => {
-    e.preventDefault();
-
-    const { dispatch, form } = this.props;
-
-    form.validateFields((err, fieldsValue) => {
-      if (err) return;
-
-      const values = {
-        ...fieldsValue,
-        updatedAt: fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf(),
-      };
-
-      this.setState({
-        formValues: values,
-      });
-
-      dispatch({
-        type: 'rule/fetch',
-        payload: values,
-      });
-    });
-  };
-
-  handleModalVisible = flag => {
-    console.log('新建角色');
-    this.setState({
-      modalVisible: !!flag,
-    });
-  };
-
-  handleUpdateModalVisible = () => {
-    console.log('删除！')
-  };
-
-  handleAdd = fields => {
-    console.log('add: ', fields);
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'rule/add',
-      payload: {
-        desc: fields.desc,
-      },
-    });
-
-    message.success('添加成功');
-    this.handleModalVisible();
-  };
-
-  handleUpdate = fields => {
-    const { dispatch } = this.props;
-    const { formValues } = this.state;
-    dispatch({
-      type: 'rule/update',
-      payload: {
-        query: formValues,
-        body: {
-          name: fields.name,
-          desc: fields.desc,
-          key: fields.key,
-        },
-      },
-    });
-
-    message.success('配置成功');
-    this.handleUpdateModalVisible();
-  };
-
-  renderAdvancedForm() {
-    const {
-      form: { getFieldDecorator },
-    } = this.props;
-    return (
-      <Form onSubmit={this.handleSearch} layout="inline">
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={8} sm={24}>
-            <FormItem label="名称">
-              {getFieldDecorator('name')(<Input placeholder="请输入" />)}
-            </FormItem>
-          </Col>
-          <Col md={8} sm={24}>
-            <FormItem label="使用状态">
-              {getFieldDecorator('status')(
-                <Select placeholder="请选择" style={{ width: '100%' }}>
-                  <Option value="0">关闭</Option>
-                  <Option value="1">运行中</Option>
-                </Select>
-              )}
-            </FormItem>
-          </Col>
-        </Row>
-        <div style={{ overflow: 'hidden' }}>
-          <div style={{ marginBottom: 24 }}>
-            <Button type="primary" htmlType="submit">
-              查询
-            </Button>
-            <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
-              重置
-            </Button>
-            <Button style={{ marginLeft: 8 }} icon="plus" type="primary" onClick={() => this.handleModalVisible(true)}>
-              新建用户
-            </Button>
-          </div>
-        </div>
-      </Form>
-    );
-  }
-
   render() {
     const {
-      rule: { data } = { data: []},
+      account: {
+        list = [],
+        pagination: { page: current, size: pageSize, total }
+      } = {},
       loading,
     } = this.props;
-  
-    const { selectedRows, modalVisible } = this.state;
+    const { selectedRows, modalVisible, updateFieldsValue } = this.state;
+    const data = {
+      list,
+      pagination: { current, pageSize, total }};
 
-    const parentMethods = {
-      handleAdd: this.handleAdd,
-      handleModalVisible: this.handleModalVisible,
+    this.setState({
+      currentPage: current,
+    });
+
+    const handleAdd = fields => {
+      let type = null;
+      if (Object.keys(updateFieldsValue).length) {
+        type = 'UPDATE';
+        Object.assign(fields, {
+          id: updateFieldsValue.id,
+        })
+      } else {
+        type = 'NEW';
+      }
+
+      this.modalChange(fields, type);
+      this.setState({
+        updateFieldsValue: {},
+      });
     };
 
+    const handleCancel = () => void this.handleModalVisible();
+
     return (
-      <PageHeaderWrapper title="用户列表">
-        <CreateForm {...parentMethods} modalVisible={modalVisible} />
+      <PageHeaderWrapper title='用户列表'>
+        { modalVisible ? <UserInfo confirmHandle={handleAdd} cancelHandle={handleCancel} fieldsValue={updateFieldsValue} /> : null }
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderAdvancedForm()}</div>

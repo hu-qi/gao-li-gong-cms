@@ -20,7 +20,7 @@ const FormItem = Form.Item;
   return {
     allBiology,
     loading: loading.models.list,
-  }
+  };
 })
 @Form.create({
   onValuesChange({ dispatch }, changedValues, allValues) {
@@ -42,7 +42,7 @@ class CoverCardList extends PureComponent {
     dispatch({
       type: 'biology/fetch',
       payload: {
-        count: 8,
+        count: 118,
       },
     });
   }
@@ -71,25 +71,25 @@ class CoverCardList extends PureComponent {
             <Card
               className={styles.card}
               hoverable
-              cover={<img alt={item.name} src={item.cover} />}
+              cover={<img alt={item.name} src={item.thumbnail} />}
               actions={[<Icon type="eye" onClick={this.preview}  />, <Icon type="edit" onClick={this.preview} />]}
             >
               <Card.Meta
                 title={<a>{item.name}</a>}
-                description={<Ellipsis lines={2}>{item.subDesc}</Ellipsis>}
+                description={<Ellipsis lines={2}>{item.brief}</Ellipsis>}
               />
               <div className={styles.cardItemContent}>
                 <span>{moment(item.updatedAt).fromNow()}</span>
                 <div className={styles.avatarList}>
-                  <AvatarList size="mini">
-                    {item.members.map((member, i) => (
-                      <AvatarList.Item
-                        key={`${item.id}-avatar-${i}`}
-                        src={member.avatar}
-                        tips={member.name}
-                      />
-                    ))}
-                  </AvatarList>
+                  {/*<AvatarList size="mini">*/}
+                  {/*  {item.members.map((member, i) => (*/}
+                  {/*    <AvatarList.Item*/}
+                  {/*      key={`${item.id}-avatar-${i}`}*/}
+                  {/*      src={member.avatar}*/}
+                  {/*      tips={member.name}*/}
+                  {/*    />*/}
+                  {/*  ))}*/}
+                  {/*</AvatarList>*/}
                 </div>
               </div>
             </Card>

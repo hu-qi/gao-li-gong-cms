@@ -1,29 +1,30 @@
 import React, { PureComponent, Fragment } from 'react';
+import moment from 'moment';
 import router from 'umi/router';
 import { Card, List, Button, Icon, Popconfirm } from 'antd';
 import { connect } from 'dva';
 
-import styles from './Slider.less';
+import styles from './Timeline.less';
 
 import Ellipsis from '@/components/Ellipsis';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 
-@connect(({ partner, loading }) => ({
-  list: partner,
+@connect(({ timeline, loading }) => ({
+  list: timeline,
   loading: loading.models.list,
 }))
-class Partner extends PureComponent {
+class Timeline extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'partner/fetch',
+      type: 'timeline/fetch',
     });
   }
 
   delete = id => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'partner/delete',
+      type: 'timeline/delete',
       payload: {
         id: id,
       },
@@ -32,10 +33,10 @@ class Partner extends PureComponent {
 
   toEditPage = param => {
     if (typeof param === 'object') {
-      router.push(`/home/partner/partner-add`);
+      router.push(`/timeline/timeline-add`);
       return;
     }
-    router.push(`/home/partner/partner-edit/id/${param}`);
+    router.push(`/timeline/timeline-edit/id/${param}`);
   };
 
   render() {
@@ -57,6 +58,7 @@ class Partner extends PureComponent {
                   <Card
                     hoverable
                     className={styles.card}
+                    cover={<img alt={item.title} src={item.imgUrl} />}
                     actions={[
                       <a onClick={() => this.toEditPage(item.id)}>编辑</a>,
                       <Popconfirm title="确定要删除吗?" onConfirm={() => this.delete(item.id)}>
@@ -65,18 +67,22 @@ class Partner extends PureComponent {
                     ]}
                   >
                     <Card.Meta
-                      avatar={<img alt="" className={styles.cardAvatar} src={item.avatar} />}
-                      title={item.description}
+                      description={
+                        <Ellipsis className={styles.item} lines={3}>
+                          {item.description}
+                        </Ellipsis>
+                      }
                     />
+                    <span>{moment(item.time).format('YYYY-MM-DD')}</span>
                   </Card>
                 </List.Item>
               ) : (
-                <List.Item>
-                  <Button type="dashed" className={styles.partnerButton} onClick={this.toEditPage}>
-                    <Icon type="plus" /> 新建伙伴
+                  <List.Item>
+                    <Button type="dashed" className={styles.newButton} onClick={this.toEditPage}>
+                      <Icon type="plus" /> 新增时间线
                   </Button>
-                </List.Item>
-              )
+                  </List.Item>
+                )
             }
           />
         </div>
@@ -85,4 +91,4 @@ class Partner extends PureComponent {
   }
 }
 
-export default Partner;
+export default Timeline;

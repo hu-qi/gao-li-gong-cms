@@ -27,12 +27,14 @@ class BasicForms extends PureComponent {
 
   componentDidMount() {
     const { dispatch } = this.props;
+
     dispatch({
       type: 'biology/fetchBiologyById',
       payload: {
-        id: 123,
+        id: 8,
       },
     });
+
     dispatch({
       type: 'biology/fetchClassify',
       payload: {},
@@ -113,7 +115,7 @@ class BasicForms extends PureComponent {
           </FormItem>
           <FormItem { ...formItemLayout } label={ <FormattedMessage id="form.goal.label"/> }>
             { getFieldDecorator('goal', {
-              initialValue: biology.desc,
+              initialValue: biology.content,
               rules: [
                 {
                   required: true,

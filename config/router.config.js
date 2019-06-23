@@ -15,7 +15,7 @@ export default [
   {
     path: '/',
     component: '../layouts/BasicLayout',
-    Routes: ['src/pages/Authorized'],
+    // Routes: ['src/pages/Authorized'],
     routes: [
       // dashboard
       { path: '/', redirect: '/dashboard/analysis', authority: ['admin', 'user'] },
@@ -40,7 +40,7 @@ export default [
                 component: './Home/SliderEdit',
               },
               {
-                path: '/home/slider/slider-edit/:id',
+                path: '/home/slider/slider-edit/id/:id',
                 name: 'slider-edit',
                 component: './Home/SliderEdit',
               },
@@ -49,16 +49,19 @@ export default [
           {
             path: '/home/partner',
             name: 'partner',
-            component: './Home/Partner',
             hideChildrenInMenu: true,
             routes: [
               {
-                path: '/home/slider/partner-add',
+                path: '/home/partner',
+                component: './Home/Partner',
+              },
+              {
+                path: '/home/partner/partner-add',
                 name: 'partner-add',
                 component: './Home/PartnerEdit',
               },
               {
-                path: '/home/slider/partner-edit',
+                path: '/home/partner/partner-edit/id/:id',
                 name: 'partner-edit',
                 component: './Home/PartnerEdit',
               },
@@ -176,7 +179,7 @@ export default [
             component: './News/NewsEdit',
           },
           {
-            path: '/news/news-edit/:id',
+            path: '/news/news-edit/id/:id',
             name: 'news-edit',
             component: './News/NewsEdit',
           },
@@ -221,6 +224,29 @@ export default [
         name: 'biology',
         hideInMenu: true,
         component: './Biodiversity/Biology',
+      },
+      // 时间线
+      {
+        name: 'timeline',
+        icon: 'calendar',
+        hideChildrenInMenu: true,
+        path: '/timeline',
+        routes: [
+          {
+            path: '/timeline',
+            component: './Timeline/Timeline',
+          },
+          {
+            path: '/timeline/timeline-add',
+            name: 'timeline-add',
+            component: './Timeline/TimelineEdit',
+          },
+          {
+            path: '/timeline/timeline-edit/id/:id',
+            name: 'timeline-edit',
+            component: './Timeline/TimelineEdit',
+          },
+        ],
       },
       // 标签
       {

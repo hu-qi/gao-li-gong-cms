@@ -1,10 +1,9 @@
 import { routerRedux } from 'dva/router';
 import { message } from 'antd';
-import { getNews, getNewsById, deleteNews, addNews, changeNews } from '@/services/api';
-import { debug } from 'util';
+import { getPartners, getPartnerById, deletePartner, addPartner, changePartner } from '@/services/api';
 
 export default {
-  namespace: 'news',
+  namespace: 'partner',
 
   state: {
     list: [],
@@ -12,72 +11,55 @@ export default {
 
   effects: {
     *fetch({ payload }, { call, put }) {
-      const response = yield call(getNews, payload);
+      const response = yield call(getPartners, payload);
       if (response.isError) {
         message.error(response.error.message);
       } else {
-        const responseData = response.data.dateList;
+        const data = response.data;
         yield put({
           type: 'queryList',
-          payload: {
-            list: responseData,
-            pagination: {
-              current: payload.page,
-              pageSize: payload.size,
-              total: response.data.total
-            }
-          }
+          payload: Array.isArray(data) ? data : [],
         });
       }
     },
     *get({ payload }, { call, put }) {
-      const response = yield call(getNewsById, payload);
+      const response = yield call(getPartnerById, payload);
       if (response.isError) {
         message.error(response.error.message);
       } else {
         yield put({
-          type: 'queryNews',
+          type: 'queryPartner',
           payload: response.data
         });
       }
     },
     *delete({ payload }, { call, put }) {
-      const response = yield call(deleteNews, payload);
-      let { pagination } = payload;
-      const { list } = payload;
+      const response = yield call(deletePartner, payload);
       if (response.isError) {
         message.error(response.error.message);
       } else {
         message.success("删除成功");
-        debugger;
-        if (list.length === 1) {
-          pagination.current = pagination.current > 1 ? pagination.current-- : 1;
-        }
         yield put({
-          type: 'fetch',
-          payload: {
-            page: pagination.current,
-            size: pagination.pageSize
-          },
+          type: 'fetch'
         });
       }
     },
     *add({ payload }, { call, put }) {
-      const response = yield call(addNews, payload);
+      const response = yield call(addPartner, payload);
       if (response.isError) {
         message.error(response.error.message);
       } else {
         message.success('提交成功');
-        yield put(routerRedux.push('/news'));
+        yield put(routerRedux.push('/home/partner'));
       }
     },
     *modify({ payload }, { call, put }) {
-      const response = yield call(changeNews, payload);
+      const response = yield call(changePartner, payload);
       if (response.isError) {
         message.error(response.error.message);
       } else {
         message.success('修改成功');
-        yield put(routerRedux.push('/news'));
+        yield put(routerRedux.push('/home/partner'));
       }
     },
   },
@@ -86,10 +68,10 @@ export default {
     queryList(state, action) {
       return {
         ...state,
-        ...action.payload,
+        list: action.payload,
       };
     },
-    queryNews(state, action) {
+    queryPartner(state, action) {
       return {
         ...state,
         ...action.payload,
