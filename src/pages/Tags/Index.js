@@ -71,6 +71,8 @@ class SearchList extends Component {
   renderNewTag() {
     const { dispatch } = this.props;
     const { newTag } = this.state;
+    const { tabActiveKey } = this.child.state;
+    const activeTab = tabList.find(({ key }) => key === tabActiveKey).tab;
     const {
       name,
       type,
@@ -137,6 +139,12 @@ class SearchList extends Component {
         return dispatch({
           type: 'tags/add',
           payload: newTag,
+          callback() {
+            dispatch({
+              type: 'tags/fetch',
+              payload: { type: activeTab },
+            });
+          }
         });
       }
     });
@@ -159,7 +167,7 @@ class SearchList extends Component {
           onClick={() => this.renderNewTag()}
         >
         </Button>
-        <div style={ { textAlign: 'center' } }>
+        <div style={{ textAlign: 'center' }}>
           <Input.Search
             placeholder='请输入标签关键字'
             enterButton='搜索'
