@@ -8,8 +8,10 @@ import {
   Card,
   Select,
 } from 'antd';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import 'braft-editor/dist/index.css';
+import BraftEditor from 'braft-editor';
+import { buildTagsGroup } from './BiologyList';
+import styles from './Biology.less';
 
 const Option = Select.Option;
 const FormItem = Form.Item;
@@ -20,32 +22,31 @@ const { TextArea } = Input;
   biology,
 }))
 @Form.create()
-class BasicForms extends PureComponent {
+class Biology extends PureComponent {
   state = {
-    value: 'test',
+    editorState: BraftEditor.createEditorState(null)
   };
 
   componentDidMount() {
-    const { dispatch } = this.props;
+    const {
+      dispatch,
+      match: {
+        params: { id },
+      },
+    } = this.props;
 
     dispatch({
       type: 'biology/fetchBiologyById',
       payload: {
-        id: 8,
+        id,
       },
     });
 
     dispatch({
-      type: 'biology/fetchClassify',
+      type: 'biology/fetchLabelList',
       payload: {},
     });
   }
-
-  handleChange = (value) => {
-    this.setState({
-      value,
-    });
-  };
 
   handleSubmit = e => {
     const { dispatch, form } = this.props;
@@ -60,38 +61,30 @@ class BasicForms extends PureComponent {
     });
   };
 
-  handleChange(value) {
-    console.log(`selected ${value}`);
-  }
+  handleEditorChange = editorState => void this.setState({ editorState });
 
   render() {
     const {
-      submitting, biology: {
+      submitting,
+      biology: {
         biology = {},
-        classify: {
-          protection = [],
-          endangered = [],
-          species = [],
-        } = {},
+        tags,
       },
-    } = this.props;
-
-    const {
       form: { getFieldDecorator },
     } = this.props;
-
+    const { editorState } = this.state;
+    const labels = Object.entries(buildTagsGroup(tags));
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },
-        sm: { span: 7 },
+        sm: { span: 5 },
       },
       wrapperCol: {
         xs: { span: 24 },
-        sm: { span: 12 },
-        md: { span: 10 },
+        sm: { span: 15 },
+        md: { span: 15 },
       },
     };
-
     const submitFormLayout = {
       wrapperCol: {
         xs: { span: 24, offset: 0 },
@@ -100,9 +93,9 @@ class BasicForms extends PureComponent {
     };
 
     return (
-      <Card bordered={ false }>
+      <Card bordered={false} className={styles.Biology}>
         <Form onSubmit={ this.handleSubmit } hideRequiredMark style={ { marginTop: 8 } }>
-          <FormItem { ...formItemLayout } label={ <FormattedMessage id="form.title.label"/> }>
+          <FormItem { ...formItemLayout } label={ <FormattedMessage id='form.title.label'/> }>
             { getFieldDecorator('title', {
               initialValue: biology.name,
               rules: [
@@ -113,7 +106,7 @@ class BasicForms extends PureComponent {
               ],
             })(<Input placeholder={ formatMessage({ id: 'form.title.placeholder' }) }/>) }
           </FormItem>
-          <FormItem { ...formItemLayout } label={ <FormattedMessage id="form.goal.label"/> }>
+          <FormItem { ...formItemLayout } label={ <FormattedMessage id='form.goal.label'/> }>
             { getFieldDecorator('goal', {
               initialValue: biology.content,
               rules: [
@@ -130,46 +123,30 @@ class BasicForms extends PureComponent {
               />,
             ) }
           </FormItem>
-          <FormItem { ...formItemLayout } label={ '保护等级' }>
-            <Select
-              mode="multiple"
-              style={{ width: '100%' }}
-              placeholder="Please select"
-              defaultValue={['level2', 'level3']}
-              onChange={this.handleChange}
-            >
-              {endangered.map(({ text, id }) => <Option key={id.toString()}>{ text }</Option>)}
-            </Select>
+          {
+            labels.map(([label, tag]) => (
+              <FormItem {...formItemLayout} key={label} label={label}>
+                <Select
+                  mode='multiple'
+                  style={{ width: '100%' }}
+                  placeholder='Please select'
+                  defaultValue={['level2', 'level3']}
+                  onChange={this.handleChange}
+                >
+                  {tag.map(({ name, id }) => <Option key={id.toString()}>{ name }</Option>)}
+                </Select>
+              </FormItem>
+            ))
+          }
+          <FormItem {...formItemLayout} label='物种介绍'>
+            <BraftEditor value={editorState} onChange={this.handleEditorChange} />
           </FormItem>
-          <FormItem { ...formItemLayout } label={ '濒危等级' }>
-            <Select
-              mode="multiple"
-              style={{ width: '100%' }}
-              placeholder="Please select"
-              defaultValue={['level2']}
-              onChange={this.handleChange}
-            >
-              {protection.map(({ text, id }) => <Option key={id.toString()}>{ text }</Option>)}
-            </Select>
-          </FormItem>
-          <FormItem { ...formItemLayout } label={ '物种分类' }>
-            <Select
-              mode="multiple"
-              style={{ width: '100%' }}
-              placeholder="Please select"
-              defaultValue={['bird', 'bird1', 'bird2']}
-              onChange={this.handleChange}
-            >
-              {species.map(({ text, id }) => <Option key={id.toString()}>{ text }</Option>)}
-            </Select>
-          </FormItem>
-          <ReactQuill value={ this.state.value } onChange={ this.handleChange }/>
-          <FormItem { ...submitFormLayout } style={ { marginTop: 32 } }>
-            <Button type="primary" htmlType="submit" loading={ submitting }>
-              <FormattedMessage id="form.submit"/>
+          <FormItem {...submitFormLayout} style={{marginTop:32}}>
+            <Button type='primary' htmlType='submit' loading={ submitting }>
+              <FormattedMessage id='form.submit' />
             </Button>
-            <Button style={ { marginLeft: 8 } }>
-              <FormattedMessage id="form.save"/>
+            <Button style={{marginLeft: 8 }} >
+              <FormattedMessage id='form.save' />
             </Button>
           </FormItem>
         </Form>
@@ -178,4 +155,4 @@ class BasicForms extends PureComponent {
   }
 }
 
-export default BasicForms;
+export default Biology;

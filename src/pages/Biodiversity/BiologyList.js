@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'dva';
 import debounce from 'lodash/debounce';
 import { Form, Card, Select, List, Icon, Modal, Typography, message, Input, Button, Tooltip, Pagination } from 'antd';
+import router from 'umi/router';
 
 import AvatarList from '@/components/AvatarList';
 import Ellipsis from '@/components/Ellipsis';
@@ -14,7 +15,7 @@ import styles from './BiologyList.less';
  * @param tags
  * @returns {*}
  */
-function buildTagsGroup(tags) {
+export function buildTagsGroup(tags) {
   return tags.reduce((pre, cur) => {
     const { type, ...info } = cur;
 
@@ -94,6 +95,11 @@ class CoverCardList extends Component {
 
   handlePreview = biology => {
     message.warning('将来直接跳到前台相应的页面！');
+  };
+
+  handleEdit = biology => {
+    const { id } = biology;
+    router.push(`/Biodiversity/${id}`);
   };
 
   handleDel = biology => {
@@ -226,7 +232,9 @@ class CoverCardList extends Component {
               </Select>
             )}
           </Form.Item>
-          <Button htmlType='reset' type='primary' onClick={handleReset}>重置</Button>
+          <Form.Item>
+            <Button htmlType='reset' type='primary' onClick={handleReset}>重置</Button>
+          </Form.Item>
         </Form>
       </Card>
     );
@@ -254,7 +262,7 @@ class CoverCardList extends Component {
               cover={<img alt={item.name} src={item.thumbnail} />}
               actions={[
                 <Icon type='eye' onClick={() => this.handlePreview(item)} />,
-                <Icon type='edit' onClick={this.preview} />,
+                <Icon type='edit' onClick={() => this.handleEdit(item)} />,
                 <Icon type='delete' onClick={() => this.handleDel(item)} />]}
             >
               <Card.Meta
