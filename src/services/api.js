@@ -313,11 +313,26 @@ export async function delBilology({id}) {
 }
 
 /**
- * 获取物种类别
+ * 生物多样性 增
+ * @param params
  * @returns {Promise<void>}
  */
-export async function getSpecies() {
-  return request('api/species')
+export async function postBiology(params) {
+  return request(`/api/biodiversity`, {
+    method: 'POST',
+    data: params,
+  });
+}
+
+/**
+ * 生物多样性 改
+ * @returns {Promise<void>}
+ */
+export async function putBilology(params) {
+  return request(`/api/label/${params.id}`, {
+    method: 'PUT',
+    data: params,
+  });
 }
 
 /**
@@ -364,3 +379,10 @@ export async function putLabel(params) {
   });
 }
 
+/**
+ * 获取物种类别
+ * @returns {Promise<void>}
+ */
+export async function getSpecies() {
+  return request('api/species')
+}

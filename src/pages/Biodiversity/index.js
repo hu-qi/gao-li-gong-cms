@@ -8,7 +8,7 @@ import AvatarList from '@/components/AvatarList';
 import Ellipsis from '@/components/Ellipsis';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 
-import styles from './BiologyList.less';
+import styles from './index.less';
 
 /**
  * buildTagsGroup
@@ -97,8 +97,8 @@ class CoverCardList extends Component {
     message.warning('将来直接跳到前台相应的页面！');
   };
 
-  handleEdit = biology => {
-    const { id } = biology;
+  handleEdit = (biology = {}) => {
+    const { id = 0 } = biology;
     router.push(`/Biodiversity/${id}`);
   };
 
@@ -203,7 +203,7 @@ class CoverCardList extends Component {
                 icon='plus'
                 shape='circle'
                 size='large'
-                onClick={() => this.renderNewTag()}
+                onClick={() => this.handleEdit()}
               />
             </Tooltip>
           </Form.Item>

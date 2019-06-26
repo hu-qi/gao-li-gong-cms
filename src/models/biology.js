@@ -1,4 +1,12 @@
-import { queryBiologyList, getBiologyById, delBilology, getSpecies, queryLabelList } from '@/services/api';
+import {
+  queryBiologyList,
+  getBiologyById,
+  delBilology,
+  getSpecies,
+  queryLabelList,
+  postBiology,
+  putBilology,
+} from '@/services/api';
 
 export default {
   namespace: 'biology',
@@ -8,9 +16,17 @@ export default {
     pagination: {
       total: 0,
       page: 1,
-      size: 5,
+      size: 115,
     },
-    biology: {},
+    biology: {
+      name: '',
+      brief: '',
+      content: '',
+      imgUrl: 'https://www.google.com/url?sa=i&source=images&cd=&ved=2ahUKEwj5h7C7vofjAhUV3o8KHWV6DigQjRx6BAgBEAU&url=https%3A%2F%2Fwww.mlar.org%2F&psig=AOvVaw2n4Uc4FiRZE0FsrmtW-wak&ust=1561650195989783',
+      thumbnails: [],
+      labels: [],
+      speciesId: 3,
+    },
     species: [],
     tags: [],
     search: {
@@ -39,7 +55,7 @@ export default {
       const { data } = yield call(getBiologyById, payload);
 
       yield put({
-        type: 'getBiologyById',
+        type: 'setBiology',
         payload: data,
       });
     },
@@ -77,6 +93,20 @@ export default {
 
       callback();
     },
+
+    * updateBiology({ payload, callback = () => void 0 }, { call, put }) {
+      yield call(putBilology, payload);
+      yield put();
+
+      callback();
+    },
+
+    * addBiology({ payload, callback = () => void 0 }, { call, put }) {
+      yield call(postBiology, payload);
+      yield put();
+
+      callback();
+    }
   },
 
   reducers: {
@@ -111,7 +141,7 @@ export default {
       };
     },
 
-    getBiologyById(state, action) {
+    setBiology(state, action) {
       return {
         ...state,
         biology: action.payload,

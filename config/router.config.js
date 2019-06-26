@@ -217,7 +217,7 @@ export default [
         name: 'biodiversity',
         icon: 'deployment-unit',
         path: '/biodiversity',
-        component: './Biodiversity/BiologyList',
+        component: './Biodiversity/index',
       },
       {
         path: '/biodiversity/:id',
