@@ -25,18 +25,18 @@ const starAnimals = [
 ];
 
 export default {
-  'GET /api/starAnimals': (req, res) => {
-    res.send(starAnimals);
-  },
-
-  'GET /api/starAnimals/:name': (req, res) => {
-    const match = pathToRegexp('/api/starAnimals/:name').exec(req.url);
-    if (!match) {
-      throw new Error(`path not match`);
-    }
-
-    res.send({
-      name: qs.unescape(match[1]),
-    });
-  },
+  // 'GET /api/starAnimals': (req, res) => {
+  //   res.send(starAnimals);
+  // },
+  //
+  // 'GET /api/starAnimals/:name': (req, res) => {
+  //   const match = pathToRegexp('/api/starAnimals/:name').exec(req.url);
+  //   if (!match) {
+  //     throw new Error(`path not match`);
+  //   }
+  //
+  //   res.send({
+  //     name: qs.unescape(match[1]),
+  //   });
+  // },
 };

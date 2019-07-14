@@ -8,17 +8,11 @@ class ReachTextEditor extends React.Component {
     editorState: BraftEditor.createEditorState(null),
   };
 
-  static getDerivedStateFromProps(props, state) {
-    const { editorState } = state;
-    const curHtmlContent = editorState.toHTML();
+  componentDidMount() {
+    const { value = null } = this.props;
+    const editorState = BraftEditor.createEditorState(value);
 
-    if (editorState !== curHtmlContent) {
-      return {
-        editorState: BraftEditor.createEditorState(editorState),
-      };
-    }
-
-    return BraftEditor.createEditorState(null);
+    this.setState({ editorState });
   }
 
   handleChange = debounce(editorState => {

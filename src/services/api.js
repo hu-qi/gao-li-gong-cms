@@ -230,10 +230,6 @@ export async function getClassify() {
   return request(`/api/getClassify`);
 }
 
-export async function getStarAnimals() {
-  return request(`/api/starAnimals`);
-}
-
 export async function getStarAnimalByName(name) {
   return request(`/api/starAnimals/${name}`);
 }
@@ -386,3 +382,23 @@ export async function putLabel(params) {
 export async function getSpecies() {
   return request('api/species')
 }
+
+/**
+ * 明星物种列表
+ * @returns {Promise<void>}
+ */
+export async function getStarAnimals() {
+  return request(`/api/starAnimals`);
+}
+
+/**
+ * 明星物种列表
+ * @returns {Promise<void>}
+ */
+export async function setStarAnimals(params) {
+  return request(`/api/starAnimals/${params.name}`, {
+    method: 'PUT',
+    data: params,
+  });
+}
+

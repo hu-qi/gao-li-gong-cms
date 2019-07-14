@@ -16,7 +16,7 @@ export default {
     pagination: {
       total: 0,
       page: 1,
-      size: 115,
+      size: 20,
     },
     biology: {
       name: '',

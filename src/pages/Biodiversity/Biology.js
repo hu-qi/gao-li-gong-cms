@@ -25,7 +25,6 @@ const TypeMap = {
   MINI: 'mini',
 };
 
-
 @connect(({ loading, biology }) => ({
   submitting: loading.effects['form/submitRegularForm'],
   biology,
@@ -127,8 +126,8 @@ class Biology extends PureComponent {
       miniImgList,
     } = this.state;
     const imgLim = {
-      mini: 10,
-      main: 10,
+      mini: 20,
+      main: 20,
     };
     const labels = Object.entries(buildTagsGroup(tags));
     const formItemLayout = {
@@ -142,13 +141,13 @@ class Biology extends PureComponent {
         md: { span: 15 },
       },
     };
-    const labelTip = lim => <span>小图&nbsp;<Tooltip title={`最多可上传 ${lim} 张图片`}><Icon type='question-circle-o' /></Tooltip></span>;
+    const labelTip = (lim, tip) => <span>{tip}&nbsp;<Tooltip title={`最多可上传 ${lim} 张图片`}><Icon type='question-circle-o' /></Tooltip></span>;
 
     return (
       <React.Fragment>
         <PageHeaderWrapper />
         <Card bordered={false} style={{marginTop: '1em'}} className={styles.Biology}>
-          <Form onSubmit={this.handleSubmit} hideRequiredMark style={{marginTop: 8}}>
+          <Form onSubmit={this.handleSubmit} style={{marginTop: 8}}>
             <FormItem {...formItemLayout} label={<FormattedMessage id='form.title.label' />}>
               <Input
                 value={biology.name}
@@ -180,16 +179,18 @@ class Biology extends PureComponent {
                 </FormItem>
               ))
             }
-            <FormItem {...formItemLayout} label={labelTip(imgLim.mini)}>
+            <FormItem {...formItemLayout} label={labelTip(imgLim.mini, '缩略图')}>
               <ImgUPload fileList={miniImgList} limit={imgLim.mini} type={TypeMap.MINI} onChange={this.handleUploadChange} />
             </FormItem>
-            <FormItem {...formItemLayout} label={labelTip(imgLim.main)}>
+            <FormItem {...formItemLayout} label={labelTip(imgLim.main, '图片')}>
               <ImgUPload fileList={mainImgList} limit={imgLim.main} type={TypeMap.MAIN} onChange={this.handleUploadChange} />
             </FormItem>
             <FormItem {...formItemLayout} label={<span>物种详情&nbsp;<Tooltip title='Ctrl + S 保存当前编辑进度'><Icon type='question-circle-o' /></Tooltip></span>}>
               <RichTextEditor value={biology.content} onChange={e => this.handleNameChange(e, 'content')} />
             </FormItem>
+            <FormItem {...formItemLayout} colon={false} label={<></>}>
               <Button type='primary' htmlType='submit' onClick={this.handleSave}>保存</Button>
+            </FormItem>
           </Form>
         </Card>
       </React.Fragment>
