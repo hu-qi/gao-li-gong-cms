@@ -11,6 +11,8 @@ function getBase64(file) {
   });
 }
 
+export const host = '//47.96.116.169';
+
 class PicturesWall extends React.Component {
   state = {
     previewVisible: false,
@@ -31,12 +33,9 @@ class PicturesWall extends React.Component {
   };
 
   handleChange = ({ fileList }) => {
-    const {
-      onChange,
-      type,
-    } = this.props;
+    const { onChange } = this.props;
 
-    onChange(fileList, type);
+    onChange(fileList.map(({ response }) => response));
   };
 
   render() {
@@ -48,7 +47,7 @@ class PicturesWall extends React.Component {
       limit,
       fileList,
     } = this.props;
-    const uploadUrl = 'api/upload/image';
+    const uploadUrl = '/api/upload/image';
     const uploadButton = (
       <div>
         <Icon type='plus' />
@@ -56,13 +55,20 @@ class PicturesWall extends React.Component {
       </div>
     );
 
+    const defaultFileList = fileList.map(url => ({
+      uid: Math.random().toString(),
+      status: 'done',
+      response: url,
+      url: `${host}://${url}`,
+    }));
+
     return (
       <div className='clearfix'>
         <Upload
-          directory
+          multiple
           listType='picture-card'
           action={uploadUrl}
-          defaultFileList={fileList}
+          defaultFileList={defaultFileList}
           onPreview={this.handlePreview}
           onChange={this.handleChange}
         >
