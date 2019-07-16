@@ -3,6 +3,8 @@ import 'braft-editor/dist/index.css';
 import BraftEditor from 'braft-editor';
 import debounce from 'lodash/debounce';
 
+import styles from './index.less';
+
 class ReachTextEditor extends React.Component {
   state = {
     editorState: BraftEditor.createEditorState(null),
@@ -29,7 +31,11 @@ class ReachTextEditor extends React.Component {
   render() {
     const { editorState } = this.state;
 
-    return (<BraftEditor value={editorState} onChange={this.handleEditorChange} />);
+    return (
+      <section className={styles.richText}>
+        <BraftEditor value={editorState} onChange={this.handleEditorChange} />
+      </section>
+    );
   }
 }
 

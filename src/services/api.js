@@ -1,7 +1,6 @@
 import { stringify } from 'qs';
 import { extend } from 'umi-request';
 import request from '@/utils/request';
-import { debug } from 'util';
 extend({
   mode: 'no-cors',
 });
@@ -402,3 +401,23 @@ export async function setStarAnimals(params) {
   });
 }
 
+
+/**
+ * 关于我们
+ * @returns {Promise<void>}
+ */
+export async function getAboutUs() {
+  return request('api/about')
+}
+
+/**
+ * 关于我们-编辑
+ * @param params
+ * @returns {Promise<void>}
+ */
+export async function setAboutUs(params) {
+  return request(`/api/about`, {
+    method: 'PUT',
+    data: params,
+  });
+}

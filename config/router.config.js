@@ -232,7 +232,7 @@ export default [
         name: 'aboutUs',
         icon: 'smile',
         path: '/about-us',
-        component: './About-us/edit',
+        component: './About-us/index',
       },
       {
         path: '/dashboard',
