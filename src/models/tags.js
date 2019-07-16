@@ -23,10 +23,6 @@ export default {
 
     *add({ payload, callback = () => void 0 }, { call, put }) {
       yield call(postLabel, payload);
-      yield put({
-        type: 'fetch',
-        payload: { type: payload.type },
-      });
 
       callback();
     },

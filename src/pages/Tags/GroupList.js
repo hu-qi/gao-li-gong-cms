@@ -70,7 +70,6 @@ class FilterCardList extends PureComponent {
     const { dispatch } = this.props;
     const { name } = tag;
     let newName = name;
-
     const changeName = name => void (newName = name);
 
     Modal.confirm({

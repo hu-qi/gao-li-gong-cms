@@ -1,5 +1,5 @@
 import pathToRegexp from 'path-to-regexp';
-import { getStarAnimalByName, getStarAnimals } from '../../../services/api';
+import { getStarAnimalByName, getStarAnimals, setStarAnimals } from '../../../services/api';
 
 export default {
   namespace: 'starAnimals',
@@ -20,7 +20,7 @@ export default {
 
   effects: {
     *fetch(action, { call, put }) {
-      const animals = yield call(getStarAnimals);
+      const { data: animals = [] } = yield call(getStarAnimals);
 
       yield put({
         type: 'save',
@@ -31,7 +31,7 @@ export default {
     },
 
     *fetchAnimal({ payload }, { call, put }) {
-      const detail = yield call(getStarAnimalByName, payload.name);
+      const { data: detail } = yield call(getStarAnimalByName, payload.name);
 
       yield put({
         type: 'save',
@@ -40,6 +40,15 @@ export default {
         },
       });
     },
+
+    * updateAnimal({ payload }, { call, put }) {
+      yield call(setStarAnimals, payload);
+
+      yield put({
+        type: 'save',
+        payload,
+      })
+    }
   },
 
   subscriptions: {

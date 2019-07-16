@@ -1,7 +1,6 @@
 import { stringify } from 'qs';
 import { extend } from 'umi-request';
 import request from '@/utils/request';
-import { debug } from 'util';
 extend({
   mode: 'no-cors',
 });
@@ -230,10 +229,6 @@ export async function getClassify() {
   return request(`/api/getClassify`);
 }
 
-export async function getStarAnimals() {
-  return request(`/api/starAnimals`);
-}
-
 export async function getStarAnimalByName(name) {
   return request(`/api/starAnimals/${name}`);
 }
@@ -302,6 +297,40 @@ export async function getBiologyById({id}) {
 }
 
 /**
+ * 生物多样性 删
+ * @param id
+ * @returns {Promise<void>}
+ */
+export async function delBilology({id}) {
+  return request(`/api/biodiversity/${id}`, {
+    method: 'DELETE',
+  });
+}
+
+/**
+ * 生物多样性 增
+ * @param params
+ * @returns {Promise<void>}
+ */
+export async function postBiology(params) {
+  return request(`/api/biodiversity`, {
+    method: 'POST',
+    data: params,
+  });
+}
+
+/**
+ * 生物多样性 改
+ * @returns {Promise<void>}
+ */
+export async function putBilology(params) {
+  return request(`/api/label/${params.id}`, {
+    method: 'PUT',
+    data: params,
+  });
+}
+
+/**
  * 标签查
  * @param params { name, type, page, size }
  * @returns {Promise<void>}
@@ -345,3 +374,50 @@ export async function putLabel(params) {
   });
 }
 
+/**
+ * 获取物种类别
+ * @returns {Promise<void>}
+ */
+export async function getSpecies() {
+  return request('api/species')
+}
+
+/**
+ * 明星物种列表
+ * @returns {Promise<void>}
+ */
+export async function getStarAnimals() {
+  return request(`/api/starAnimals`);
+}
+
+/**
+ * 明星物种列表
+ * @returns {Promise<void>}
+ */
+export async function setStarAnimals(params) {
+  return request(`/api/starAnimals/${params.name}`, {
+    method: 'PUT',
+    data: params,
+  });
+}
+
+
+/**
+ * 关于我们
+ * @returns {Promise<void>}
+ */
+export async function getAboutUs() {
+  return request('api/about')
+}
+
+/**
+ * 关于我们-编辑
+ * @param params
+ * @returns {Promise<void>}
+ */
+export async function setAboutUs(params) {
+  return request(`/api/about`, {
+    method: 'PUT',
+    data: params,
+  });
+}

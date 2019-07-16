@@ -7,45 +7,54 @@ import {
   Button,
   Card,
   Select,
+  Tooltip,
+  Icon,
 } from 'antd';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
 
-const Option = Select.Option;
+import ImgUPload from '@/components/ImgUpload'
+import PageHeaderWrapper from '@/components/PageHeaderWrapper';
+import RichTextEditor from '@/components/RichTextEditor';
+import { buildTagsGroup } from './index';
+import styles from './Biology.less';
+
 const FormItem = Form.Item;
 const { TextArea } = Input;
+const { Option } = Select;
+const TypeMap = {
+  MAIN: 'main',
+  MINI: 'mini',
+};
 
 @connect(({ loading, biology }) => ({
   submitting: loading.effects['form/submitRegularForm'],
   biology,
 }))
-@Form.create()
-class BasicForms extends PureComponent {
+class Biology extends PureComponent {
   state = {
-    value: 'test',
+    miniImgList: [],
+    mainImgList: [],
   };
 
   componentDidMount() {
-    const { dispatch } = this.props;
-
-    dispatch({
-      type: 'biology/fetchBiologyById',
-      payload: {
-        id: 8,
+    const {
+      dispatch,
+      match: {
+        params: { id },
       },
-    });
+    } = this.props;
+
+    if (+id) {
+      dispatch({
+        type: 'biology/fetchBiologyById',
+        payload: { id },
+      });
+    }
 
     dispatch({
-      type: 'biology/fetchClassify',
+      type: 'biology/fetchLabelList',
       payload: {},
     });
   }
-
-  handleChange = (value) => {
-    this.setState({
-      value,
-    });
-  };
 
   handleSubmit = e => {
     const { dispatch, form } = this.props;
@@ -60,122 +69,133 @@ class BasicForms extends PureComponent {
     });
   };
 
-  handleChange(value) {
-    console.log(`selected ${value}`);
-  }
+  handleUploadChange = (fileList, type) => {
+    console.log(fileList)
+    switch (type) {
+      case TypeMap.MAIN:
+        this.setState({
+          mainImgList: fileList,
+        });
+        break;
+      case TypeMap.MINI:
+        this.setState({
+          miniImgList: fileList,
+        });
+        break;
+      default:
+        void 0;
+    }
+  };
+
+  handleNameChange = (value, key) => {
+    const {
+      dispatch,
+      biology: { biology },
+    } = this.props;
+
+    dispatch({
+      type: 'biology/setBiology',
+      payload: {
+        ...biology,
+        [key]: value,
+      },
+    });
+  };
+
+  handleSave = () => {
+    const {
+      dispatch,
+      biology: { biology },
+    } = this.props;
+
+    dispatch({
+      type: 'biology/addBiology',
+      payload: biology,
+    });
+  };
 
   render() {
     const {
-      submitting, biology: {
-        biology = {},
-        classify: {
-          protection = [],
-          endangered = [],
-          species = [],
-        } = {},
+      biology: {
+        biology,
+        tags,
       },
     } = this.props;
-
     const {
-      form: { getFieldDecorator },
-    } = this.props;
-
+      mainImgList,
+      miniImgList,
+    } = this.state;
+    const imgLim = {
+      mini: 20,
+      main: 20,
+    };
+    const labels = Object.entries(buildTagsGroup(tags));
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },
-        sm: { span: 7 },
+        sm: { span: 5 },
       },
       wrapperCol: {
         xs: { span: 24 },
-        sm: { span: 12 },
-        md: { span: 10 },
+        sm: { span: 15 },
+        md: { span: 15 },
       },
     };
-
-    const submitFormLayout = {
-      wrapperCol: {
-        xs: { span: 24, offset: 0 },
-        sm: { span: 10, offset: 7 },
-      },
-    };
+    const labelTip = (lim, tip) => <span>{tip}&nbsp;<Tooltip title={`最多可上传 ${lim} 张图片`}><Icon type='question-circle-o' /></Tooltip></span>;
 
     return (
-      <Card bordered={ false }>
-        <Form onSubmit={ this.handleSubmit } hideRequiredMark style={ { marginTop: 8 } }>
-          <FormItem { ...formItemLayout } label={ <FormattedMessage id="form.title.label"/> }>
-            { getFieldDecorator('title', {
-              initialValue: biology.name,
-              rules: [
-                {
-                  required: true,
-                  message: formatMessage({ id: 'validation.title.required' }),
-                },
-              ],
-            })(<Input placeholder={ formatMessage({ id: 'form.title.placeholder' }) }/>) }
-          </FormItem>
-          <FormItem { ...formItemLayout } label={ <FormattedMessage id="form.goal.label"/> }>
-            { getFieldDecorator('goal', {
-              initialValue: biology.content,
-              rules: [
-                {
-                  required: true,
-                  message: formatMessage({ id: 'validation.goal.required' }),
-                },
-              ],
-            })(
+      <React.Fragment>
+        <PageHeaderWrapper />
+        <Card bordered={false} style={{marginTop: '1em'}} className={styles.Biology}>
+          <Form onSubmit={this.handleSubmit} style={{marginTop: 8}}>
+            <FormItem {...formItemLayout} label={<FormattedMessage id='form.title.label' />}>
+              <Input
+                value={biology.name}
+                placeholder='请输入物种名称'
+                onChange={e => this.handleNameChange(e.target.value, 'name')}
+              />
+            </FormItem>
+            <FormItem {...formItemLayout} label={<FormattedMessage id='form.goal.label' />}>
               <TextArea
-                style={ { minHeight: 32 } }
-                placeholder={ formatMessage({ id: 'form.goal.placeholder' }) }
-                rows={ 4 }
-              />,
-            ) }
-          </FormItem>
-          <FormItem { ...formItemLayout } label={ '保护等级' }>
-            <Select
-              mode="multiple"
-              style={{ width: '100%' }}
-              placeholder="Please select"
-              defaultValue={['level2', 'level3']}
-              onChange={this.handleChange}
-            >
-              {endangered.map(({ text, id }) => <Option key={id.toString()}>{ text }</Option>)}
-            </Select>
-          </FormItem>
-          <FormItem { ...formItemLayout } label={ '濒危等级' }>
-            <Select
-              mode="multiple"
-              style={{ width: '100%' }}
-              placeholder="Please select"
-              defaultValue={['level2']}
-              onChange={this.handleChange}
-            >
-              {protection.map(({ text, id }) => <Option key={id.toString()}>{ text }</Option>)}
-            </Select>
-          </FormItem>
-          <FormItem { ...formItemLayout } label={ '物种分类' }>
-            <Select
-              mode="multiple"
-              style={{ width: '100%' }}
-              placeholder="Please select"
-              defaultValue={['bird', 'bird1', 'bird2']}
-              onChange={this.handleChange}
-            >
-              {species.map(({ text, id }) => <Option key={id.toString()}>{ text }</Option>)}
-            </Select>
-          </FormItem>
-          <ReactQuill value={ this.state.value } onChange={ this.handleChange }/>
-          <FormItem { ...submitFormLayout } style={ { marginTop: 32 } }>
-            <Button type="primary" htmlType="submit" loading={ submitting }>
-              <FormattedMessage id="form.submit"/>
-            </Button>
-            <Button style={ { marginLeft: 8 } }>
-              <FormattedMessage id="form.save"/>
-            </Button>
-          </FormItem>
-        </Form>
-      </Card>
+                style={{minHeight: 32}}
+                placeholder={formatMessage({ id: 'form.goal.placeholder'})}
+                rows={4}
+                value={biology.brief}
+                onChange={e => this.handleNameChange(e.target.value, 'brief')}
+              />
+            </FormItem>
+            {
+              labels.map(([label, tag]) => (
+                <FormItem {...formItemLayout} key={label} label={label}>
+                  <Select
+                    mode='multiple'
+                    style={{ width: '100%' }}
+                    placeholder='Please select'
+                    defaultValue={[]}
+                    onChange={this.handleChange}
+                  >
+                    {tag.map(({ name, id }) => <Option key={id.toString()}>{ name }</Option>)}
+                  </Select>
+                </FormItem>
+              ))
+            }
+            <FormItem {...formItemLayout} label={labelTip(imgLim.mini, '缩略图')}>
+              <ImgUPload fileList={miniImgList} limit={imgLim.mini} type={TypeMap.MINI} onChange={this.handleUploadChange} />
+            </FormItem>
+            <FormItem {...formItemLayout} label={labelTip(imgLim.main, '图片')}>
+              <ImgUPload fileList={mainImgList} limit={imgLim.main} type={TypeMap.MAIN} onChange={this.handleUploadChange} />
+            </FormItem>
+            <FormItem {...formItemLayout} label={<span>物种详情&nbsp;<Tooltip title='Ctrl + S 保存当前编辑进度'><Icon type='question-circle-o' /></Tooltip></span>}>
+              <RichTextEditor value={biology.content} onChange={e => this.handleNameChange(e, 'content')} />
+            </FormItem>
+            <FormItem {...formItemLayout} colon={false} label={<></>}>
+              <Button type='primary' htmlType='submit' onClick={this.handleSave}>保存</Button>
+            </FormItem>
+          </Form>
+        </Card>
+      </React.Fragment>
     );
   }
 }
 
-export default BasicForms;
+export default Biology;
