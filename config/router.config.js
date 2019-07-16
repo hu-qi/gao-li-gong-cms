@@ -185,34 +185,6 @@ export default [
           },
         ],
       },
-      // 影视集锦
-      // {
-      //   name: 'videos',
-      //   icon: 'video-camera',
-      //   path: '/videos',
-      //   hideChildrenInMenu: true,
-      //   routes: [
-      //     {
-      //       path: '/videos',
-      //       redirect: '/videos/videos-list',
-      //     },
-      //     {
-      //       path: '/videos/videos-list',
-      //       component: './Videos/VideosList',
-      //     },
-      //     {
-      //       path: '/videos/videos-add',
-      //       name: 'videos-add',
-      //       component: './Videos/VideosEdit',
-      //     },
-      //     {
-      //       path: '/videos/videos-edit/:id',
-      //       name: 'videos-edit',
-      //       component: './Videos/VideosEdit',
-      //     },
-      //   ],
-      // },
-      // 生物多样性
       {
         name: 'biodiversity',
         icon: 'deployment-unit',
@@ -380,45 +352,6 @@ export default [
         ],
       },
       {
-        path: '/profile',
-        name: 'profile',
-        icon: 'profile',
-        routes: [
-          // profile
-          {
-            path: '/profile/basic',
-            name: 'basic',
-            component: './Profile/BasicProfile',
-          },
-          {
-            path: '/profile/basic/:id',
-            name: 'basic',
-            hideInMenu: true,
-            component: './Profile/BasicProfile',
-          },
-          {
-            path: '/profile/advanced',
-            name: 'advanced',
-            authority: ['admin'],
-            component: './Profile/AdvancedProfile',
-          },
-        ],
-      },
-      {
-        name: 'result',
-        icon: 'check-circle-o',
-        path: '/result',
-        routes: [
-          // result
-          {
-            path: '/result/success',
-            name: 'success',
-            component: './Result/Success',
-          },
-          { path: '/result/fail', name: 'fail', component: './Result/Error' },
-        ],
-      },
-      {
         name: 'exception',
         icon: 'warning',
         path: '/exception',
@@ -444,29 +377,6 @@ export default [
             name: 'trigger',
             hideInMenu: true,
             component: './Exception/TriggerException',
-          },
-        ],
-      },
-      //  editor
-      {
-        name: 'editor',
-        icon: 'highlight',
-        path: '/editor',
-        routes: [
-          {
-            path: '/editor/flow',
-            name: 'flow',
-            component: './Editor/GGEditor/Flow',
-          },
-          {
-            path: '/editor/mind',
-            name: 'mind',
-            component: './Editor/GGEditor/Mind',
-          },
-          {
-            path: '/editor/koni',
-            name: 'koni',
-            component: './Editor/GGEditor/Koni',
           },
         ],
       },
