@@ -15,7 +15,7 @@ export default [
   {
     path: '/',
     component: '../layouts/BasicLayout',
-    // Routes: ['src/pages/Authorized'],
+    Routes: ['src/pages/Authorized'],
     routes: [
       // dashboard
       { path: '/', redirect: '/dashboard/analysis', authority: ['admin', 'user'] },
@@ -69,95 +69,6 @@ export default [
           },
         ],
       },
-      // 账户管理
-      {
-        name: 'account',
-        icon: 'usergroup-delete',
-        path: '/account',
-        routes: [
-          {
-            path: '/account/list',
-            name: 'list',
-            component: './Account/User/TableList.tmp',
-            hideChildrenInMenu: true,
-            routes: [
-              {
-                path: '/account/new',
-                name: 'new',
-                // component: './Account/User/Create',
-              },
-              {
-                path: '/account/preview',
-                name: 'preview',
-              },
-            ],
-          },
-          {
-            path: '/account/center',
-            name: 'center',
-            component: './Account/Center/Center',
-            routes: [
-              {
-                path: '/account/center',
-                redirect: '/account/center/articles',
-              },
-              {
-                path: '/account/center/articles',
-                component: './Account/Center/Articles',
-              },
-              {
-                path: '/account/center/applications',
-                component: './Account/Center/Applications',
-              },
-              {
-                path: '/account/center/projects',
-                component: './Account/Center/Projects',
-              },
-            ],
-          },
-          {
-            path: '/account/settings',
-            name: 'settings',
-            component: './Account/Settings/Info',
-            routes: [
-              {
-                path: '/account/settings',
-                redirect: '/account/settings/base',
-              },
-              {
-                path: '/account/settings/base',
-                component: './Account/Settings/BaseView',
-              },
-              {
-                path: '/account/settings/security',
-                component: './Account/Settings/SecurityView',
-              },
-              {
-                path: '/account/settings/binding',
-                component: './Account/Settings/BindingView',
-              },
-              {
-                path: '/account/settings/notification',
-                component: './Account/Settings/NotificationView',
-              },
-            ],
-          },
-        ],
-      },
-      // 明星物种
-      {
-        name: 'starAnimals',
-        icon: 'twitter',
-        path: '/starAnimals',
-        component: './StarAnimals',
-        hideChildrenInMenu: true,
-      },
-      {
-        path: '/starAnimals/edit/:name',
-        component: './StarAnimals/edit',
-        name: 'starAnimals',
-        hideInMenu: true,
-      },
       // 新闻管理
       {
         name: 'news',
@@ -185,18 +96,6 @@ export default [
           },
         ],
       },
-      {
-        name: 'biodiversity',
-        icon: 'deployment-unit',
-        path: '/biodiversity',
-        component: './Biodiversity/index',
-      },
-      {
-        path: '/biodiversity/:id',
-        name: 'biology',
-        hideInMenu: true,
-        component: './Biodiversity/Biology',
-      },
       // 时间线
       {
         name: 'timeline',
@@ -220,6 +119,41 @@ export default [
           },
         ],
       },
+      // 账户管理
+      {
+        name: 'account',
+        icon: 'usergroup-delete',
+        path: '/account',
+        component: './Account/User/TableList.tmp',
+      },
+      // 明星物种
+      {
+        name: 'starAnimals',
+        icon: 'twitter',
+        path: '/starAnimals',
+        component: './StarAnimals',
+        hideChildrenInMenu: true,
+      },
+      {
+        path: '/starAnimals/edit/:name',
+        component: './StarAnimals/edit',
+        name: 'starAnimals',
+        hideInMenu: true,
+      },
+      // 生物多样性
+      {
+        name: 'biodiversity',
+        icon: 'deployment-unit',
+        path: '/biodiversity',
+        component: './Biodiversity/index',
+      },
+      // 生物多样性-新建
+      {
+        path: '/biodiversity/:id',
+        name: 'biology',
+        hideInMenu: true,
+        component: './Biodiversity/Biology',
+      },
       // 标签
       {
         name: 'labels',
@@ -234,152 +168,35 @@ export default [
         path: '/about-us',
         component: './About-us/index',
       },
-      {
-        path: '/dashboard',
-        name: 'dashboard',
-        icon: 'dashboard',
-        routes: [
-          {
-            path: '/dashboard/analysis',
-            name: 'analysis',
-            component: './Dashboard/Analysis',
-          },
-          {
-            path: '/dashboard/monitor',
-            name: 'monitor',
-            component: './Dashboard/Monitor',
-          },
-          {
-            path: '/dashboard/workplace',
-            name: 'workplace',
-            component: './Dashboard/Workplace',
-          },
-        ],
-      },
-      // forms
-      {
-        path: '/form',
-        icon: 'form',
-        name: 'form',
-        routes: [
-          {
-            path: '/form/basic-form',
-            name: 'basicform',
-            component: './Forms/BasicForm',
-          },
-          {
-            path: '/form/step-form',
-            name: 'stepform',
-            component: './Forms/StepForm',
-            hideChildrenInMenu: true,
-            routes: [
-              {
-                path: '/form/step-form',
-                redirect: '/form/step-form/info',
-              },
-              {
-                path: '/form/step-form/info',
-                name: 'info',
-                component: './Forms/StepForm/Step1',
-              },
-              {
-                path: '/form/step-form/confirm',
-                name: 'confirm',
-                component: './Forms/StepForm/Step2',
-              },
-              {
-                path: '/form/step-form/result',
-                name: 'result',
-                component: './Forms/StepForm/Step3',
-              },
-            ],
-          },
-          {
-            path: '/form/advanced-form',
-            name: 'advancedform',
-            authority: ['admin'],
-            component: './Forms/AdvancedForm',
-          },
-        ],
-      },
-      // list
-      {
-        path: '/list',
-        icon: 'table',
-        name: 'list',
-        routes: [
-          {
-            path: '/list/table-list',
-            name: 'searchtable',
-            component: './List/TableList',
-          },
-          {
-            path: '/list/basic-list',
-            name: 'basiclist',
-            component: './List/BasicList',
-          },
-          {
-            path: '/list/card-list',
-            name: 'cardlist',
-            component: './List/CardList',
-          },
-          {
-            path: '/list/search',
-            name: 'searchlist',
-            component: './List/List',
-            routes: [
-              {
-                path: '/list/search',
-                redirect: '/list/search/articles',
-              },
-              {
-                path: '/list/search/articles',
-                name: 'articles',
-                component: './List/Articles',
-              },
-              {
-                path: '/list/search/projects',
-                name: 'projects',
-                component: './List/Projects',
-              },
-              {
-                path: '/list/search/applications',
-                name: 'applications',
-                component: './List/Applications',
-              },
-            ],
-          },
-        ],
-      },
-      {
-        name: 'exception',
-        icon: 'warning',
-        path: '/exception',
-        routes: [
-          // exception
-          {
-            path: '/exception/403',
-            name: 'not-permission',
-            component: './Exception/403',
-          },
-          {
-            path: '/exception/404',
-            name: 'not-find',
-            component: './Exception/404',
-          },
-          {
-            path: '/exception/500',
-            name: 'server-error',
-            component: './Exception/500',
-          },
-          {
-            path: '/exception/trigger',
-            name: 'trigger',
-            hideInMenu: true,
-            component: './Exception/TriggerException',
-          },
-        ],
-      },
+      // {
+      //   name: 'exception',
+      //   icon: 'warning',
+      //   path: '/exception',
+      //   routes: [
+      //     // exception
+      //     {
+      //       path: '/exception/403',
+      //       name: 'not-permission',
+      //       component: './Exception/403',
+      //     },
+      //     {
+      //       path: '/exception/404',
+      //       name: 'not-find',
+      //       component: './Exception/404',
+      //     },
+      //     {
+      //       path: '/exception/500',
+      //       name: 'server-error',
+      //       component: './Exception/500',
+      //     },
+      //     {
+      //       path: '/exception/trigger',
+      //       name: 'trigger',
+      //       hideInMenu: true,
+      //       component: './Exception/TriggerException',
+      //     },
+      //   ],
+      // },
       {
         component: '404',
       },
