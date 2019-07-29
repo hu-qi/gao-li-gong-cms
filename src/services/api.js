@@ -114,19 +114,8 @@ export async function fakeAccountLogin(params) {
   });
 }
 
-export async function fakeRegister(params) {
-  return request('/api/register', {
-    method: 'POST',
-    data: params,
-  });
-}
-
 export async function queryNotices(params = {}) {
   return request(`/api/notices?${stringify(params)}`);
-}
-
-export async function getFakeCaptcha(mobile) {
-  return request(`/api/captcha?mobile=${mobile}`);
 }
 
 export async function getNews(params) {
@@ -223,8 +212,6 @@ export async function changeTimeline(params) {
   });
 }
 
-
-
 export async function getClassify() {
   return request(`/api/getClassify`);
 }
@@ -241,6 +228,15 @@ export async function getStarAnimalByName(name) {
  */
 export async function userList(params) {
   return request(`/api/users/list?${stringify(params)}`);
+}
+
+/**
+ * 用户详情
+ * @param params
+ * @returns {Promise<void>}
+ */
+export async function userById(params) {
+  return request(`/api/users/${params.id}`);
 }
 
 /**
