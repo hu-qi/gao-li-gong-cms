@@ -11,7 +11,7 @@ function getBase64(file) {
   });
 }
 
-export const host = '//47.96.116.169';
+export const host = '47.96.116.169';
 
 class PicturesWall extends React.Component {
   state = {
@@ -55,12 +55,18 @@ class PicturesWall extends React.Component {
       </div>
     );
 
-    const defaultFileList = fileList.map(url => ({
-      uid: Math.random().toString(),
-      status: 'done',
-      response: url,
-      url: `${host}://${url}`,
-    }));
+    const defaultFileList = [];
+
+    fileList.forEach(url => {
+      if (!url) return;
+
+      defaultFileList.push({
+        uid: Math.random().toString(),
+        status: 'done',
+        response: url,
+        url: `//${host}${url}`,
+      });
+    });
 
     return (
       <div className='clearfix'>
@@ -72,7 +78,7 @@ class PicturesWall extends React.Component {
           onPreview={this.handlePreview}
           onChange={this.handleChange}
         >
-          {fileList.length >= +limit ? null : uploadButton}
+          {defaultFileList.length >= +limit ? null : uploadButton}
         </Upload>
         <Modal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
           <img alt='example' style={{ width: '100%' }} src={previewImage} />

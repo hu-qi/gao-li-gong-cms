@@ -12,11 +12,13 @@ import {
   Divider, Avatar, Modal,
   Typography,
 } from 'antd';
+import router from 'umi/router';
+
 import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import UserInfo from './UserInfo';
 
-import styles from './TableList.less';
+import styles from './index.less';
+import { host } from '../../components/ImgUpload';
 
 const FormItem = Form.Item;
 const { Text } = Typography;
@@ -24,28 +26,23 @@ const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
     .join(',');
-const ModalType = {
-  NEW: 'post',
-  UPDATE: 'put',
-};
 
 /* eslint react/no-multi-comp:0 */
 @connect(models => {
   const { account, loading } = models;
+
   return ({
     account,
     loading: loading.models.account,
-  })
+  });
 })
 @Form.create()
 class TableList extends PureComponent {
   state = {
     selectedRows: [],
     formValues: {},
-    modalVisible: false, // 新建用户
     pageSize: 10,
     currentPage: 1,
-    updateFieldsValue: {},
   };
 
   // 列表配置
@@ -53,7 +50,7 @@ class TableList extends PureComponent {
     {
       title: '用户',
       dataIndex: 'avatar',
-      render: url => <Avatar src={url} shape='square' size='large' />,
+      render: url => <Avatar src={`//${host}${url}`} shape='square' size='large' />,
     },
     {
       title: '用户名',
@@ -82,7 +79,7 @@ class TableList extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.handleUpdate(record)}>编辑</a>
+          <a onClick={() => router.push(`/account/${record.id}`)}>编辑</a>
           <Divider type='vertical' />
           <a onClick={() => this.handleDelete(record)}>删除</a>
         </Fragment>
@@ -127,20 +124,6 @@ class TableList extends PureComponent {
     input.setAttribute('style','display:none');
   };
 
-  handleModalVisible = flag => {
-    this.setState({
-      modalVisible: !!flag,
-    });
-  };
-
-  handleUpdate = fields => {
-    this.setState({
-      updateFieldsValue: fields,
-    });
-
-    this.handleModalVisible(true);
-  };
-
   handleDelete = user => {
     const { dispatch } = this.props;
 
@@ -168,55 +151,6 @@ class TableList extends PureComponent {
     });
   };
 
-  modalChange = (fields, type) => {
-    const { dispatch } = this.props;
-
-    dispatch({
-      type: `account/${ModalType[type]}`,
-      payload: fields,
-      callback: ({isError}) => {
-        if (!isError) {
-          message.success('数据修改成功');
-          this.handleModalVisible();
-        } else {
-          message.warning('数据修改失败，请重试！')
-        }
-
-        this.fetchData();
-      }
-    });
-  };
-
-  renderAdvancedForm() {
-    const {
-      form: { getFieldDecorator },
-    } = this.props;
-    return (
-      <Form onSubmit={this.handleSearch} layout='inline'>
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={10} sm={24}>
-            <FormItem label='用户名/昵称'>
-              {getFieldDecorator('name')(<Input placeholder='请输入用户名或昵称' />)}
-            </FormItem>
-          </Col>
-          <Col>
-            <Button type='primary' htmlType='submit'>
-              查询
-            </Button>
-            <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
-              重置
-            </Button>
-          </Col>
-        </Row>
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Button style={{ marginLeft: 10, marginBottom: 10, }} icon='plus' type='primary' onClick={() => this.handleModalVisible(true)}>
-            新建用户
-          </Button>
-        </Row>
-      </Form>
-    );
-  }
-
   handleFormReset = () => {
     const { form } = this.props;
 
@@ -231,6 +165,7 @@ class TableList extends PureComponent {
 
   handleSearch = e => {
     e.preventDefault();
+
     const { dispatch, form } = this.props;
 
     form.validateFields((err, fieldsValue) => {
@@ -278,6 +213,42 @@ class TableList extends PureComponent {
     });
   };
 
+  renderAdvancedForm() {
+    const {
+      form: { getFieldDecorator },
+    } = this.props;
+
+    return (
+      <Form onSubmit={this.handleSearch} layout='inline'>
+        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
+          <Col md={10} sm={24}>
+            <FormItem label='用户名/昵称'>
+              {getFieldDecorator('name1')(<Input placeholder='请输入用户名或昵称' />)}
+            </FormItem>
+          </Col>
+          <Col>
+            <Button type='primary' htmlType='submit'>
+              查询
+            </Button>
+            <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
+              重置
+            </Button>
+          </Col>
+        </Row>
+        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
+          <Button
+            style={{ marginLeft: 10, marginBottom: 10, }}
+            icon='plus'
+            type='primary'
+            onClick={() => router.push('/account/0')}
+          >
+            新建用户
+          </Button>
+        </Row>
+      </Form>
+    );
+  }
+
   render() {
     const {
       account: {
@@ -286,7 +257,7 @@ class TableList extends PureComponent {
       } = {},
       loading,
     } = this.props;
-    const { selectedRows, modalVisible, updateFieldsValue } = this.state;
+    const { selectedRows } = this.state;
     const data = {
       list,
       pagination: { current, pageSize, total }};
@@ -295,28 +266,8 @@ class TableList extends PureComponent {
       currentPage: current,
     });
 
-    const handleAdd = fields => {
-      let type = null;
-      if (Object.keys(updateFieldsValue).length) {
-        type = 'UPDATE';
-        Object.assign(fields, {
-          id: updateFieldsValue.id,
-        })
-      } else {
-        type = 'NEW';
-      }
-
-      this.modalChange(fields, type);
-      this.setState({
-        updateFieldsValue: {},
-      });
-    };
-
-    const handleCancel = () => void this.handleModalVisible();
-
     return (
       <PageHeaderWrapper title='用户列表'>
-        { modalVisible ? <UserInfo confirmHandle={handleAdd} cancelHandle={handleCancel} fieldsValue={updateFieldsValue} /> : null }
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderAdvancedForm()}</div>

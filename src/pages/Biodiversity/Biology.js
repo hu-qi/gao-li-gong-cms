@@ -70,7 +70,6 @@ class Biology extends PureComponent {
   };
 
   handleUploadChange = (fileList, type) => {
-    console.log(fileList)
     switch (type) {
       case TypeMap.MAIN:
         this.setState({
