@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Input, Button, Modal, Icon, Form, Select, Popover } from 'antd';
+import { Input, Button, Modal, Icon, Form, Select, Popover, Tooltip } from 'antd';
 import Debounce from 'lodash-decorators/debounce';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import { ChromePicker } from 'react-color';
@@ -157,16 +157,17 @@ class SearchList extends Component {
     } = this.state;
 
     const mainSearch = (
-      <section >
-        <Button
-          className={styles.newTag}
-          type='primary'
-          icon='plus'
-          shape='circle'
-          size='large'
-          onClick={() => this.renderNewTag()}
-        >
-        </Button>
+      <section>
+        <Tooltip title='新增标签'>
+          <Button
+            className={styles.newTag}
+            type='primary'
+            icon='plus'
+            shape='circle'
+            size='large'
+            onClick={() => this.renderNewTag()}
+          />
+        </Tooltip>
         <div style={{ textAlign: 'center' }}>
           <Input.Search
             placeholder='请输入标签关键字'

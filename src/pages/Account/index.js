@@ -1,16 +1,17 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import {
-  Row,
-  Col,
   Card,
   Form,
   Input,
   Button,
   message,
   notification,
-  Divider, Avatar, Modal,
+  Divider,
+  Avatar,
+  Modal,
   Typography,
+  Tooltip,
 } from 'antd';
 import router from 'umi/router';
 
@@ -20,14 +21,8 @@ import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './index.less';
 import { host } from '../../components/ImgUpload';
 
-const FormItem = Form.Item;
 const { Text } = Typography;
-const getValue = obj =>
-  Object.keys(obj)
-    .map(key => obj[key])
-    .join(',');
 
-/* eslint react/no-multi-comp:0 */
 @connect(models => {
   const { account, loading } = models;
 
@@ -39,10 +34,7 @@ const getValue = obj =>
 @Form.create()
 class TableList extends PureComponent {
   state = {
-    selectedRows: [],
-    formValues: {},
-    pageSize: 10,
-    currentPage: 1,
+    name: '',
   };
 
   // 列表配置
@@ -50,7 +42,7 @@ class TableList extends PureComponent {
     {
       title: '用户',
       dataIndex: 'avatar',
-      render: url => <Avatar src={`//${host}${url}`} shape='square' size='large' />,
+      render: url => <Avatar src={url ? `//${host}${url}`: ''} shape='square' size='large' />,
     },
     {
       title: '用户名',
@@ -91,18 +83,27 @@ class TableList extends PureComponent {
     this.fetchData();
   }
 
-  fetchData() {
-    const { dispatch } = this.props;
-    const { pageSize: size, currentPage: page } = this.state;
+  fetchData = () => {
+    const {
+      dispatch,
+      account: {
+        pagination: {
+          size,
+          page,
+        },
+      },
+    } = this.props;
+    const { name } = this.state;
 
     dispatch({
       type: 'account/fetch',
       payload: {
         page,
         size,
+        name,
       }
     });
-  }
+  };
 
   onCopyClipboard = (webchat) => {
     const input = document.createElement('input');
@@ -125,7 +126,12 @@ class TableList extends PureComponent {
   };
 
   handleDelete = user => {
-    const { dispatch } = this.props;
+    const {
+      props: {
+        dispatch,
+      },
+      fetchData,
+    }= this;
 
     Modal.confirm({
       title: <p>确定删除 <Text type='warning'>{user.name}</Text> 吗？</p>,
@@ -143,7 +149,7 @@ class TableList extends PureComponent {
               message.warning('账号删除失败，请重试！')
             }
 
-            this.fetchData();
+            fetchData();
           }
         });
       },
@@ -151,134 +157,107 @@ class TableList extends PureComponent {
     });
   };
 
-  handleFormReset = () => {
-    const { form } = this.props;
+  handleSearchChange = name => this.setState({ name });
 
-    form.resetFields();
-
-    this.setState({
-      formValues: {},
-    });
-
-    this.fetchData();
-  };
-
-  handleSearch = e => {
-    e.preventDefault();
-
-    const { dispatch, form } = this.props;
-
-    form.validateFields((err, fieldsValue) => {
-      if (err) return;
-
-      const values = {
-        ...fieldsValue,
-      };
-
-      this.setState({
-        formValues: values,
-      });
-
-      dispatch({
-        type: 'account/fetch',
-        payload: values,
-      });
-    });
-  };
-
-  handleStandardTableChange = (pagination, filtersArg, sorter) => {
-    const { dispatch } = this.props;
-    const { formValues } = this.state;
-
-    const filters = Object.keys(filtersArg).reduce((obj, key) => {
-      const newObj = { ...obj };
-      newObj[key] = getValue(filtersArg[key]);
-      return newObj;
-    }, {});
-
-    const params = {
-      page: pagination.current,
-      size: pagination.pageSize,
-      ...formValues,
-      ...filters,
-    };
-
-    if (sorter.field) {
-      params.sorter = `${sorter.field}_${sorter.order}`;
-    }
+  handleSearchSubmit = () => {
+    const {
+      dispatch,
+      account: {
+        pagination: { size },
+      }
+    } = this.props;
+    const { name } = this.state;
 
     dispatch({
       type: 'account/fetch',
-      payload: params,
+      payload: {
+        name,
+        size,
+        page: 1,
+      },
     });
   };
 
-  renderAdvancedForm() {
-    const {
-      form: { getFieldDecorator },
-    } = this.props;
+  handleStandardTableChange = pagination => {
+    const { dispatch } = this.props;
+    const { name } = this.state;
 
-    return (
-      <Form onSubmit={this.handleSearch} layout='inline'>
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={10} sm={24}>
-            <FormItem label='用户名/昵称'>
-              {getFieldDecorator('name1')(<Input placeholder='请输入用户名或昵称' />)}
-            </FormItem>
-          </Col>
-          <Col>
-            <Button type='primary' htmlType='submit'>
-              查询
-            </Button>
-            <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
-              重置
-            </Button>
-          </Col>
-        </Row>
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Button
-            style={{ marginLeft: 10, marginBottom: 10, }}
-            icon='plus'
-            type='primary'
-            onClick={() => router.push('/account/0')}
-          >
-            新建用户
-          </Button>
-        </Row>
-      </Form>
-    );
-  }
+    const payload = {
+      page: pagination.current,
+      size: pagination.pageSize,
+      name,
+    };
+
+    dispatch({
+      type: 'account/fetch',
+      payload,
+    });
+  };
 
   render() {
     const {
       account: {
         list = [],
-        pagination: { page: current, size: pageSize, total }
+        pagination: {
+          page: current,
+          size: pageSize,
+          total,
+        }
       } = {},
       loading,
     } = this.props;
-    const { selectedRows } = this.state;
+    const {
+      name,
+    } = this.state;
     const data = {
       list,
-      pagination: { current, pageSize, total }};
+      pagination: {
+        current,
+        pageSize,
+        total,
+      },
+    };
 
-    this.setState({
-      currentPage: current,
-    });
+    const mainSearch = (
+      <section className={styles.tableList}>
+        <Tooltip title='新增用户'>
+          <Button
+            className={styles.newTag}
+            type='primary'
+            icon='plus'
+            shape='circle'
+            size='large'
+            onClick={() => router.push('/account/0')}
+          />
+        </Tooltip>
+        <div style={{ textAlign: 'center' }}>
+          <Input.Search
+            placeholder='请输入用户名或昵称'
+            enterButton='搜索'
+            size='large'
+            value={name}
+            onChange={e => this.handleSearchChange(e.target.value)}
+            onSearch={this.handleSearchSubmit}
+            style={{width: 522}}
+            allowClear
+          />
+        </div>
+      </section>
+    );
 
     return (
-      <PageHeaderWrapper title='用户列表'>
+      <PageHeaderWrapper
+        className={styles.tableList}
+        content={mainSearch}
+      >
         <Card bordered={false}>
-          <div className={styles.tableList}>
-            <div className={styles.tableListForm}>{this.renderAdvancedForm()}</div>
-            <StandardTable
-              selectedRows={selectedRows}
-              loading={loading}
-              data={data}
-              columns={this.columns}
-              onChange={this.handleStandardTableChange}
-            />
-          </div>
+          <StandardTable
+            selectedRows={[]}
+            loading={loading}
+            data={data}
+            columns={this.columns}
+            onChange={this.handleStandardTableChange}
+          />
         </Card>
       </PageHeaderWrapper>
     );

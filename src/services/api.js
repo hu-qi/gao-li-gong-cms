@@ -1,6 +1,7 @@
 import { stringify } from 'qs';
 import { extend } from 'umi-request';
 import request from '@/utils/request';
+
 extend({
   mode: 'no-cors',
 });

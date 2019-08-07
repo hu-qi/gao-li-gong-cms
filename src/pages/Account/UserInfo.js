@@ -204,8 +204,8 @@ class UserInfo extends React.Component {
                 rules: [{
                   required: true, message: '请输入你的登录密码!',
                 }, {
-                  pattern: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z_]{6,16}$/,
-                  message: '密码必须包含至少一个数字和字母，长度在 6 ~ 16 位之间!',
+                  pattern: new RegExp('^(?=.*[A-Za-z])(?=.*\\d)(?=.*[$@$!%*#?&])[A-Za-z\\d$@$!%*#?&]{6,16}$'),
+                  message: '密码必须包含至少一个数字、字母和特殊字符，长度在 6 ~ 16 位之间!',
                 }],
               })(<Input.Password type='password' placeholder='请输入你的登录密码' allowClear />) }
             </Form.Item>
