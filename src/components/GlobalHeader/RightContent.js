@@ -6,6 +6,8 @@ import groupBy from 'lodash/groupBy';
 import SelectLang from '../SelectLang';
 import styles from './index.less';
 
+import { host } from '@/components/ImgUpload/index.js';
+
 export default class GlobalHeaderRight extends PureComponent {
   getNoticeData() {
     const { notices = [] } = this.props;
@@ -61,11 +63,7 @@ export default class GlobalHeaderRight extends PureComponent {
   };
 
   render() {
-    const {
-      currentUser,
-      theme,
-      onMenuClick,
-    } = this.props;
+    const { currentUser, theme, onMenuClick } = this.props;
 
     let className = styles.right;
     if (theme === 'dark') {
@@ -77,7 +75,7 @@ export default class GlobalHeaderRight extends PureComponent {
           <Avatar
             size="small"
             className={styles.avatar}
-            src={currentUser.avatar}
+            src={currentUser.avatar ? `//${host}${currentUser.avatar}` : ''}
             alt="avatar"
           />
           <span className={styles.name}>{currentUser.name}</span>

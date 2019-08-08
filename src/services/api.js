@@ -108,13 +108,6 @@ export async function updateFakeList(params) {
   });
 }
 
-export async function fakeAccountLogin(params) {
-  return request('/api/login/account', {
-    method: 'POST',
-    data: params,
-  });
-}
-
 export async function queryNotices(params = {}) {
   return request(`/api/notices?${stringify(params)}`);
 }
@@ -134,7 +127,7 @@ export async function deleteNews(params) {
 export async function changeNews(params) {
   return request(`/api/news/${params.id}`, {
     method: 'PUT',
-    data: params
+    data: params,
   });
 }
 
@@ -183,7 +176,7 @@ export async function addPartner(params) {
 export async function changePartner(params) {
   return request(`/api/partner/${params.id}`, {
     method: 'PUT',
-    data: params
+    data: params,
   });
 }
 
@@ -209,7 +202,7 @@ export async function addTimeline(params) {
 export async function changeTimeline(params) {
   return request(`/api/timeline/${params.id}`, {
     method: 'PUT',
-    data: params
+    data: params,
   });
 }
 
@@ -220,7 +213,6 @@ export async function getClassify() {
 export async function getStarAnimalByName(name) {
   return request(`/api/starAnimals/${name}`);
 }
-
 
 /**
  * 获取用户列表信息, 同时支持nickname和姓名的模糊查询
@@ -289,7 +281,7 @@ export async function queryBiologyList(params) {
  * @param params
  * @returns {Promise<void>}
  */
-export async function getBiologyById({id}) {
+export async function getBiologyById({ id }) {
   return request(`/api/biodiversity/${id}`);
 }
 
@@ -298,7 +290,7 @@ export async function getBiologyById({id}) {
  * @param id
  * @returns {Promise<void>}
  */
-export async function delBilology({id}) {
+export async function delBilology({ id }) {
   return request(`/api/biodiversity/${id}`, {
     method: 'DELETE',
   });
@@ -376,7 +368,7 @@ export async function putLabel(params) {
  * @returns {Promise<void>}
  */
 export async function getSpecies() {
-  return request('api/species')
+  return request('api/species');
 }
 
 /**
@@ -398,13 +390,12 @@ export async function setStarAnimals(params) {
   });
 }
 
-
 /**
  * 关于我们
  * @returns {Promise<void>}
  */
 export async function getAboutUs() {
-  return request('api/about')
+  return request('api/about');
 }
 
 /**
@@ -417,4 +408,13 @@ export async function setAboutUs(params) {
     method: 'PUT',
     data: params,
   });
+}
+
+/**
+ * 登录-暂时用用户详情接口 mock
+ * @param params
+ * @returns {Promise<void>}
+ */
+export async function fakeAccountLogin(params) {
+  return request(`/api/users/list?${stringify(params)}`);
 }

@@ -49,9 +49,9 @@ class BasicLayout extends React.Component {
       dispatch,
       route: { routes, path, authority },
     } = this.props;
-    dispatch({
-      type: 'user/fetchCurrent',
-    });
+    // dispatch({
+    //   type: 'user/fetchCurrent',
+    // });
     dispatch({
       type: 'setting/getSetting',
     });
@@ -163,11 +163,12 @@ class BasicLayout extends React.Component {
   }
 }
 
-export default connect(({ global, setting, menu: menuModel }) => ({
+export default connect(({ global, setting, menu: menuModel, login }) => ({
   collapsed: global.collapsed,
   layout: setting.layout,
   menuData: menuModel.menuData,
   breadcrumbNameMap: menuModel.breadcrumbNameMap,
+  login,
   ...setting,
 }))(props => (
   <Media query="(max-width: 599px)">
