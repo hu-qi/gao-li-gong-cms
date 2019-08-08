@@ -10,11 +10,27 @@ export default {
 
   state: {
     status: undefined,
+    currentUser: {},
   },
 
   effects: {
     *login({ payload }, { call, put }) {
-      const response = yield call(fakeAccountLogin, payload);
+      const { userName: name, password } = payload;
+      const {
+        data: { dateList = [] },
+      } = yield call(fakeAccountLogin, { name, page: 1, size: 100 });
+
+      const user = dateList.find(({ mail, phone, wechatId }) => {
+        return mail === password || phone === password || wechatId === password;
+      });
+
+      const response = {
+        status: user ? 'ok' : 'error',
+        type: 'account',
+        currentAuthority: user ? 'admin' : 'guest',
+        user,
+      };
+
       yield put({
         type: 'changeLoginStatus',
         payload: response,
@@ -70,6 +86,7 @@ export default {
         ...state,
         status: payload.status,
         type: payload.type,
+        currentUser: payload.user,
       };
     },
   },

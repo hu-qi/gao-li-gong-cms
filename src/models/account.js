@@ -5,19 +5,35 @@ export default {
 
   state: {
     list: [],
-    pagination: {},
+    pagination: {
+      page: 1,
+      size: 20,
+      total: 0,
+    },
     account: {},
   },
 
   effects: {
     *fetch({ payload }, { call, put }) {
       const {
-        data: { dateList: list = [], total} = {},
+        data: {
+          dateList: list = [],
+          total = 0
+        } = {},
       } = yield call(userList, payload);
+      const pagination = {
+        total,
+        page: payload.page,
+        size: payload.size,
+      };
 
       yield put({
         type: 'save',
-        payload: { list, ...payload, total },
+        payload: {
+          list,
+          pagination,
+          ...payload,
+        },
       });
     },
 
@@ -46,10 +62,6 @@ export default {
     *delete({ payload, callback }, { call, put }) {
       const response = yield call(userDelete, payload);
 
-      yield put({
-        type: 'save',
-        payload: response,
-      });
       if (callback) callback(response);
     },
 
@@ -65,7 +77,12 @@ export default {
   },
 
   reducers: {
-    save(state, { payload: { list, ...pagination }}) {
+    save(state, {
+      payload: {
+        list,
+        pagination,
+      }
+    }) {
       return {
         ...state,
         list,

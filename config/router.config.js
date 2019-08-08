@@ -17,14 +17,20 @@ export default [
     component: '../layouts/BasicLayout',
     Routes: ['src/pages/Authorized'],
     routes: [
-      // dashboard
-      { path: '/', redirect: '/dashboard/analysis', authority: ['admin', 'user'] },
+      {
+        path: '/',
+        redirect: '/home',
+      },
       // 首页管理
       {
         name: 'index',
         icon: 'home',
         path: '/home',
         routes: [
+          {
+            path: '/home',
+            redirect: '/home/slider',
+          },
           {
             path: '/home/slider',
             name: 'slider',

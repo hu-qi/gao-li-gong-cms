@@ -43,12 +43,18 @@ class LoginPage extends Component {
 
   forgotPassword = () => {
     Modal.info({
-      title: <p>忘记密码？联系管理员<a href='tel:15958110140'>张文博</a>重置！</p>,
+      title: (
+        <p>
+          忘记密码？联系管理员<a href="tel:15958110140">张文博</a>重置！
+        </p>
+      ),
       content: (
         <div>
           <Row>
             <Col span={6}>电话：</Col>
-            <Col span={18}><a href='tel:15958111234'>159 5811 1234</a></Col>
+            <Col span={18}>
+              <a href="tel:15958111234">159 5811 1234</a>
+            </Col>
           </Row>
           <Row>
             <Col span={6}>微信：</Col>
@@ -56,12 +62,14 @@ class LoginPage extends Component {
           </Row>
           <Row>
             <Col span={6}>电子邮件：</Col>
-            <Col span={18}><a href='mailto:zwb@glg.com'>zwb@glg.com</a></Col>
+            <Col span={18}>
+              <a href="mailto:zwb@glg.com">zwb@glg.com</a>
+            </Col>
           </Row>
         </div>
       ),
       onOk() {},
-    })
+    });
   };
 
   render() {
@@ -77,22 +85,22 @@ class LoginPage extends Component {
           }}
         >
           {login.status === 'error' &&
-          login.type === 'account' &&
-          !submitting &&
-          this.renderMessage(formatMessage({ id: 'app.login.message-invalid-credentials' }))}
+            login.type === 'account' &&
+            !submitting &&
+            this.renderMessage(formatMessage({ id: 'app.login.message-invalid-credentials' }))}
           <UserName
             name="userName"
-            placeholder={`${formatMessage({ id: 'app.login.userName' })}: admin or user`}
+            placeholder={`用户名或昵称`}
             rules={[
               {
                 required: true,
-                message: formatMessage({ id: 'validation.userName.required' }),
+                message: '请输入用户名或昵称',
               },
             ]}
           />
           <Password
             name="password"
-            placeholder={`${formatMessage({ id: 'app.login.password' })}: ant.design`}
+            placeholder={`手机号、email或微信ID任意匹配即可`}
             rules={[
               {
                 required: true,
