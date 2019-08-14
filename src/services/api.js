@@ -181,7 +181,7 @@ export async function changePartner(params) {
 }
 
 export async function getTimelines() {
-  return request(`/api/timeline`);
+  return request(`/api/timelines`);
 }
 
 export async function getTimelineById(params) {
