@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import { Input, Button, Modal, Icon, Form, Select, Popover, Tooltip } from 'antd';
-import Debounce from 'lodash-decorators/debounce';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import { ChromePicker } from 'react-color';
+import debounce from 'lodash/debounce';
 import GroupList from './GroupList';
 import { tabList } from './constant';
 
@@ -27,7 +27,7 @@ class SearchList extends Component {
       name: '',
       type: '物种分类',
       backgroundColor: '#000',
-    }
+    },
   };
 
   handleTabChange = activeTabKey => {
@@ -37,15 +37,12 @@ class SearchList extends Component {
     });
   };
 
-  @Debounce(500)
-  handleSearchSubmit = () => {
+  handleSearchSubmit = debounce(() => {
     this.child.fetchData();
-  };
+  }, 500);
 
-  handleSearchChange = (searchVal) => {
-    this.setState({ searchVal },
-      this.handleSearchSubmit,
-    );
+  handleSearchChange = searchVal => {
+    this.setState({ searchVal }, this.handleSearchSubmit);
   };
 
   onNewTagChange = (newVal, TYPE) => {
@@ -73,11 +70,7 @@ class SearchList extends Component {
     const { newTag } = this.state;
     const { tabActiveKey } = this.child.state;
     const activeTab = tabList.find(({ key }) => key === tabActiveKey).tab;
-    const {
-      name,
-      type,
-      backgroundColor,
-    } = newTag;
+    const { name, type, backgroundColor } = newTag;
     const options = tabList.map(({ tab: label }) => label);
     const formItemLayout = {
       labelCol: {
@@ -96,30 +89,37 @@ class SearchList extends Component {
 
       colorBtn.style.backgroundColor = bg;
       colorBtn.textContent = bg;
-      this.onNewTagChange(bg, typeMap.BG)
+      this.onNewTagChange(bg, typeMap.BG);
     };
 
     const body = (
       <Form {...formItemLayout}>
-        <Form.Item label='标签名'>
-          <Input placeholder='不能为空！' defaultValue={name} onChange={e => this.onNewTagChange(e.target.value, typeMap.NAME)} allowClear />
+        <Form.Item label="标签名">
+          <Input
+            placeholder="不能为空！"
+            defaultValue={name}
+            onChange={e => this.onNewTagChange(e.target.value, typeMap.NAME)}
+            allowClear
+          />
         </Form.Item>
-        <Form.Item label='标签类别'>
-          <Select defaultValue={type} onChange={newVal => this.onNewTagChange(newVal, typeMap.TYPE)}>
-            { options.map(o => <Select.Option value={o}>{o}</Select.Option>)}
+        <Form.Item label="标签类别">
+          <Select
+            defaultValue={type}
+            onChange={newVal => this.onNewTagChange(newVal, typeMap.TYPE)}
+          >
+            {options.map(o => (
+              <Select.Option value={o}>{o}</Select.Option>
+            ))}
           </Select>
         </Form.Item>
-        <Form.Item label='颜色选择'>
+        <Form.Item label="颜色选择">
           <Popover
-            placement='bottomLeft'
-            content={
-              <ChromePicker
-                color={backgroundColor}
-                onChangeComplete={onPopover}
-              />
-            }
+            placement="bottomLeft"
+            content={<ChromePicker color={backgroundColor} onChangeComplete={onPopover} />}
           >
-            <Button className='Jbtn btn' shape='round' style={{background: backgroundColor}}>{backgroundColor}</Button>
+            <Button className="Jbtn btn" shape="round" style={{ background: backgroundColor }}>
+              {backgroundColor}
+            </Button>
           </Popover>
         </Form.Item>
       </Form>
@@ -127,7 +127,7 @@ class SearchList extends Component {
 
     Modal.confirm({
       title: <p>新建标签</p>,
-      icon: <Icon type='plus-circle' />,
+      icon: <Icon type="plus-circle" />,
       content: body,
       okText: '确认',
       cancelText: '取消',
@@ -144,39 +144,36 @@ class SearchList extends Component {
               type: 'tags/fetch',
               payload: { type: activeTab },
             });
-          }
+          },
         });
-      }
+      },
     });
   }
 
   render() {
-    const {
-      activeTabKey,
-      searchVal,
-    } = this.state;
+    const { activeTabKey, searchVal } = this.state;
 
     const mainSearch = (
       <section>
-        <Tooltip title='新增标签'>
+        <Tooltip title="新增标签">
           <Button
             className={styles.newTag}
-            type='primary'
-            icon='plus'
-            shape='circle'
-            size='large'
+            type="primary"
+            icon="plus"
+            shape="circle"
+            size="large"
             onClick={() => this.renderNewTag()}
           />
         </Tooltip>
         <div style={{ textAlign: 'center' }}>
           <Input.Search
-            placeholder='请输入标签关键字'
-            enterButton='搜索'
-            size='large'
+            placeholder="请输入标签关键字"
+            enterButton="搜索"
+            size="large"
             value={searchVal}
             onChange={e => this.handleSearchChange(e.target.value)}
             onSearch={this.handleSearchSubmit}
-            style={{width: 522}}
+            style={{ width: 522 }}
           />
         </div>
       </section>
