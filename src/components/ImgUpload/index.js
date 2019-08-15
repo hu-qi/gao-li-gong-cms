@@ -58,7 +58,7 @@ class PicturesWall extends React.Component {
     const defaultFileList = [];
 
     fileList.forEach(url => {
-      if (!url) return;
+      if (!url) { return; }
 
       defaultFileList.push({
         uid: Math.random().toString(),

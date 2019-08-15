@@ -37,7 +37,7 @@ class FilterCardList extends PureComponent {
       tabActiveKey: curTabActiveKey
     } = this.state;
 
-    if (curTabActiveKey === tabActiveKey) return;
+    if (curTabActiveKey === tabActiveKey) { return; }
 
     this.setState( { tabActiveKey }, this.fetchData);
   }

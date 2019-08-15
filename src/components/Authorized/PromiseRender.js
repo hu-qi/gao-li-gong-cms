@@ -18,7 +18,7 @@ export default class PromiseRender extends React.Component {
     if (!isEqual(nextProps, this.props)) {
       this.setRenderComponent(nextProps);
     }
-    if (nextState.component !== component) return true;
+    if (nextState.component !== component) { return true; }
     return false;
   };
 

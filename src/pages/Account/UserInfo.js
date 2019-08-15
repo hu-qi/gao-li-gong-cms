@@ -51,7 +51,7 @@ class UserInfo extends React.Component {
       id,
     } = this.state;
 
-    if (mode === modeType.NEW) return;
+    if (mode === modeType.NEW) { return; }
     const handleUploadChange = this.handleUploadChange;
 
     dispatch({
@@ -76,7 +76,7 @@ class UserInfo extends React.Component {
           avatar,
         });
 
-        if (avatar) handleUploadChange([ avatar ]);
+        if (avatar) { handleUploadChange([ avatar ]); }
       }
     });
   }
@@ -88,7 +88,7 @@ class UserInfo extends React.Component {
       callback('两次输入密码不一致!');
     }
 
-    if (callback) callback();
+    if (callback) { callback(); }
   };
 
   handleSubmit = e => {
@@ -104,7 +104,7 @@ class UserInfo extends React.Component {
     } = this.state;
 
     form.validateFields((err, values) => {
-      if (err) return;
+      if (err) { return; }
 
       const {
         mode,
