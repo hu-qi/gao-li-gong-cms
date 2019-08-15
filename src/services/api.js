@@ -325,6 +325,9 @@ export async function putBilology(params) {
  * @returns {Promise<void>}
  */
 export async function queryLabelList(params) {
+  Object.assign(params, {
+    size: 0,
+  });
   return request(`/api/label/list?${stringify(params)}`);
 }
 
