@@ -10,9 +10,9 @@ import CheckPermissions from './CheckPermissions';
 const Exception403 = () => <Exception type="403" />;
 
 export const isComponentClass = component => {
-  if (!component) return false;
+  if (!component) { return false; }
   const proto = Object.getPrototypeOf(component);
-  if (proto === React.Component || proto === Function.prototype) return true;
+  if (proto === React.Component || proto === Function.prototype) { return true; }
   return isComponentClass(proto);
 };
 

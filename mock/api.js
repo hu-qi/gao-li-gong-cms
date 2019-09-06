@@ -503,25 +503,25 @@ function upload(req, res) {
 }
 
 export default {
-  'GET /api/project/notice': getNotice,
-  'GET /api/activities': getActivities,
-  'POST /api/forms': (req, res) => {
-    res.send({ message: 'Ok' });
-  },
-  'GET /api/tags': mockjs.mock({
-    'list|100': [{ name: '@city', 'value|1-100': 150, 'type|0-2': 1 }],
-  }),
-  'GET /api/fake_list': getFakeList,
-  'POST /api/fake_list': postFakeList,
-  'GET /api/captcha': getFakeCaptcha,
-  'GET /api/fake_news': getNews,
-  'GET /api/delete_news': deleteNews,
-  'GET /api/fake_videos': getNews,
-  'GET /api/delete_videos': deleteNews,
-  'GET /api/fake_sliders': getSliders,
-  'GET /api/delete_sliders': deleteSliders,
-  'GET /api/fake_partners': getPartners,
-  'GET /api/delete_partners': deletePartners,
+  // 'GET /api/project/notice': getNotice,
+  // 'GET /api/activities': getActivities,
+  // 'POST /api/forms': (req, res) => {
+  //   res.send({ message: 'Ok' });
+  // },
+  // 'GET /api/tags': mockjs.mock({
+  //   'list|100': [{ name: '@city', 'value|1-100': 150, 'type|0-2': 1 }],
+  // }),
+  // 'GET /api/fake_list': getFakeList,
+  // 'POST /api/fake_list': postFakeList,
+  // 'GET /api/captcha': getFakeCaptcha,
+  // 'GET /api/fake_news': getNews,
+  // 'GET /api/delete_news': deleteNews,
+  // 'GET /api/fake_videos': getNews,
+  // 'GET /api/delete_videos': deleteNews,
+  // 'GET /api/fake_sliders': getSliders,
+  // 'GET /api/delete_sliders': deleteSliders,
+  // 'GET /api/fake_partners': getPartners,
+  // 'GET /api/delete_partners': deletePartners,
   // 'GET /api/timeline': getTimelines,
   // 'DELETE /api/timeline/{id}': deleteTimelines,
   // 'POST /api/timeline': deleteTimelines,

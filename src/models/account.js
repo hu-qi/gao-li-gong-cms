@@ -45,7 +45,7 @@ export default {
         payload: { account },
       });
 
-      if (callback) callback(account);
+      if (callback) { callback(account); }
     },
 
     *post({ payload, callback }, { call, put }) {
@@ -56,13 +56,13 @@ export default {
         payload,
       });
 
-      if (callback) callback();
+      if (callback) { callback(); }
     },
 
     *delete({ payload, callback }, { call, put }) {
       const response = yield call(userDelete, payload);
 
-      if (callback) callback(response);
+      if (callback) { callback(response); }
     },
 
     *put({ payload, callback }, { call, put }) {
@@ -72,7 +72,7 @@ export default {
         type: 'saveAccount',
         payload: response,
       });
-      if (callback) callback(response);
+      if (callback) { callback(response); }
     },
   },
 

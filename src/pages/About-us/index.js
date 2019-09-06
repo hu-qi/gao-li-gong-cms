@@ -45,7 +45,7 @@ export default class AboutUs extends React.Component {
       loading: { global },
     } = this.props;
 
-    if (!content) return null;
+    if (!content) { return null; }
 
     return (
       <Spin spinning={global} delay={500}>
