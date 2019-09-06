@@ -147,7 +147,7 @@ export async function deleteFakeVideos(params) {
 }
 
 export async function getFakeSliders() {
-  return request(`/api/fake_sliders`);
+  return request(`/api/rollimage`);
 }
 
 export async function deleteFakeSliders(params) {

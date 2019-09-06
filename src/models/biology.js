@@ -16,30 +16,28 @@ export default {
     pagination: {
       total: 0,
       page: 1,
-      size: 10,
+      size: 20,
     },
     biology: {
       name: '',
       brief: '',
       content: '',
-      imgUrl: 'https://www.google.com/url?sa=i&source=images&cd=&ved=2ahUKEwj5h7C7vofjAhUV3o8KHWV6DigQjRx6BAgBEAU&url=https%3A%2F%2Fwww.mlar.org%2F&psig=AOvVaw2n4Uc4FiRZE0FsrmtW-wak&ust=1561650195989783',
+      imgUrl: JSON.stringify([]),
       thumbnails: [],
       labels: [],
-      speciesId: 3,
+      speciesId: 0,
     },
     species: [],
     tags: [],
     search: {
       name: '',
       speciesId: null,
-    }
+    },
   },
 
   effects: {
-    * fetch({ payload }, { call, put }) {
-      const {
-        data: { dateList: list = [], total } = {},
-      } = yield call(queryBiologyList, payload);
+    *fetch({ payload }, { call, put }) {
+      const { data: { dateList: list = [], total } = {} } = yield call(queryBiologyList, payload);
 
       yield put({
         type: 'queryList',
@@ -51,16 +49,18 @@ export default {
       });
     },
 
-    * fetchBiologyById({ payload }, { call, put }) {
-      const { data } = yield call(getBiologyById, payload);
+    *fetchBiologyById({ payload, callback = () => void 0 }, { call, put }) {
+      const { data = {} } = yield call(getBiologyById, payload);
 
       yield put({
         type: 'setBiology',
         payload: data,
       });
+
+      callback(data);
     },
 
-    * remove({ payload, callback = () => void 0 }, { call, put }) {
+    *remove({ payload, callback = () => void 0 }, { call, put }) {
       yield call(delBilology, payload);
       yield put({
         type: 'fetch',
@@ -70,7 +70,7 @@ export default {
       callback();
     },
 
-    * fetchSpecies({ payload, callback = () => void 0 }, { call, put }) {
+    *fetchSpecies({ payload, callback = () => void 0 }, { call, put }) {
       const { data = [] } = yield call(getSpecies, payload);
 
       yield put({
@@ -81,44 +81,34 @@ export default {
       callback();
     },
 
-    * fetchLabelList({ payload, callback = () => void 0 }, { call, put }) {
-      const {
-        data: { dateList = [] } = {},
-      } = yield call(queryLabelList, payload);
+    *fetchLabelList({ payload, callback = () => void 0 }, { call, put }) {
+      const { data: { dateList = [] } = {} } = yield call(queryLabelList, payload);
 
       yield put({
         type: 'setTags',
         payload: dateList,
       });
 
-      callback();
+      callback(dateList);
     },
 
-    * updateBiology({ payload, callback = () => void 0 }, { call, put }) {
+    *updateBiology({ payload, callback = () => void 0 }, { call, put }) {
       yield call(putBilology, payload);
       yield put();
 
       callback();
     },
 
-    * addBiology({ payload, callback = () => void 0 }, { call, put }) {
+    *addBiology({ payload, callback = () => void 0 }, { call, put }) {
       yield call(postBiology, payload);
-      yield put();
 
       callback();
-    }
+    },
   },
 
   reducers: {
     queryList(state, action) {
-      const {
-        list,
-        total,
-        page,
-        size,
-        name,
-        speciesId,
-      } = action.payload;
+      const { list, total, page, size, name, speciesId } = action.payload;
 
       return {
         ...state,
