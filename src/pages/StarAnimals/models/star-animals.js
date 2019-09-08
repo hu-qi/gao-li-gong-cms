@@ -26,29 +26,32 @@ export default {
         type: 'save',
         payload: {
           animals,
+          currentAnimal: null,
         },
       });
     },
 
     *fetchAnimal({ payload }, { call, put }) {
-      const { data: detail } = yield call(getStarAnimalByName, payload.name);
+      const { data: currentAnimal } = yield call(getStarAnimalByName, payload.name);
 
       yield put({
         type: 'save',
         payload: {
-          currentAnimal: detail,
+          currentAnimal,
         },
       });
     },
 
-    * updateAnimal({ payload }, { call, put }) {
+    *updateAnimal({ payload, callback = () => void 0 }, { call, put }) {
       yield call(setStarAnimals, payload);
 
       yield put({
         type: 'save',
         payload,
-      })
-    }
+      });
+
+      callback();
+    },
   },
 
   subscriptions: {

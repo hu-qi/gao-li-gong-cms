@@ -20,8 +20,8 @@ class ReachTextEditor extends React.Component {
   handleChange = debounce(editorState => {
     const { onChange } = this.props;
 
-    onChange(editorState.toHTML())
-  }, 800);
+    onChange(editorState.toHTML());
+  }, 200);
 
   handleEditorChange = editorState => {
     this.setState({ editorState });

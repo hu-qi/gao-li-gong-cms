@@ -1,31 +1,22 @@
-.pageTitle {
-  display: flex;
-  justify-content: center;
-  font-size: 40px;
-}
+.editAnimal {
+  :global {
+    .ant-card-meta-description {
+      overflow: hidden;
+      /* autoprefixer: ignore next */
+      display: -webkit-inline-box;
+      /* autoprefixer: ignore next */
+      -webkit-box-orient: vertical;
+      /* autoprefixer: ignore next */
+      -webkit-line-clamp: 4;
+      white-space: normal;
+    }
 
-.starAnimalPortal {
-  display: flex;
-  justify-content: space-around;
-
-  margin-top: 100px;
-}
-
-.starAnimalCard {
-  background-color: #ffffff;
-  cursor: pointer;
-  padding: 10px 10px 30px;
-
-  .animalImage {
-    width: 160px;
-    height: 200px;
-    margin-bottom: 20px;
-  }
-
-  .name {
-    color: #000000;
-    font-size: 18px;
-    text-align: center;
-    font-weight: 600;
+    .ant-card-cover {
+      max-height: 160px;
+      display: flex;
+      overflow: hidden;
+      justify-content: center;
+      align-items: center;
+    }
   }
 }
