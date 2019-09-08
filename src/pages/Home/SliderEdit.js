@@ -73,7 +73,7 @@ class SliderEdit extends PureComponent {
                 valuePropName: 'fileList',
                 getValueFromEvent: this.normFile,
               })(
-                <Upload name="logo" action="/upload/image" listType="picture">
+                <Upload name="logo" action="/api/upload/image" listType="picture">
                   <Button>
                     <Icon type="upload" /> Click to upload
                   </Button>

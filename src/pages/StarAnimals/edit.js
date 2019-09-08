@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import { Button, Card, Form, Icon, Input, Tooltip, Typography } from 'antd';
+import cloneDeep from 'lodash/cloneDeep';
 
 import PageLoading from '@/components/PageLoading';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
@@ -44,18 +45,25 @@ class StarAnimalEdit extends Component {
   };
 
   handleSave = () => {
-    const { dispatch, currentAnimal } = this.props;
+    const { dispatch, currentAnimal, history } = this.props;
 
     dispatch({
       type: 'starAnimals/updateAnimal',
       payload: { ...currentAnimal },
+      callback: () => {
+        history.push('/starAnimals');
+      },
     });
   };
 
   render() {
     const {
-      currentAnimal,
+      currentAnimal: _currentAnimal,
       form: { getFieldDecorator },
+      history,
+      match: {
+        params: { name },
+      },
     } = this.props;
     const imgLim = {
       mini: 50,
@@ -80,15 +88,19 @@ class StarAnimalEdit extends Component {
         </Tooltip>
       </span>
     );
+    const currentAnimal = cloneDeep(_currentAnimal);
 
-    if (!currentAnimal) {
-      return <PageLoading />;
-    }
+    if (!currentAnimal) return <PageLoading />;
 
     return (
       <React.Fragment>
         {/*<PageHeaderWrapper title={currentAnimal.name} />*/}
-        <Card bordered={false} style={{ marginTop: '1em' }} className={styles.editAnimal}>
+        <Card
+          bordered={false}
+          style={{ marginTop: '1em' }}
+          className={styles.editAnimal}
+          key={name}
+        >
           <Form onSubmit={this.handleSubmit} style={{ marginTop: 8 }}>
             <Form.Item {...formItemLayout} colon={false} label={<></>}>
               <Typography.Title level={3} style={{ textAlign: 'center' }}>
@@ -131,6 +143,10 @@ class StarAnimalEdit extends Component {
               />
             </Form.Item>
             <Form.Item {...formItemLayout} colon={false} label={<></>}>
+              <Button type="default" htmlType="button" onClick={() => history.push('/starAnimals')}>
+                取消
+              </Button>
+              &emsp;
               <Button type="primary" htmlType="submit" onClick={this.handleSave}>
                 保存
               </Button>
