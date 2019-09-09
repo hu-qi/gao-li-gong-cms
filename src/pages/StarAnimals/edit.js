@@ -4,7 +4,6 @@ import { Button, Card, Form, Icon, Input, Tooltip, Typography } from 'antd';
 import cloneDeep from 'lodash/cloneDeep';
 
 import PageLoading from '@/components/PageLoading';
-import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import ImgUPload from '@/components/ImgUpload';
 import RichTextEditor from '@/components/RichTextEditor';
 
@@ -94,7 +93,6 @@ class StarAnimalEdit extends Component {
 
     return (
       <React.Fragment>
-        {/*<PageHeaderWrapper title={currentAnimal.name} />*/}
         <Card
           bordered={false}
           style={{ marginTop: '1em' }}
