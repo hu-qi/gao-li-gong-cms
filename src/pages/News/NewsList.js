@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import router from 'umi/router';
-import { Card, Table, Divider, Button, Popconfirm, Avatar } from 'antd';
+import { Card, Table, Divider, Button, Modal, Avatar } from 'antd';
 import { connect } from 'dva';
 
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
@@ -41,24 +41,31 @@ class NewsList extends PureComponent {
     router.push(`/news/news-edit/id/${param}`);
   };
 
-  delete = id => {
+  delete = record => {
     const {
       dispatch,
       list,
     } = this.props;
     const { pagination } = this.state;
-    dispatch({
-      type: 'news/delete',
-      payload: {
-        id,
-        list,
-        pagination
+
+    Modal.confirm({
+      title: '确定删除吗?',
+      content: '删除后不可恢复',
+      onOk() {
+        dispatch({
+          type: 'news/delete',
+          payload: {
+            id: record.id,
+            list,
+            pagination
+          },
+        });
       },
+      onCancel() {},
     });
   };
   handleStandardTableChange = pagination => {
     const { dispatch } = this.props;
-    const { formValues } = this.state;
 
     const params = {
       page: pagination.current,
@@ -75,7 +82,6 @@ class NewsList extends PureComponent {
     const {
       list,
       pagination,
-      loading,
     } = this.props;
     if (pagination) {
       this.setState({
@@ -87,7 +93,7 @@ class NewsList extends PureComponent {
       {
         title: '缩略图',
         dataIndex: 'thumbnail',
-        render: url => <Avatar src={url ? `//${host}${JSON.parse(url)[0]}`: ''} shape='square' size='large' />,
+        render: url => <Avatar src={url ? `${host}${JSON.parse(url)[0]}`: ''} shape='square' size='large' />,
       },
       {
         title: '标题',
@@ -103,7 +109,7 @@ class NewsList extends PureComponent {
       {
         title: '外链',
         dataIndex: 'link',
-        maxWidth: 450,
+        width: 350,
         render: link => <a className={styles.link} target='_blank' href={`${link}`}>{link}</a>,
       },
       {
@@ -114,9 +120,7 @@ class NewsList extends PureComponent {
           <span>
             <a onClick={() => this.toEditPage(record.id)}>编辑</a>
             <Divider type="vertical" />
-            <Popconfirm title="确定要删除吗?" onConfirm={() => this.delete(record.id)}>
-              <a href="javascript:;">删除</a>
-            </Popconfirm>
+            <a onClick={() => this.delete(record)}>删除</a>
           </span>
         ),
       },

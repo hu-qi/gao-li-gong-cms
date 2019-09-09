@@ -39,7 +39,13 @@ class NewsEdit extends PureComponent {
         payload: {
           id: params.id
         },
-        callback: ({ thumbnail }) => {
+        callback: ({
+                     thumbnail,
+                     title,
+                     brief,
+                     link,
+                     time,
+                   }) => {
           let thumbnails = [];
 
           try {
@@ -52,12 +58,20 @@ class NewsEdit extends PureComponent {
             thumbnails,
             loading: false,
           });
+
+          this.props.form.setFieldsValue({
+            title,
+            brief,
+            link,
+            time: title ? moment(time) : null,
+          });
         },
       });
     } else {
       this.setState({
         loading: false,
       });
+      this.props.form.resetFields();
     }
   }
 
@@ -66,7 +80,13 @@ class NewsEdit extends PureComponent {
   };
 
   handleSubmit = e => {
-    const { dispatch, form, id } = this.props;
+    const {
+      dispatch,
+      form,
+      match: {
+        params: { id },
+      },
+    } = this.props;
     const { thumbnails } = this.state;
 
     e.preventDefault();
@@ -89,18 +109,10 @@ class NewsEdit extends PureComponent {
     });
   };
 
-  componentWillUnmount() {
-    this.props.form.resetFields();
-  }
-
   render() {
-    const { submitting } = this.props;
     const {
       form: { getFieldDecorator },
-      title,
-      brief,
-      link,
-      time,
+      submitting,
     } = this.props;
     const {
       thumbnails,
@@ -132,7 +144,6 @@ class NewsEdit extends PureComponent {
           <Form onSubmit={this.handleSubmit} hideRequiredMark style={{ marginTop: 8 }}>
             <FormItem {...formItemLayout} label={<FormattedMessage id="form.news.title.label" />}>
               {getFieldDecorator('title', {
-                initialValue: title,
                 rules: [
                   {
                     required: true,
@@ -146,7 +157,6 @@ class NewsEdit extends PureComponent {
               label={<FormattedMessage id="form.news.description.label" />}
             >
               {getFieldDecorator('brief', {
-                initialValue: brief,
                 rules: [{
                   required: true,
                   message: formatMessage({ id: 'validation.news.description.required' }),
@@ -159,7 +169,6 @@ class NewsEdit extends PureComponent {
             </FormItem>
             <FormItem {...formItemLayout} label={<FormattedMessage id="form.news.link.label" />}>
               {getFieldDecorator('link', {
-                initialValue: link,
                 rules: [
                   {
                     type: 'url',
@@ -171,7 +180,6 @@ class NewsEdit extends PureComponent {
             </FormItem>
             <FormItem {...formItemLayout} label={<FormattedMessage id="form.datepicker.label" />}>
               {getFieldDecorator('time', {
-                initialValue: time ? moment(time) : null
               })(
                 <DatePicker showTime placeholder={formatMessage({ id: 'form.datepicker.placeholder' })} />
               )}

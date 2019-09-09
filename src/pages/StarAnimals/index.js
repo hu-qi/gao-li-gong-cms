@@ -22,7 +22,7 @@ const StarAnimals = ({ animals = [], history, dispatch }) => {
               <Card
                 hoverable
                 style={{ width: 250, height: 330 }}
-                cover={<img alt="example" src={`//${host}${JSON.parse(animal.imgUrl)[0]}`} />}
+                cover={<img alt="example" src={`${host}${JSON.parse(animal.imgUrl)[0]}`} />}
               >
                 <Card.Meta title={animal.name} description={animal.brief} />
               </Card>

@@ -253,7 +253,7 @@ class CoverCardList extends Component {
         rowKey='id'
         loading={loading}
         grid={{ gutter: 24, xl: 4, lg: 3, md: 3, sm: 2, xs: 1 }}
-        dataSource={list.reverse()}
+        dataSource={list.sort((a, b) => b.id - a.id)}
         renderItem={item => (
           <List.Item>
             <Card
