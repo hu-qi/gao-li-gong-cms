@@ -2,8 +2,8 @@ import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import moment from 'moment';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
-import { Form, Input, Button, Card, Select, Icon, Upload, DatePicker  } from 'antd';
-
+import { Form, Input, Button, Card, DatePicker  } from 'antd';
+import ImgUPload from '@/components/ImgUpload';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 
 const { TextArea } = Input;
@@ -14,21 +14,22 @@ const FormItem = Form.Item;
   ...news,
   submitting: loading.effects['form/submitRegularForm'],
 }))
-
 @Form.create()
 class NewsEdit extends PureComponent {
   state = {
-    id: null
+    id: null,
+    thumbnails: [],
+    loading: true,
   }
-  normFile = e => {
-    if (Array.isArray(e)) {
-      return e;
-    }
-    return e && e.fileList;
-  };
+
   componentDidMount() {
-    const {params} = this.props.match;
-    const {dispatch} = this.props;
+    const {
+      dispatch,
+      match: {
+        params,
+      },
+    } = this.props;
+
     if (params.id) {
       this.setState({
         id: params.id
@@ -38,34 +39,48 @@ class NewsEdit extends PureComponent {
         payload: {
           id: params.id
         },
+        callback: ({ thumbnail }) => {
+          let thumbnails = [];
+
+          try {
+            thumbnails = JSON.parse(thumbnail);
+          } catch (e) {
+            console.log(e);
+          }
+
+          this.setState({
+            thumbnails,
+            loading: false,
+          });
+        },
+      });
+    } else {
+      this.setState({
+        loading: false,
       });
     }
   }
 
-  beforeUpload = file => {
-    const isJPG = file.type.indexOf('image/') > -1;
-    if (!isJPG) {
-      message.error('仅支持上传图片');
-    }
-    const isLt1M = file.size / 1024 / 1024 <= 1;
-    if (!isLt1M) {
-      message.error('图片大小必须小于 1MB!');
-    }
-    return isJPG && isLt1M;
-  }
+  handleUploadChange = thumbnails => {
+    this.setState({ thumbnails });
+  };
 
   handleSubmit = e => {
     const { dispatch, form, id } = this.props;
+    const { thumbnails } = this.state;
+
     e.preventDefault();
+
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        let {thumbnail, time, ...restValues} = values;
+        let { time, ...restValues} = values;
         const type = id ? 'news/modify' : 'news/add';
+
         dispatch({
-          type: type,
+          type,
           payload: {
-            id: id,
-            thumbnail: thumbnail && thumbnail.length && JSON.stringify(thumbnail[0]),
+            id,
+            thumbnail: JSON.stringify(thumbnails),
             time: time ? time.format('YYYY-MM-DD h:mm:ss') : '',
             ...restValues
           },
@@ -74,16 +89,23 @@ class NewsEdit extends PureComponent {
     });
   };
 
+  componentWillUnmount() {
+    this.props.form.resetFields();
+  }
+
   render() {
     const { submitting } = this.props;
     const {
-      form: { getFieldDecorator, getFieldValue },
+      form: { getFieldDecorator },
       title,
       brief,
       link,
       time,
-      thumbnail
     } = this.props;
+    const {
+      thumbnails,
+      loading,
+    } = this.state;
 
     const formItemLayout = {
       labelCol: {
@@ -154,24 +176,15 @@ class NewsEdit extends PureComponent {
                 <DatePicker showTime placeholder={formatMessage({ id: 'form.datepicker.placeholder' })} />
               )}
             </FormItem>
-            <FormItem {...formItemLayout} label={<FormattedMessage id="form.thumbnail.label" />}>
-              {getFieldDecorator('thumbnail', {
-                valuePropName: 'fileList',
-                getValueFromEvent: this.normFile,
-              })(
-                <Upload
-                  name="file"
-                  action="/api/upload/image"
-                  listType="picture"
-                  accept="image/*"
-                  beforeUpload={this.beforeUpload}
-                >
-                  <Button>
-                    <Icon type="upload" /> 点击上传
-                  </Button>
-                </Upload>
-              )}
-            </FormItem>
+            { !loading &&
+              <FormItem {...formItemLayout} label={<FormattedMessage id="form.thumbnail.label" />}>
+                <ImgUPload
+                  fileList={thumbnails}
+                  limit={10}
+                  onChange={fileList => this.handleUploadChange(fileList, 'thumbnail')}
+                />
+              </FormItem>
+            }
             <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
               <Button type="primary" htmlType="submit" loading={submitting}>
                 <FormattedMessage id="form.submit" />
