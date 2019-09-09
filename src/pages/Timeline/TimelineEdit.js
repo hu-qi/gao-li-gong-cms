@@ -2,11 +2,12 @@ import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import moment from 'moment';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
-import { Form, Input, Button, Card, DatePicker, Select, Icon, Upload } from 'antd';
+import { Form, Input, Button, Card, DatePicker } from 'antd';
 
 const { TextArea } = Input;
 const FormItem = Form.Item;
 
+import ImgUPload from '@/components/ImgUpload';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 
 @connect(({ timeline, loading }) => ({
@@ -16,14 +17,9 @@ import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 @Form.create()
 class TimelineEdit extends PureComponent {
   state = {
-    id: null
+    id: null,
+    imgUrl: null,
   }
-  normFile = e => {
-    if (Array.isArray(e)) {
-      return e;
-    }
-    return e && e.fileList;
-  };
 
   componentDidMount() {
     const {params} = this.props.match;
@@ -37,36 +33,38 @@ class TimelineEdit extends PureComponent {
         payload: {
           id: params.id
         },
+        callback: ({ imgUrl, time, description = '' }) => {
+          this.setState({ imgUrl: [ imgUrl ] });
+
+          this.props.form.setFieldsValue({
+            description,
+            time: time ? moment(time, 'YYYY-MM-DD hh:mm') : null,
+          })
+        },
       });
+    } else {
+      this.setState({ imgUrl: [] });
+      this.props.form.resetFields();
     }
   }
 
-  beforeUpload = file => {
-    const isJPG = file.type.indexOf('image/') > -1;
-    if (!isJPG) {
-      message.error('仅支持上传图片');
-    }
-    const isLt1M = file.size / 1024 / 1024 <= 1;
-    if (!isLt1M) {
-      message.error('图片大小必须小于 1MB!');
-    }
-    return isJPG && isLt1M;
+  componentWillUnmount() {
+    this.props.form.resetFields();
   }
 
   handleSubmit = e => {
-    const { dispatch, form, id } = this.props;
+    const { dispatch, form, match: { params } } = this.props;
     e.preventDefault();
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        let {imgUrl, time, ...restValues} = values;
-        const type = id ? 'timeline/modify' : 'timeline/add';
+        let { time, ...restValues} = values;
+        const type = params.id ? 'timeline/modify' : 'timeline/add';
         dispatch({
-          type: type,
+          type,
           payload: {
-            id: id,
-            // imgUrl: imgUrl && imgUrl.length ? imgUrl[0].response : '',
-            imgUrl: imgUrl && imgUrl.length && imgUrl[0],
-            time: time.format('YYYY-MM-DD h:mm:ss'),
+            id: params.id ? params.id : undefined,
+            imgUrl: this.state.imgUrl[0],
+            time: time.format('YYYY-MM-DD hh:mm'),
             ...restValues
           },
         });
@@ -75,13 +73,11 @@ class TimelineEdit extends PureComponent {
   };
 
   render() {
-    const { submitting } = this.props;
     const {
-      form: { getFieldDecorator, getFieldValue },
-      description,
-      imgUrl,
-      time
+      form: { getFieldDecorator },
+      submitting,
     } = this.props;
+    const { imgUrl } = this.state;
 
     const formItemLayout = {
       labelCol: {
@@ -108,7 +104,6 @@ class TimelineEdit extends PureComponent {
           <Form onSubmit={this.handleSubmit} hideRequiredMark style={{ marginTop: 8 }}>
             <FormItem {...formItemLayout} label={<FormattedMessage id="form.description.label" />}>
               {getFieldDecorator('description', {
-                initialValue: description,
                 rules: [
                   {
                     required: true,
@@ -124,7 +119,6 @@ class TimelineEdit extends PureComponent {
             </FormItem>
             <FormItem {...formItemLayout} label={<FormattedMessage id="form.datepicker.label" />}>
               {getFieldDecorator('time', {
-                initialValue: time ? moment(time, 'YYYY-MM-DD') : null,
                 rules: [
                   {
                     required: true,
@@ -132,26 +126,18 @@ class TimelineEdit extends PureComponent {
                   },
                 ],
               })(
-                <DatePicker placeholder={formatMessage({ id: 'form.datepicker.placeholder' })} />
+                <DatePicker showTime placeholder={formatMessage({ id: 'form.datepicker.placeholder' })} />
               )}
             </FormItem>
             <FormItem {...formItemLayout} label={<FormattedMessage id="form.thumbnail.label" />}>
-              {getFieldDecorator('imgUrl', {
-                valuePropName: 'fileList',
-                getValueFromEvent: this.normFile
-              })(
-                <Upload
-                  name="file"
-                  action="/api/upload/image"
-                  listType="picture"
-                  accept="image/*"
-                  beforeUpload={this.beforeUpload}
-                >
-                  <Button>
-                    <Icon type="upload" /> 点击上传
-                  </Button>
-                </Upload>
-              )}
+              {
+                imgUrl &&
+                <ImgUPload
+                  fileList={imgUrl}
+                  limit={1}
+                  onChange={imgUrl => this.setState({ imgUrl })}
+                />
+              }
             </FormItem>
             <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
               <Button type="primary" htmlType="submit" loading={submitting}>

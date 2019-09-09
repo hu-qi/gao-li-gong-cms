@@ -22,7 +22,7 @@ export default {
         });
       }
     },
-    *get({ payload }, { call, put }) {
+    *get({ payload, callback = () => void 0}, { call, put }) {
       const response = yield call(getTimelineById, payload);
       if (response.isError) {
         message.error(response.error.message);
@@ -31,6 +31,8 @@ export default {
           type: 'queryTimeline',
           payload: response.data
         });
+
+        callback(response.data);
       }
     },
     *delete({ payload }, { call, put }) {
