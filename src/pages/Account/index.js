@@ -42,7 +42,7 @@ class TableList extends PureComponent {
     {
       title: '用户',
       dataIndex: 'avatar',
-      render: url => <Avatar src={url ? `//${host}${url}`: ''} shape='square' size='large' />,
+      render: url => <Avatar src={url ? `${host}${url}`: ''} shape='square' size='large' />,
     },
     {
       title: '用户名',

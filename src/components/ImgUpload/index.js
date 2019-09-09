@@ -1,35 +1,14 @@
 import React from 'react';
-import { Upload, Icon, Modal } from 'antd';
+import { Upload, Icon } from 'antd';
 
-function getBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = error => reject(error);
-  });
-}
-
-export const host = '47.96.116.169';
+export const host = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1'
+  ? window.location.origin
+  : '//47.96.116.169';
 
 class PicturesWall extends React.Component {
-  state = {
-    previewVisible: false,
-    previewImage: '',
-  };
-
-  handleCancel = () => this.setState({ previewVisible: false });
-
-  handlePreview = async file => {
-    if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj);
-    }
-
-    this.setState({
-      previewImage: file.url || file.preview,
-      previewVisible: true,
-    });
+  handlePreview = file => {
+    const win = window.open();
+    win.location.href = file.url;
   };
 
   handleChange = ({ fileList }) => {
@@ -40,10 +19,6 @@ class PicturesWall extends React.Component {
 
   render() {
     const {
-      previewVisible,
-      previewImage,
-    } = this.state;
-    const {
       limit,
       fileList,
     } = this.props;
@@ -51,7 +26,7 @@ class PicturesWall extends React.Component {
     const uploadButton = (
       <div>
         <Icon type='plus' />
-        <div className='ant-upload-text'>Upload</div>
+        <div className='ant-upload-text'>上传</div>
       </div>
     );
 
@@ -64,7 +39,7 @@ class PicturesWall extends React.Component {
         uid: Math.random().toString(),
         status: 'done',
         response: url,
-        url: `//${host}${url}`,
+        url: `${host}${url}`,
       });
     });
 
@@ -80,9 +55,6 @@ class PicturesWall extends React.Component {
         >
           {defaultFileList.length >= +limit ? null : uploadButton}
         </Upload>
-        <Modal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
-          <img alt='example' style={{ width: '100%' }} src={previewImage} />
-        </Modal>
       </div>
     );
   }

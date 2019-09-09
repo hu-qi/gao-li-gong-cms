@@ -112,10 +112,6 @@ class NewsEdit extends PureComponent {
   render() {
     const {
       form: { getFieldDecorator },
-      title,
-      brief,
-      link,
-      time,
       submitting,
     } = this.props;
     const {
