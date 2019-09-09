@@ -5,7 +5,6 @@ import { Form, Input, Button, Card, Select, Tooltip, Icon } from 'antd';
 import debounce from 'lodash/debounce';
 
 import ImgUPload from '@/components/ImgUpload';
-import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import RichTextEditor from '@/components/RichTextEditor';
 import { buildTagsGroup } from './index';
 import { tabList } from '../Tags/constant';
@@ -187,7 +186,6 @@ class Biology extends PureComponent {
 
     return (
       <React.Fragment>
-        <PageHeaderWrapper />
         <Card bordered={false} style={{ marginTop: '1em' }} className={styles.Biology}>
           <Form onSubmit={this.handleSubmit} style={{ marginTop: 8 }}>
             <FormItem {...formItemLayout} label={<FormattedMessage id="form.title.label" />}>
@@ -270,7 +268,7 @@ class Biology extends PureComponent {
               }
             >
               <RichTextEditor
-                value={biology.content}
+                value={biology.content || ''}
                 onChange={e => this.handleChange(e, 'content')}
               />
             </FormItem>

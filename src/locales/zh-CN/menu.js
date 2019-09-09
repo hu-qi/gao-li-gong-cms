@@ -68,4 +68,5 @@ export default {
   'menu.timeline.timeline-edit': '时间线编辑',
   'menu.labels': '标签',
   'menu.aboutUs': '关于我们',
+  'menu.biology': '生物多样性',
 };

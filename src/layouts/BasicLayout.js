@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { Layout } from 'antd';
+import { Layout, Spin } from 'antd';
 import DocumentTitle from 'react-document-title';
 import { connect } from 'dva';
 import { ContainerQuery } from 'react-container-query';
@@ -43,7 +43,14 @@ const query = {
   },
 };
 
+@connect(({ loading }) => ({
+  loading: loading.global,
+}))
 class BasicLayout extends React.Component {
+  state = {
+    spinning: false
+  };
+
   componentDidMount() {
     const {
       dispatch,
@@ -110,7 +117,23 @@ class BasicLayout extends React.Component {
       menuData,
       breadcrumbNameMap,
       fixedHeader,
+      loading,
     } = this.props;
+    const { spinning } = this.state;
+
+    if (loading) {
+      setTimeout(() => {
+        this.setState({
+          spinning: true
+        });
+      });
+    } else {
+      setTimeout(() => {
+        this.setState({
+          spinning: false
+        });
+      }, 100);
+    }
 
     const isTop = PropsLayout === 'topmenu';
     const contentStyle = !fixedHeader ? { paddingTop: 0 } : {};
@@ -139,9 +162,11 @@ class BasicLayout extends React.Component {
             isMobile={isMobile}
             {...this.props}
           />
-          <Content className={styles.content} style={contentStyle}>
-            {children}
-          </Content>
+          <Spin spinning={loading ? true : spinning}>
+            <Content className={styles.content} style={contentStyle}>
+              {children}
+            </Content>
+          </Spin>
           <Footer />
         </Layout>
       </Layout>

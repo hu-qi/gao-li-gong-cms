@@ -28,6 +28,7 @@ const codeMessage = {
  * 异常处理程序
  */
 const errorHandler = error => {
+  console.log('errorHandler: ', error);
   const { response = {} } = error;
   const errortext = codeMessage[response.status] || response.statusText;
   const { status, url } = response;
@@ -43,6 +44,7 @@ const errorHandler = error => {
     });
     return;
   }
+
   notification.error({
     message: `请求错误 ${status}: ${url}`,
     description: errortext,
@@ -67,6 +69,7 @@ const errorHandler = error => {
 const request = extend({
   errorHandler, // 默认错误处理
   credentials: 'include', // 默认请求是否带上cookie
+  // mode: 'no-cors',
 });
 
 export default request;
