@@ -1,12 +1,12 @@
-import React, { PureComponent, Fragment } from 'react';
+import React, { PureComponent } from 'react';
 import router from 'umi/router';
-import { Card, Table, Divider, Button, Popconfirm } from 'antd';
+import { Card, Table, Divider, Button, Popconfirm, Avatar } from 'antd';
 import { connect } from 'dva';
 
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import ArticleListContent from '@/components/ArticleListContent';
-import styles from './NewsList.less';
-import { debug } from 'util';
+
+import styles from './index.less';
+import { host } from '@/components/ImgUpload';
 
 @connect(({ news, loading }) => ({
   ...news,
@@ -42,7 +42,7 @@ class NewsList extends PureComponent {
   };
 
   delete = id => {
-    const { 
+    const {
       dispatch,
       list,
     } = this.props;
@@ -85,17 +85,26 @@ class NewsList extends PureComponent {
 
     const columns = [
       {
+        title: '缩略图',
+        dataIndex: 'thumbnail',
+        render: url => <Avatar src={url ? `//${host}${JSON.parse(url)[0]}`: ''} shape='square' size='large' />,
+      },
+      {
         title: '标题',
         width: 200,
         dataIndex: 'title',
+        render: title => <p className={styles.link}>{title}</p>,
       },
       {
         title: '摘要',
         dataIndex: 'brief',
+        render: brief => <p className={styles.link}>{brief}</p>,
       },
       {
         title: '外链',
         dataIndex: 'link',
+        maxWidth: 450,
+        render: link => <a className={styles.link} target='_blank' href={`${link}`}>{link}</a>,
       },
       {
         title: '操作',
@@ -124,6 +133,7 @@ class NewsList extends PureComponent {
           bodyStyle={{ padding: '8px 32px 32px 32px' }}
         >
           <Table
+            className={styles.newList}
             rowKey="id"
             columns={columns}
             dataSource={list}

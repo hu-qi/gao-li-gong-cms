@@ -30,7 +30,7 @@ export default {
         });
       }
     },
-    *get({ payload }, { call, put }) {
+    *get({ payload, callback = () => void 0}, { call, put }) {
       const response = yield call(getNewsById, payload);
       if (response.isError) {
         message.error(response.error.message);
@@ -40,6 +40,8 @@ export default {
           payload: response.data
         });
       }
+
+      callback(response.data);
     },
     *delete({ payload }, { call, put }) {
       const response = yield call(deleteNews, payload);
@@ -49,7 +51,6 @@ export default {
         message.error(response.error.message);
       } else {
         message.success("删除成功");
-        debugger;
         if (list.length === 1) {
           pagination.current = pagination.current > 1 ? pagination.current-- : 1;
         }
