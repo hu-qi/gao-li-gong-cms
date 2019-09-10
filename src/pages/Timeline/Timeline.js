@@ -43,19 +43,14 @@ class Timeline extends PureComponent {
   render() {
     const {
       list: { list = [] },
-      loading,
     } = this.props;
     const lines = list.sort((a, b) => new Date(b.time) - new Date(a.time));
 
     return (
       <PageHeaderWrapper>
-        <div className={styles.tileLineList}>
-          <List
-            rowKey="id"
-            loading={loading}
-            style={{display: 'flex', flexWrap: 'wrap'}}
-            dataSource={['', ...lines]}
-            renderItem={item =>
+        <div className={styles.tileLineList} style={{display: 'flex', flexWrap: 'wrap'}}>
+          {
+            ['', ...lines].map(item =>
               item ? (
                 <List.Item key={item.id}>
                   <Card
@@ -87,9 +82,8 @@ class Timeline extends PureComponent {
                     </Button>
                   </Card>
                 </List.Item>
-              )
-            }
-          />
+              ))
+          }
         </div>
       </PageHeaderWrapper>
     );

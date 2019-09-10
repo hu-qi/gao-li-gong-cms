@@ -1,4 +1,4 @@
-import React, { PureComponent, Fragment } from 'react';
+import React, { PureComponent } from 'react';
 import router from 'umi/router';
 import { Card, List, Button, Icon, Popconfirm } from 'antd';
 import { connect } from 'dva';
@@ -48,13 +48,9 @@ class Slider extends PureComponent {
 
     return (
       <PageHeaderWrapper>
-        <div className={styles.sliderList}>
-          <List
-            rowKey="id"
-            loading={loading}
-            dataSource={['', ...sliders]}
-            style={{display: 'flex', flexWrap: 'wrap'}}
-            renderItem={item =>
+        <div className={styles.sliderList} style={{display: 'flex', flexWrap: 'wrap'}}>
+          {
+            ['', ...sliders].map(item =>
               item ? (
                 <List.Item key={item.id}>
                   <Card
@@ -87,8 +83,8 @@ class Slider extends PureComponent {
                   </Card>
                 </List.Item>
               )
-            }
-          />
+            )
+          }
         </div>
       </PageHeaderWrapper>
     );
