@@ -47,10 +47,6 @@ const query = {
   loading: loading.global,
 }))
 class BasicLayout extends React.Component {
-  state = {
-    spinning: false
-  };
-
   componentDidMount() {
     const {
       dispatch,
@@ -119,22 +115,6 @@ class BasicLayout extends React.Component {
       fixedHeader,
       loading,
     } = this.props;
-    const { spinning } = this.state;
-
-    if (loading) {
-      setTimeout(() => {
-        this.setState({
-          spinning: true
-        });
-      });
-    } else {
-      setTimeout(() => {
-        this.setState({
-          spinning: false
-        });
-      }, 100);
-    }
-
     const isTop = PropsLayout === 'topmenu';
     const contentStyle = !fixedHeader ? { paddingTop: 0 } : {};
     const layout = (
@@ -162,7 +142,7 @@ class BasicLayout extends React.Component {
             isMobile={isMobile}
             {...this.props}
           />
-          <Spin spinning={loading ? true : spinning}>
+          <Spin delay={100} spinning={loading}>
             <Content className={styles.content} style={contentStyle}>
               {children}
             </Content>
