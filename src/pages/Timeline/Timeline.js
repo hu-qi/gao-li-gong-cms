@@ -49,10 +49,11 @@ class Timeline extends PureComponent {
 
     return (
       <PageHeaderWrapper>
-        <div className={styles.cardList}>
+        <div className={styles.tileLineList}>
           <List
             rowKey="id"
             loading={loading}
+            style={{display: 'flex', flexWrap: 'wrap'}}
             dataSource={['', ...lines]}
             renderItem={item =>
               item ? (

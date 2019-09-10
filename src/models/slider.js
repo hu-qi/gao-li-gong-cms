@@ -1,4 +1,5 @@
-import { getFakeSliders, deleteFakeSliders } from '@/services/api';
+import { getFakeSliders, deleteFakeSliders, addRollimages, getRollimages, updateRollimages } from '@/services/api';
+import { routerRedux } from 'dva/router';
 
 export default {
   namespace: 'slider',
@@ -21,6 +22,19 @@ export default {
         type: 'queryList',
         payload: Array.isArray(response) ? response : [],
       });
+    },
+    *addRollimages({ payload }, { call, put }) {
+      yield call(addRollimages, payload);
+      yield put(routerRedux.push('/home/slider'));
+    },
+    *updateRollimages({ payload }, { call, put }) {
+      yield call(updateRollimages, payload);
+      yield put(routerRedux.push('/home/slider'));
+    },
+    *getRollimages({ payload, callback = () => void 0 }, { call, put }) {
+      const resp = yield call(getRollimages, payload);
+      yield put();
+      callback(resp.data);
     },
   },
 
