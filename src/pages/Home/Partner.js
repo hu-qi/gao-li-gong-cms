@@ -1,12 +1,13 @@
-import React, { PureComponent, Fragment } from 'react';
+import React, { PureComponent } from 'react';
 import router from 'umi/router';
-import { Card, List, Button, Icon, Popconfirm } from 'antd';
+import { Card, List, Button, Icon, Popconfirm, Avatar } from 'antd';
 import { connect } from 'dva';
 
 import styles from './Slider.less';
 
 import Ellipsis from '@/components/Ellipsis';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
+import { host } from '@/components/ImgUpload';
 
 @connect(({ partner, loading }) => ({
   list: partner,
@@ -43,6 +44,8 @@ class Partner extends PureComponent {
       list: { list },
       loading,
     } = this.props;
+    const partners = list.sort((a, b) => b.id - a.id);
+
     return (
       <PageHeaderWrapper>
         <div className={styles.cardList}>
@@ -50,7 +53,7 @@ class Partner extends PureComponent {
             rowKey="id"
             loading={loading}
             grid={{ gutter: 24, lg: 3, md: 2, sm: 1, xs: 1 }}
-            dataSource={['', ...list]}
+            dataSource={['', ...partners]}
             renderItem={item =>
               item ? (
                 <List.Item key={item.id}>
@@ -65,16 +68,28 @@ class Partner extends PureComponent {
                     ]}
                   >
                     <Card.Meta
-                      avatar={<img alt="" className={styles.cardAvatar} src={item.avatar} />}
+                      avatar={
+                        <Avatar
+                          size="large"
+                          shape="circle"
+                          src={item.imgUrl ? `${host}${item.imgUrl}` : ''}
+                        />
+                      }
                       title={item.description}
                     />
                   </Card>
                 </List.Item>
               ) : (
                 <List.Item>
-                  <Button type="dashed" className={styles.partnerButton} onClick={this.toEditPage}>
-                    <Icon type="plus" /> 新建伙伴
-                  </Button>
+                  <Card hoverable className={styles.card}>
+                    <Button
+                      type="dashed"
+                      className={styles.partnerButton}
+                      onClick={this.toEditPage}
+                    >
+                      <Icon type="plus" /> 新建伙伴
+                    </Button>
+                  </Card>
                 </List.Item>
               )
             }

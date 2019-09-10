@@ -1,6 +1,12 @@
 import { routerRedux } from 'dva/router';
 import { message } from 'antd';
-import { getPartners, getPartnerById, deletePartner, addPartner, changePartner } from '@/services/api';
+import {
+  getPartners,
+  getPartnerById,
+  deletePartner,
+  addPartner,
+  changePartner,
+} from '@/services/api';
 
 export default {
   namespace: 'partner',
@@ -22,15 +28,16 @@ export default {
         });
       }
     },
-    *get({ payload }, { call, put }) {
+    *get({ payload, callback = () => void 0 }, { call, put }) {
       const response = yield call(getPartnerById, payload);
       if (response.isError) {
         message.error(response.error.message);
       } else {
         yield put({
           type: 'queryPartner',
-          payload: response.data
+          payload: response.data,
         });
+        callback(response.data);
       }
     },
     *delete({ payload }, { call, put }) {
@@ -38,9 +45,9 @@ export default {
       if (response.isError) {
         message.error(response.error.message);
       } else {
-        message.success("删除成功");
+        message.success('删除成功');
         yield put({
-          type: 'fetch'
+          type: 'fetch',
         });
       }
     },
