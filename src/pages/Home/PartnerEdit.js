@@ -1,12 +1,14 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
-import { Form, Input, Button, Card, Select, Icon, Upload } from 'antd';
+import { Form, Input, Button, Card, Icon, Upload } from 'antd';
 
 const { TextArea } = Input;
 const FormItem = Form.Item;
 
+import ImgUPload from '@/components/ImgUpload';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
+import moment from 'moment';
 
 @connect(({ partner, loading }) => ({
   ...partner,
@@ -15,58 +17,52 @@ import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 @Form.create()
 class PartnerEdit extends PureComponent {
   state = {
-    id: null
-  }
-  normFile = e => {
-    if (Array.isArray(e)) {
-      return e;
-    }
-    return e && e.fileList;
+    id: null,
+    imgUrl: null,
   };
 
   componentDidMount() {
-    const {params} = this.props.match;
-    const {dispatch} = this.props;
+    const { params } = this.props.match;
+    const { dispatch } = this.props;
     if (params.id) {
       this.setState({
-        id: params.id
-      })
+        id: params.id,
+      });
       dispatch({
         type: 'partner/get',
         payload: {
-          id: params.id
+          id: params.id,
+        },
+        callback: resp => {
+          this.setState({ imgUrl: resp.imgUrl ? [resp.imgUrl] : [] });
+          delete resp.imgUrl;
+
+          this.props.form.setFieldsValue({
+            ...resp,
+          });
         },
       });
+    } else {
+      this.setState({ imgUrl: [] });
     }
-  }
-
-  beforeUpload = file => {
-    const isJPG = file.type.indexOf('image/') > -1;
-    if (!isJPG) {
-      message.error('仅支持上传图片');
-    }
-    const isLt1M = file.size / 1024 / 1024 <= 1;
-    if (!isLt1M) {
-      message.error('图片大小必须小于 1MB!');
-    }
-    return isJPG && isLt1M;
   }
 
   handleSubmit = e => {
-    const { dispatch, form, id } = this.props;
+    const {
+      dispatch,
+      form,
+      match: { params },
+    } = this.props;
     e.preventDefault();
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        let {imgUrl, description, ...restValues} = values;
-        const type = id ? 'partner/modify' : 'partner/add';
+        const type = params.id ? 'partner/modify' : 'partner/add';
         dispatch({
-          type: type,
+          type,
           payload: {
-            id: id,
-            description: description,
-            // imgUrl: imgUrl && imgUrl.length ? imgUrl[0].response : '',
-            imgUrl: imgUrl && imgUrl.length && imgUrl[0],
-            ...restValues
+            id: params.id,
+            ...values,
+            imgUrl: this.state.imgUrl[0],
           },
         });
       }
@@ -76,11 +72,9 @@ class PartnerEdit extends PureComponent {
   render() {
     const { submitting } = this.props;
     const {
-      form: { getFieldDecorator, getFieldValue },
-      description,
-      imgUrl,
-      link
+      form: { getFieldDecorator },
     } = this.props;
+    const { imgUrl } = this.state;
 
     const formItemLayout = {
       labelCol: {
@@ -101,79 +95,12 @@ class PartnerEdit extends PureComponent {
       },
     };
 
-    let FormItems;
-    // const partnerType = getFieldValue('partnerType');
-    // if (partnerType == 3) {
-    //   FormItems = <>
-    //     <FormItem
-    //       {...formItemLayout} label={<FormattedMessage id="form.partner.photographer.label"
-    //       />}>
-    //       {getFieldDecorator('photographer', {
-    //         rules: [
-    //           {
-    //             required: true,
-    //             message: formatMessage({ id: 'validation.news.link.required' }),
-    //           },
-    //         ],
-    //       })(<Input placeholder={formatMessage({ id: 'form.partner.photographer.placeholder' })} />)}
-    //     </FormItem>
-    //   </>;
-    // } else {
-      FormItems = <>
-        <FormItem
-          {...formItemLayout} label={<FormattedMessage id="form.news.link.label"
-          />}>
-          {getFieldDecorator('link', {
-            initialValue: link,
-            rules: [
-              {
-                type: 'url',
-                required: true,
-                message: formatMessage({ id: 'validation.news.link.required' }),
-              },
-            ],
-          })(<Input placeholder={formatMessage({ id: 'form.news.link.placeholder' })} />)}
-        </FormItem>
-        <FormItem {...formItemLayout} label={<FormattedMessage id="form.partner.logo.avatar" />}>
-          {getFieldDecorator('thumbnail', {
-            valuePropName: 'fileList',
-            getValueFromEvent: this.normFile,
-          })(
-            <Upload name="file" action="/api/upload/image" listType="picture">
-              <Button>
-                <Icon type="upload" /> 点击上传
-          </Button>
-            </Upload>
-          )}
-        </FormItem>
-      </>;
-    // }
-
     return (
       <PageHeaderWrapper>
         <Card bordered={false}>
           <Form onSubmit={this.handleSubmit} hideRequiredMark style={{ marginTop: 8 }}>
-            {/* <FormItem {...formItemLayout} label={<FormattedMessage id="form.partner.type.label" />}>
-              {getFieldDecorator('partnerType')(
-                <Select
-                  placeholder={formatMessage({ id: 'form.partner.type.placeholder' })}
-                  style={{
-                    margin: '8px 0',
-                  }}
-                  defaultValue="1"
-                >
-                  <Select.Option value="1">
-                    主办方
-                  </Select.Option>
-                  <Select.Option value="2">
-                    支持单位
-                  </Select.Option>
-                </Select>
-              )}
-            </FormItem> */}
             <FormItem {...formItemLayout} label={<FormattedMessage id="form.description.label" />}>
               {getFieldDecorator('description', {
-                initialValue: description,
                 rules: [
                   {
                     required: true,
@@ -187,7 +114,26 @@ class PartnerEdit extends PureComponent {
                 />
               )}
             </FormItem>
-            {FormItems}
+            <FormItem {...formItemLayout} label={<FormattedMessage id="form.news.link.label" />}>
+              {getFieldDecorator('link', {
+                rules: [
+                  {
+                    type: 'url',
+                    required: true,
+                    message: formatMessage({ id: 'validation.news.link.required' }),
+                  },
+                ],
+              })(<Input placeholder={formatMessage({ id: 'form.news.link.placeholder' })} />)}
+            </FormItem>
+            <FormItem {...formItemLayout} label={<FormattedMessage id="form.thumbnail.label" />}>
+              {imgUrl && (
+                <ImgUPload
+                  fileList={imgUrl}
+                  limit={1}
+                  onChange={imgUrl => this.setState({ imgUrl })}
+                />
+              )}
+            </FormItem>
             <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
               <Button type="primary" htmlType="submit" loading={submitting}>
                 <FormattedMessage id="form.submit" />
