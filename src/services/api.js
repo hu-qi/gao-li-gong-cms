@@ -65,10 +65,6 @@ export async function deleteFakeVideos(params) {
   return request(`/api/delete_videos?${stringify(params)}`);
 }
 
-export async function deleteFakeSliders(params) {
-  return request(`/api/delete_sliders?${stringify(params)}`);
-}
-
 export async function getPartners() {
   return request(`/api/partners/list`);
 }
@@ -373,4 +369,15 @@ export async function updateRollimages(params) {
  */
 export async function getRollimages(params) {
   return request(`/api/rollimage/${params.id}`);
+}
+
+/**
+ * 轮播图删除
+ * @param params
+ * @returns {Promise<*>}
+ */
+export async function deleteFakeSliders(params) {
+  return request(`/api/rollimage/${params.id}`, {
+    type: 'DELETE',
+  });
 }

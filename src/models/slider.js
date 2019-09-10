@@ -6,21 +6,21 @@ export default {
 
   state: {
     list: [],
+    detail: null,
   },
 
   effects: {
     *fetch({ payload }, { call, put }) {
-      const response = yield call(getFakeSliders, payload);
+      const { data: list = [] } = yield call(getFakeSliders, payload);
       yield put({
-        type: 'queryList',
-        payload: Array.isArray(response) ? response : [],
+        type: 'save',
+        payload: { list },
       });
     },
     *delete({ payload }, { call, put }) {
-      const response = yield call(deleteFakeSliders, payload);
+      yield call(deleteFakeSliders, payload);
       yield put({
-        type: 'queryList',
-        payload: Array.isArray(response) ? response : [],
+        type: 'fetch',
       });
     },
     *addRollimages({ payload }, { call, put }) {
@@ -32,17 +32,20 @@ export default {
       yield put(routerRedux.push('/home/slider'));
     },
     *getRollimages({ payload, callback = () => void 0 }, { call, put }) {
-      const resp = yield call(getRollimages, payload);
-      yield put();
-      callback(resp.data);
+      const { data: detail = {} } = yield call(getRollimages, payload);
+      yield put({
+        type: 'save',
+        payload: { detail },
+      });
+      callback(detail);
     },
   },
 
   reducers: {
-    queryList(state, action) {
+    save(state, action) {
       return {
         ...state,
-        list: action.payload,
+        ...action.payload,
       };
     },
   },

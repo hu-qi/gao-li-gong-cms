@@ -7,6 +7,7 @@ import styles from './Slider.less';
 
 import Ellipsis from '@/components/Ellipsis';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
+import { host } from '@/components/ImgUpload';
 
 @connect(({ slider, loading }) => ({
   list: slider,
@@ -40,24 +41,26 @@ class Slider extends PureComponent {
 
   render() {
     const {
-      list: { list },
+      list: { list = [] },
       loading,
     } = this.props;
+    const sliders = list.sort((a, b) => new Date(b.updateTime) - new Date(a.updateTime));
+
     return (
       <PageHeaderWrapper>
-        <div className={styles.cardList}>
+        <div className={styles.sliderList}>
           <List
             rowKey="id"
             loading={loading}
-            grid={{ gutter: 24, lg: 3, md: 2, sm: 1, xs: 1 }}
-            dataSource={['', ...list]}
+            dataSource={['', ...sliders]}
+            style={{display: 'flex', flexWrap: 'wrap'}}
             renderItem={item =>
               item ? (
                 <List.Item key={item.id}>
                   <Card
+                    size='small'
                     hoverable
-                    className={styles.card}
-                    cover={<img alt={item.title} src={item.imgSrc} />}
+                    cover={<img alt={item.title} src={`${host}${item.imgUrl}`} />}
                     actions={[
                       <a onClick={() => this.toEditPage(item.id)}>编辑</a>,
                       <Popconfirm title="确定要删除吗?" onConfirm={() => this.delete(item.id)}>
@@ -66,8 +69,9 @@ class Slider extends PureComponent {
                     ]}
                   >
                     <Card.Meta
+                      title={item.title}
                       description={
-                        <Ellipsis className={styles.item} lines={3}>
+                        <Ellipsis lines={2}>
                           {item.description}
                         </Ellipsis>
                       }
@@ -76,9 +80,11 @@ class Slider extends PureComponent {
                 </List.Item>
               ) : (
                 <List.Item>
-                  <Button type="dashed" className={styles.newButton} onClick={this.toEditPage}>
-                    <Icon type="plus" /> 新建轮播图
-                  </Button>
+                  <Card className='new-line'>
+                    <Button type="dashed" onClick={this.toEditPage}>
+                      <Icon type="plus" /> 新建轮播图
+                    </Button>
+                  </Card>
                 </List.Item>
               )
             }
