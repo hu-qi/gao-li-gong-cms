@@ -1,30 +1,79 @@
 import React, { PureComponent } from 'react';
-import { connect } from 'dva';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
-import { Form, Input, Button, Card, Select, Icon, Upload } from 'antd';
+import { Form, Input, Button, Card } from 'antd';
+import { connect } from 'dva';
 
 const { TextArea } = Input;
 const FormItem = Form.Item;
 
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
+import ImgUPload from '@/components/ImgUpload';
 
-@connect(({ loading }) => ({
-  submitting: loading.effects['form/submitRegularForm'],
+@connect(({ slider }) => ({
+  slider,
 }))
 @Form.create()
 class SliderEdit extends PureComponent {
-  normFile = e => {
-    if (Array.isArray(e)) {
-      return e;
+  state = {
+    imgUrl: null,
+  };
+
+  componentDidMount() {
+    const {
+      match: { params },
+      dispatch,
+    } = this.props;
+
+    if (params.id) {
+      dispatch({
+        type: 'slider/getRollimages',
+        payload: {
+          id: params.id
+        },
+        callback: ( resp ) => {
+          this.setState({ imgUrl: [ resp.imgUrl ] });
+
+          delete resp.imgUrl;
+
+          this.props.form.setFieldsValue({
+            ...resp,
+          })
+        },
+      });
+    } else {
+      this.setState({ imgUrl: [] });
     }
-    return e && e.fileList;
+  }
+
+  handleSubmit = e => {
+    const {
+      dispatch,
+      form,
+      match: { params },
+    } = this.props;
+
+    e.preventDefault();
+
+    form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        dispatch({
+          type: params.id ? 'slider/updateRollimages' : 'slider/addRollimages',
+          payload: {
+            id: params.id ? params.id : undefined,
+            imgUrl: this.state.imgUrl[0],
+            ...values,
+          },
+        });
+      }
+    });
   };
 
   render() {
     const { submitting } = this.props;
     const {
-      form: { getFieldDecorator, getFieldValue },
+      form: { getFieldDecorator },
     } = this.props;
+    const { imgUrl } = this.state;
 
     const formItemLayout = {
       labelCol: {
@@ -50,11 +99,28 @@ class SliderEdit extends PureComponent {
         <Card bordered={false}>
           <Form onSubmit={this.handleSubmit} hideRequiredMark style={{ marginTop: 8 }}>
             <FormItem {...formItemLayout} label={<FormattedMessage id="form.description.label" />}>
-              {
-                <TextArea
-                  rows={4}
-                  placeholder={formatMessage({ id: 'form.description.placeholder' })}
-                />
+              {getFieldDecorator('title', {
+                rules: [
+                  {
+                    required: true,
+                    message: 'title 不能为空',
+                  },
+                ],
+              })(<Input placeholder='请输入 title' />)
+              }
+            </FormItem>
+            <FormItem {...formItemLayout} label={<FormattedMessage id="form.description.label" />}>
+              {getFieldDecorator('description', {
+                rules: [
+                  {
+                    required: true,
+                    message: '描述不能为空',
+                  },
+                ],
+              })(<TextArea
+                rows={4}
+                placeholder='请输入相关摘要'
+              />)
               }
             </FormItem>
             <FormItem {...formItemLayout} label={<FormattedMessage id="form.news.link.label" />}>
@@ -69,16 +135,14 @@ class SliderEdit extends PureComponent {
               })(<Input placeholder={formatMessage({ id: 'form.news.link.placeholder' })} />)}
             </FormItem>
             <FormItem {...formItemLayout} label={<FormattedMessage id="form.thumbnail.label" />}>
-              {getFieldDecorator('thumbnail', {
-                valuePropName: 'fileList',
-                getValueFromEvent: this.normFile,
-              })(
-                <Upload name="logo" action="/api/upload/image" listType="picture">
-                  <Button>
-                    <Icon type="upload" /> Click to upload
-                  </Button>
-                </Upload>
-              )}
+              {
+                imgUrl &&
+                <ImgUPload
+                  fileList={imgUrl}
+                  limit={1}
+                  onChange={imgUrl => this.setState({ imgUrl })}
+                />
+              }
             </FormItem>
             <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
               <Button type="primary" htmlType="submit" loading={submitting}>

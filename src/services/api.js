@@ -65,10 +65,6 @@ export async function deleteFakeVideos(params) {
   return request(`/api/delete_videos?${stringify(params)}`);
 }
 
-export async function getFakeSliders() {
-  return request(`/api/rollimages/list`);
-}
-
 export async function deleteFakeSliders(params) {
   return request(`/api/delete_sliders?${stringify(params)}`);
 }
@@ -339,4 +335,42 @@ export async function setAboutUs(params) {
  */
 export async function fakeAccountLogin(params) {
   return request(`/api/users/list?${stringify(params)}`);
+}
+
+/**
+ * 轮播图 列表
+ * @returns {Promise<*>}
+ */
+export async function getFakeSliders() {
+  return request(`/api/rollimages/list`);
+}
+
+/**
+ * 新增 轮播图
+ * @returns {Promise<*>}
+ */
+export async function addRollimages(params) {
+  return request(`/api/rollimage`, {
+    method: 'POST',
+    data: params,
+  });
+}
+
+/**
+ * 更新 轮播图
+ * @returns {Promise<*>}
+ */
+export async function updateRollimages(params) {
+  return request(`/api/rollimage/${params.id}`, {
+    method: 'PUT',
+    data: params,
+  });
+}
+
+/**
+ * 查询 轮播图
+ * @returns {Promise<*>}
+ */
+export async function getRollimages(params) {
+  return request(`/api/rollimage/${params.id}`);
 }

@@ -44,12 +44,7 @@ class TimelineEdit extends PureComponent {
       });
     } else {
       this.setState({ imgUrl: [] });
-      this.props.form.resetFields();
     }
-  }
-
-  componentWillUnmount() {
-    this.props.form.resetFields();
   }
 
   handleSubmit = e => {
