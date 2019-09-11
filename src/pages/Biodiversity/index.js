@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import debounce from 'lodash/debounce';
-import { Form, Card, Select, List, Icon, Modal, Typography, message, Input, Button, Tooltip, Pagination } from 'antd';
+import { Form, Card, Select, List, Icon, Modal, Typography, message, Input, Button, Tooltip, Pagination, Avatar } from 'antd';
 import router from 'umi/router';
 
-import AvatarList from '@/components/AvatarList';
 import Ellipsis from '@/components/Ellipsis';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
+import { host } from '@/components/ImgUpload/index.js';
 
 import styles from './index.less';
 
@@ -244,6 +244,7 @@ class CoverCardList extends Component {
     const {
       biology: {
         list,
+        tags,
       } = {},
       loading,
     } = this.props;
@@ -259,7 +260,7 @@ class CoverCardList extends Component {
             <Card
               className={styles.card}
               hoverable
-              cover={<img alt={item.name} src={item.thumbnail} />}
+              cover={<img alt={item.name} src={`${host}${item.thumbnail}`} />}
               actions={[
                 <Icon type='eye' onClick={() => this.handlePreview(item)} />,
                 <Icon type='edit' onClick={() => this.handleEdit(item)} />,
@@ -270,12 +271,9 @@ class CoverCardList extends Component {
                 description={<Ellipsis lines={2}>{item.brief}</Ellipsis>}
               />
               <div className={styles.cardItemContent}>
-                <AvatarList size='large'>
-                  <AvatarList.Item
-                    src={'https://gw.alipayobjects.com/zos/rmsportal/iXjVmWVHbCJAyqvDxdtx.png'}
-                    tips={'鸟类'}
-                  />
-                </AvatarList>
+                <Avatar size='large' style={{backgroundColor: '#f56a00'}}>
+                  {(tags.find(t => +t.id === item.speciesId) || {}).name || '未分类'}
+                </Avatar>
               </div>
             </Card>
           </List.Item>
