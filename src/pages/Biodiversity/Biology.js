@@ -21,8 +21,7 @@ const TypeMap = {
 let labelsCache = new Map();
 
 @Form.create()
-@connect(({ loading, biology }) => ({
-  submitting: loading.effects['form/submitRegularForm'],
+@connect(({ biology }) => ({
   biology,
 }))
 class Biology extends PureComponent {
@@ -36,7 +35,7 @@ class Biology extends PureComponent {
     mainImgList: [],
     tagsMap: new Map(),
     tagsList: [],
-    loading: false,
+    ready: false,
   };
 
   componentDidMount() {
@@ -51,23 +50,27 @@ class Biology extends PureComponent {
       dispatch({
         type: 'biology/fetchBiologyById',
         payload: { id },
-        callback: ({ labels = [], imgUrl, thumbnails }) => {
+        callback: ({ labels = [], imgUrl, thumbnails, name, brief }) => {
           const miniImgList = thumbnails || [];
           const mainImgList = JSON.parse(imgUrl || '[]');
-          const labelsList = Object.entries(buildTagsGroup(labels));
+          const labelsMapList = new Map(Object.entries(buildTagsGroup(labels)));
           [...labelsCache.keys()].forEach(key => {
-            if (key in labelsList) {
-              labelsCache.set(key, labelsList[key].map(l => l.id));
+            if (labelsMapList.has(key)) {
+              labelsCache.set(key, labelsMapList.get(key).map(l => l.id.toString()));
             }
           });
 
           this.setState({
             miniImgList,
             mainImgList,
-            loading: true,
+            ready: true,
           });
+
+          this.props.form.setFieldsValue({ name, brief });
         },
       });
+    } else {
+      this.setState({ ready: true });
     }
 
     dispatch({
@@ -99,7 +102,10 @@ class Biology extends PureComponent {
       if (!err) {
         dispatch({
           type: 'biology/addBiology',
-          payload: biology,
+          payload: {
+            ...biology,
+            speciesId: (biology.labels.find(l => l.type === '物种分类') || {}).id || 0,
+          },
           callback: () => history.push('/biodiversity'),
         });
       }
@@ -159,7 +165,7 @@ class Biology extends PureComponent {
         params: { id },
       },
     } = this.props;
-    const { mainImgList, miniImgList, tagsList, loading } = this.state;
+    const { mainImgList, miniImgList, tagsList, ready } = this.state;
     const imgLim = {
       mini: 20,
       main: 20,
@@ -221,7 +227,7 @@ class Biology extends PureComponent {
                 />
               )}
             </FormItem>
-            {Object.entries(tagsList).map(([label, tag = []]) => (
+            {ready && Object.entries(tagsList).map(([label, tag = []]) => (
               <FormItem {...formItemLayout} key={label} label={label}>
                 <Select
                   mode="multiple"
@@ -237,7 +243,7 @@ class Biology extends PureComponent {
               </FormItem>
             ))}
             <FormItem {...formItemLayout} label={labelTip(imgLim.mini, '缩略图')}>
-              {(+id === 0 || loading) && (
+              {(+id === 0 || ready) && (
                 <ImgUPload
                   fileList={miniImgList}
                   limit={imgLim.mini}
@@ -247,7 +253,7 @@ class Biology extends PureComponent {
               )}
             </FormItem>
             <FormItem {...formItemLayout} label={labelTip(imgLim.main, '图片')}>
-              {(+id === 0 || loading) && (
+              {(+id === 0 || ready) && (
                 <ImgUPload
                   fileList={mainImgList}
                   limit={imgLim.main}
@@ -267,10 +273,12 @@ class Biology extends PureComponent {
                 </span>
               }
             >
-              <RichTextEditor
-                value={biology.content || ''}
-                onChange={e => this.handleChange(e, 'content')}
-              />
+              { ready &&
+                <RichTextEditor
+                  value={biology.content || ''}
+                  onChange={e => this.handleChange(e, 'content')}
+                />
+              }
             </FormItem>
             <FormItem {...formItemLayout} colon={false} label={<></>}>
               <Button
