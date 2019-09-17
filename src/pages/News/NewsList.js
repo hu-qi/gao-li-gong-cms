@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import router from 'umi/router';
 import { Card, Table, Divider, Button, Modal, Avatar } from 'antd';
 import { connect } from 'dva';
+import moment from 'moment';
 
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 
@@ -89,11 +90,19 @@ class NewsList extends PureComponent {
       })
     }
 
+    const dataList = list.sort((a, b) => b.id - a.id);
+
     const columns = [
       {
         title: '缩略图',
         dataIndex: 'thumbnail',
         render: url => <Avatar src={url ? `${host}${JSON.parse(url)[0]}`: ''} shape='square' size='large' />,
+      },
+      {
+        title: '时间',
+        dataIndex: 'time',
+        width: 160,
+        render: time => <span>{moment(time).format('YYYY-MM-DD hh:mm')}</span>,
       },
       {
         title: '标题',
@@ -110,7 +119,16 @@ class NewsList extends PureComponent {
         title: '外链',
         dataIndex: 'link',
         width: 350,
-        render: link => <a className={styles.link} target='_blank' href={`${link}`}>{link}</a>,
+        render: link => (
+          <a
+            className={styles.link}
+            target='_blank'
+            style={{ wordWrap: 'break-word', wordBreak: 'break-word' }}
+            href={`${link}`}
+          >
+            {link}
+          </a>
+        ),
       },
       {
         title: '操作',
@@ -140,7 +158,7 @@ class NewsList extends PureComponent {
             className={styles.newList}
             rowKey="id"
             columns={columns}
-            dataSource={list}
+            dataSource={dataList}
             pagination={this.state.pagination}
             onChange={this.handleStandardTableChange}
           />
