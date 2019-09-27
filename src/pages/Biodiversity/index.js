@@ -1,7 +1,21 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import debounce from 'lodash/debounce';
-import { Form, Card, Select, List, Icon, Modal, Typography, message, Input, Button, Tooltip, Pagination, Avatar } from 'antd';
+import {
+  Form,
+  Card,
+  Select,
+  List,
+  Icon,
+  Modal,
+  Typography,
+  message,
+  Input,
+  Button,
+  Tooltip,
+  Pagination,
+  Avatar,
+} from 'antd';
 import router from 'umi/router';
 
 import Ellipsis from '@/components/Ellipsis';
@@ -41,10 +55,7 @@ export function buildTagsGroup(tags) {
     const {
       dispatch,
       biology: {
-        pagination: {
-          page,
-          size,
-        },
+        pagination: { page, size },
         species,
       },
     } = props;
@@ -68,10 +79,7 @@ class CoverCardList extends Component {
       dispatch,
       biology: {
         search,
-        pagination: {
-          page,
-          size,
-        },
+        pagination: { page, size },
       },
     } = this.props;
 
@@ -105,27 +113,29 @@ class CoverCardList extends Component {
   handleDel = biology => {
     const {
       dispatch,
-      biology: {
-        pagination,
-        search,
-      },
+      biology: { pagination, search },
     } = this.props;
     const { id, name } = biology;
 
     Modal.confirm({
-      title: <p>确定删除 <Typography.Text type='warning'>{name}</Typography.Text> 吗？</p>,
-      icon: <Icon type='delete' />,
-      content: <Typography.Text type='danger'>删除后不可恢复！</Typography.Text>,
+      title: (
+        <p>
+          确定删除 <Typography.Text type="warning">{name}</Typography.Text> 吗？
+        </p>
+      ),
+      icon: <Icon type="delete" />,
+      content: <Typography.Text type="danger">删除后不可恢复！</Typography.Text>,
       okText: '确认',
       cancelText: '取消',
-      onOk: () => dispatch({
-        type: 'biology/remove',
-        payload: {
-          id,
-          ...pagination,
-          ...search,
-        },
-      }),
+      onOk: () =>
+        dispatch({
+          type: 'biology/remove',
+          payload: {
+            id,
+            ...pagination,
+            ...search,
+          },
+        }),
     });
   };
 
@@ -165,14 +175,7 @@ class CoverCardList extends Component {
 
   renderSearch() {
     const {
-      biology: {
-        species,
-        tags,
-        pagination: {
-          page,
-          size,
-        },
-      } = {},
+      biology: { species, tags, pagination: { page, size } } = {},
       form,
       dispatch,
     } = this.props;
@@ -195,45 +198,51 @@ class CoverCardList extends Component {
 
     return (
       <Card bordered={false}>
-        <Form layout='inline'>
+        <Form layout="inline">
           <Form.Item>
             <Tooltip title="新增">
               <Button
-                type='primary'
-                icon='plus'
-                shape='circle'
-                size='large'
+                type="primary"
+                icon="plus"
+                shape="circle"
+                size="large"
                 onClick={() => this.handleEdit()}
               />
             </Tooltip>
           </Form.Item>
-          <Form.Item label='名称'>
-            {getFieldDecorator('name', {})(
-              <Input placeholder='不限' />
-            )}
+          <Form.Item label="名称">
+            {getFieldDecorator('name', {})(<Input placeholder="不限" />)}
           </Form.Item>
-          <Form.Item label='类别'>
+          <Form.Item label="类别">
             {getFieldDecorator('species', {})(
-              <Select placeholder='不限' showSearch style={{ minWidth: 200, width: '100%' }}>
-                { species.map(s => <Select.Option key={s.id} value={s.title}>{s.title}</Select.Option>) }
+              <Select placeholder="不限" showSearch style={{ minWidth: 200, width: '100%' }}>
+                {species.map(s => (
+                  <Select.Option key={s.id} value={s.title}>
+                    {s.title}
+                  </Select.Option>
+                ))}
               </Select>
             )}
           </Form.Item>
-          <Form.Item label='标签'>
+          <Form.Item label="标签">
             {getFieldDecorator('tag', {})(
-              <Select placeholder='不限' showSearch style={{ minWidth: 200, width: '100%' }}>
-                {
-                  tagsGroup.map(([g, t]) => (
-                    <Select.OptGroup key={g} label={g}>
-                      {t.map(tag => <Select.Option key={tag.id} value={tag.name}>{tag.name}</Select.Option>) }
-                    </Select.OptGroup>
-                  ))
-                }
+              <Select placeholder="不限" showSearch style={{ minWidth: 200, width: '100%' }}>
+                {tagsGroup.map(([g, t]) => (
+                  <Select.OptGroup key={g} label={g}>
+                    {t.map(tag => (
+                      <Select.Option key={tag.id} value={tag.name}>
+                        {tag.name}
+                      </Select.Option>
+                    ))}
+                  </Select.OptGroup>
+                ))}
               </Select>
             )}
           </Form.Item>
           <Form.Item>
-            <Button htmlType='reset' type='primary' onClick={handleReset}>重置</Button>
+            <Button htmlType="reset" type="primary" onClick={handleReset}>
+              重置
+            </Button>
           </Form.Item>
         </Form>
       </Card>
@@ -241,57 +250,62 @@ class CoverCardList extends Component {
   }
 
   renderBilologyList() {
-    const {
-      biology: {
-        list,
-        tags,
-      } = {},
-      loading,
-    } = this.props;
+    const { biology: { list, tags } = {}, loading } = this.props;
 
     return list ? (
       <List
-        rowKey='id'
+        rowKey="id"
         loading={loading}
         grid={{ gutter: 24, xl: 4, lg: 3, md: 3, sm: 2, xs: 1 }}
         dataSource={list.sort((a, b) => b.id - a.id)}
-        renderItem={item => (
-          <List.Item>
-            <Card
-              className={styles.card}
-              hoverable
-              cover={<img alt={item.name} src={`${host}${item.thumbnail}`} />}
-              actions={[
-                <Icon type='eye' onClick={() => this.handlePreview(item)} />,
-                <Icon type='edit' onClick={() => this.handleEdit(item)} />,
-                <Icon type='delete' onClick={() => this.handleDel(item)} />]}
-            >
-              <Card.Meta
-                title={<a>{item.name}</a>}
-                description={<Ellipsis lines={2}>{item.brief}</Ellipsis>}
-              />
-              <div className={styles.cardItemContent}>
-                <Avatar size='large' style={{backgroundColor: '#f56a00'}}>
-                  {(tags.find(t => +t.id === item.speciesId) || {}).name || '未分类'}
-                </Avatar>
-              </div>
-            </Card>
-          </List.Item>
-        )}
+        renderItem={item => {
+          let name;
+          try {
+            const { common, latin } = JSON.parse(item.name);
+
+            name = `${common} ${latin}`;
+          } catch (e) {
+            name = item.name;
+          }
+
+          return (
+            <List.Item>
+              <Card
+                className={styles.card}
+                hoverable
+                cover={<img alt={name} src={`${host}${item.thumbnail}`} />}
+                actions={[
+                  <Icon type="eye" onClick={() => this.handlePreview(item)} />,
+                  <Icon type="edit" onClick={() => this.handleEdit(item)} />,
+                  <Icon type="delete" onClick={() => this.handleDel(item)} />,
+                ]}
+              >
+                <Card.Meta
+                  title={
+                    <a
+                      style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
+                      href={`Biodiversity/${item.id}`}
+                    >
+                      {name}
+                    </a>
+                  }
+                  description={<Ellipsis lines={2}>{item.brief}</Ellipsis>}
+                />
+                <div className={styles.cardItemContent}>
+                  <Avatar size="large" style={{ backgroundColor: '#f56a00' }}>
+                    {(tags.find(t => +t.id === item.speciesId) || {}).name || '未分类'}
+                  </Avatar>
+                </div>
+              </Card>
+            </List.Item>
+          );
+        }}
       />
     ) : null;
   }
 
   render() {
-    const {
-      biology: {
-        pagination: {
-          total,
-          page,
-          size,
-        }
-      } = {},
-    } = this.props;
+    const { biology: { pagination: { total, page, size } } = {} } = this.props;
 
     return (
       <section className={styles.coverCardList}>

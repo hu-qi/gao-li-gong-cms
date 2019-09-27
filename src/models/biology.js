@@ -94,7 +94,6 @@ export default {
 
     *updateBiology({ payload, callback = () => void 0 }, { call, put }) {
       yield call(putBilology, payload);
-      yield put();
 
       callback();
     },

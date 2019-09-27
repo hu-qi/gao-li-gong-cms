@@ -66,7 +66,13 @@ class Biology extends PureComponent {
             ready: true,
           });
 
-          this.props.form.setFieldsValue({ name, brief });
+          try {
+            const { common = '', latin = '' } = JSON.parse(name);
+
+            this.props.form.setFieldsValue({ common, latin, brief });
+          } catch (e) {
+            this.props.form.setFieldsValue({ common: name, latin: '', brief });
+          }
         },
       });
     } else {
@@ -95,13 +101,16 @@ class Biology extends PureComponent {
       form,
       biology: { biology },
       history,
+      match: {
+        params: { id },
+      },
     } = this.props;
 
     e.preventDefault();
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         dispatch({
-          type: 'biology/addBiology',
+          type: !!Number(id) ? 'biology/updateBiology' : 'biology/addBiology',
           payload: {
             ...biology,
             speciesId: (biology.labels.find(l => l.type === '物种分类') || {}).id || 0,
@@ -145,6 +154,24 @@ class Biology extends PureComponent {
         .flat()
         .map(id => tagsMap.get(id))
         .filter(f => f);
+    }
+
+    if (['common', 'latin'].includes(key)) {
+      let newVal;
+
+      try {
+        newVal = JSON.parse(biology.name);
+      } catch (e) {
+        newVal = {
+          common: biology.name,
+          latin: '',
+        };
+      }
+
+      Object.assign(newVal, { [key]: value });
+
+      key = 'name';
+      value = JSON.stringify(newVal);
     }
 
     dispatch({
@@ -195,7 +222,7 @@ class Biology extends PureComponent {
         <Card bordered={false} style={{ marginTop: '1em' }} className={styles.Biology}>
           <Form onSubmit={this.handleSubmit} style={{ marginTop: 8 }}>
             <FormItem {...formItemLayout} label={<FormattedMessage id="form.title.label" />}>
-              {form.getFieldDecorator('name', {
+              {form.getFieldDecorator('common', {
                 rules: [
                   {
                     required: true,
@@ -205,7 +232,23 @@ class Biology extends PureComponent {
               })(
                 <Input
                   placeholder="请输入物种名称"
-                  onChange={e => this.handleChange(e.target.value, 'name')}
+                  onChange={e => this.handleChange(e.target.value, 'common')}
+                  allowClear
+                />
+              )}
+            </FormItem>
+            <FormItem {...formItemLayout} label="学名">
+              {form.getFieldDecorator('latin', {
+                rules: [
+                  {
+                    required: true,
+                    message: '物种学名不能为空！',
+                  },
+                ],
+              })(
+                <Input
+                  placeholder="请输入物种学名"
+                  onChange={e => this.handleChange(e.target.value, 'latin')}
                   allowClear
                 />
               )}
@@ -227,21 +270,22 @@ class Biology extends PureComponent {
                 />
               )}
             </FormItem>
-            {ready && Object.entries(tagsList).map(([label, tag = []]) => (
-              <FormItem {...formItemLayout} key={label} label={label}>
-                <Select
-                  mode="multiple"
-                  style={{ width: '100%' }}
-                  placeholder="Please select"
-                  defaultValue={labelsCache.get(label)}
-                  onChange={value => this.handleChange(value, 'labels', label)}
-                >
-                  {tag.map(({ name, id }) => (
-                    <Option key={id.toString()}>{name}</Option>
-                  ))}
-                </Select>
-              </FormItem>
-            ))}
+            {ready &&
+              Object.entries(tagsList).map(([label, tag = []]) => (
+                <FormItem {...formItemLayout} key={label} label={label}>
+                  <Select
+                    mode="multiple"
+                    style={{ width: '100%' }}
+                    placeholder="Please select"
+                    defaultValue={labelsCache.get(label)}
+                    onChange={value => this.handleChange(value, 'labels', label)}
+                  >
+                    {tag.map(({ name, id }) => (
+                      <Option key={id.toString()}>{name}</Option>
+                    ))}
+                  </Select>
+                </FormItem>
+              ))}
             <FormItem {...formItemLayout} label={labelTip(imgLim.mini, '缩略图')}>
               {(+id === 0 || ready) && (
                 <ImgUPload
@@ -273,12 +317,12 @@ class Biology extends PureComponent {
                 </span>
               }
             >
-              { ready &&
+              {ready && (
                 <RichTextEditor
                   value={biology.content || ''}
                   onChange={e => this.handleChange(e, 'content')}
                 />
-              }
+              )}
             </FormItem>
             <FormItem {...formItemLayout} colon={false} label={<></>}>
               <Button
