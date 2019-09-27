@@ -276,7 +276,7 @@ export async function putLabel(params) {
  * @returns {Promise<void>}
  */
 export async function getSpecies() {
-  return request('api/species');
+  return request('/api/species');
 }
 
 /**

@@ -46,6 +46,11 @@ class Biology extends PureComponent {
       },
     } = this.props;
 
+    dispatch({
+      type: 'biology/fetchSpecies',
+      payload: {},
+    });
+
     if (+id) {
       dispatch({
         type: 'biology/fetchBiologyById',
@@ -113,7 +118,6 @@ class Biology extends PureComponent {
           type: !!Number(id) ? 'biology/updateBiology' : 'biology/addBiology',
           payload: {
             ...biology,
-            speciesId: (biology.labels.find(l => l.type === '物种分类') || {}).id || 0,
           },
           callback: () => history.push('/biodiversity'),
         });
@@ -185,7 +189,10 @@ class Biology extends PureComponent {
 
   render() {
     const {
-      biology: { biology },
+      biology: {
+        biology,
+        species,
+      },
       history,
       form,
       match: {
@@ -253,6 +260,20 @@ class Biology extends PureComponent {
                 />
               )}
             </FormItem>
+            <Form.Item {...formItemLayout} label="所属大类">
+              {form.getFieldDecorator('speciesId', {
+                rules: [{ required: true, message: '物种分类必填' }],
+              })(
+                <Select
+                  placeholder="请选择物种类别"
+                  onChange={val => this.handleChange(val, 'speciesId')}
+                >
+                  {species.map(s => (
+                    <Option key={s.id} value={s.id}>{s.title}</Option>
+                  ))}
+                </Select>,
+              )}
+            </Form.Item>
             <FormItem {...formItemLayout} label={<FormattedMessage id="form.goal.label" />}>
               {form.getFieldDecorator('brief', {
                 rules: [

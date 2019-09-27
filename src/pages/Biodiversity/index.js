@@ -116,11 +116,19 @@ class CoverCardList extends Component {
       biology: { pagination, search },
     } = this.props;
     const { id, name } = biology;
+    let biologyName;
+    try {
+      const { common, latin } = JSON.parse(name);
+
+      biologyName = `${common} ${latin}`;
+    } catch (e) {
+      biologyName = name;
+    }
 
     Modal.confirm({
       title: (
         <p>
-          确定删除 <Typography.Text type="warning">{name}</Typography.Text> 吗？
+          确定删除 <Typography.Text type="warning">{biologyName}</Typography.Text> 吗？
         </p>
       ),
       icon: <Icon type="delete" />,
@@ -250,7 +258,13 @@ class CoverCardList extends Component {
   }
 
   renderBilologyList() {
-    const { biology: { list, tags } = {}, loading } = this.props;
+    const {
+      biology: {
+        list,
+        species,
+      } = {},
+      loading,
+    } = this.props;
 
     return list ? (
       <List
@@ -293,7 +307,7 @@ class CoverCardList extends Component {
                 />
                 <div className={styles.cardItemContent}>
                   <Avatar size="large" style={{ backgroundColor: '#f56a00' }}>
-                    {(tags.find(t => +t.id === item.speciesId) || {}).name || '未分类'}
+                    {(species.find(s => s.id === item.speciesId) || {}).title || '未分类'}
                   </Avatar>
                 </div>
               </Card>
@@ -305,7 +319,11 @@ class CoverCardList extends Component {
   }
 
   render() {
-    const { biology: { pagination: { total, page, size } } = {} } = this.props;
+    const {
+      biology: {
+        pagination: { total, page, size }
+      } = {},
+    } = this.props;
 
     return (
       <section className={styles.coverCardList}>
