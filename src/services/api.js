@@ -4,14 +4,8 @@ import { notification } from 'antd';
 
 async function request(url, opts) {
   const response = await Request(url, opts);
-  const {
-    error,
-    isError,
-  } = response;
-  const {
-    code = '',
-    message = '',
-  } = error || {};
+  const { error, isError } = response;
+  const { code = '', message = '' } = error || {};
 
   if (isError) {
     notification.error({
@@ -224,7 +218,7 @@ export async function postBiology(params) {
  * @returns {Promise<void>}
  */
 export async function putBilology(params) {
-  return request(`/api/label/${params.id}`, {
+  return request(`/api/biodiversity/${params.id}`, {
     method: 'PUT',
     data: params,
   });
