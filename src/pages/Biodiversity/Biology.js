@@ -44,6 +44,7 @@ class Biology extends PureComponent {
       match: {
         params: { id },
       },
+      form,
     } = this.props;
 
     dispatch({
@@ -74,13 +75,26 @@ class Biology extends PureComponent {
           try {
             const { common = '', latin = '' } = JSON.parse(name);
 
-            this.props.form.setFieldsValue({ common, latin, brief });
+            form.setFieldsValue({ common, latin, brief });
           } catch (e) {
-            this.props.form.setFieldsValue({ common: name, latin: '', brief });
+            form.setFieldsValue({ common: name, latin: '', brief });
           }
         },
       });
     } else {
+      dispatch({
+        type: 'biology/initBiology',
+        payload: {
+          name: '',
+          brief: '',
+          content: '',
+          imgUrl: JSON.stringify([]),
+          thumbnails: [],
+          labels: [],
+          speciesId: 0,
+        },
+      });
+
       this.setState({ ready: true });
     }
 
@@ -189,10 +203,7 @@ class Biology extends PureComponent {
 
   render() {
     const {
-      biology: {
-        biology,
-        species,
-      },
+      biology: { biology, species },
       history,
       form,
       match: {
@@ -269,9 +280,11 @@ class Biology extends PureComponent {
                   onChange={val => this.handleChange(val, 'speciesId')}
                 >
                   {species.map(s => (
-                    <Option key={s.id} value={s.id}>{s.title}</Option>
+                    <Option key={s.id} value={s.id}>
+                      {s.title}
+                    </Option>
                   ))}
-                </Select>,
+                </Select>
               )}
             </Form.Item>
             <FormItem {...formItemLayout} label={<FormattedMessage id="form.goal.label" />}>
