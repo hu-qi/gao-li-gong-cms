@@ -12,6 +12,14 @@ const StarAnimals = ({ animals = [], history, dispatch }) => {
     type: 'fetch',
   });
 
+  const getUrl = urlstr => {
+    try {
+      return JSON.parse(urlstr)[0];
+    } catch (e) {
+      return urlstr;
+    }
+  };
+
   return (
     <React.Fragment>
       <PageHeaderWrapper />
@@ -22,7 +30,7 @@ const StarAnimals = ({ animals = [], history, dispatch }) => {
               <Card
                 hoverable
                 style={{ width: 250, height: 330 }}
-                cover={<img alt="example" src={`${host}${JSON.parse(animal.imgUrl)[0]}`} />}
+                cover={<img alt="example" src={`${host}${getUrl(animal.imgUrl)}`} />}
               >
                 <Card.Meta title={animal.name} description={animal.brief} />
               </Card>

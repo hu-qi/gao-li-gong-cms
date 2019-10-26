@@ -91,6 +91,14 @@ class StarAnimalEdit extends Component {
 
     if (!currentAnimal) return <PageLoading />;
 
+    let imgUrl = [];
+
+    try {
+      imgUrl = JSON.parse(currentAnimal.imgUrl);
+    } catch (e) {
+      imgUrl = [currentAnimal.imgUrl];
+    }
+
     return (
       <React.Fragment>
         <Card
@@ -119,7 +127,7 @@ class StarAnimalEdit extends Component {
             </Form.Item>
             <Form.Item {...formItemLayout} label={labelTip(imgLim.mini, '图片')}>
               <ImgUPload
-                fileList={JSON.parse(currentAnimal.imgUrl)}
+                fileList={imgUrl}
                 limit={imgLim.mini}
                 onChange={fileList => this.handleUploadChange(fileList, 'imgUrl')}
               />

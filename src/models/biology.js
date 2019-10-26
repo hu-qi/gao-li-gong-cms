@@ -150,5 +150,13 @@ export default {
         tags: action.payload,
       };
     },
+
+    initBiology(state, action) {
+      debugger;
+      return {
+        ...state,
+        biology: action.payload,
+      };
+    },
   },
 };
