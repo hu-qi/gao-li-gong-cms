@@ -56,7 +56,7 @@ class Biology extends PureComponent {
       dispatch({
         type: 'biology/fetchBiologyById',
         payload: { id },
-        callback: ({ labels = [], imgUrl, thumbnails, name, brief }) => {
+        callback: ({ labels = [], imgUrl, thumbnails, name, brief, speciesId }) => {
           const miniImgList = thumbnails || [];
           const mainImgList = JSON.parse(imgUrl || '[]');
           const labelsMapList = new Map(Object.entries(buildTagsGroup(labels)));
@@ -75,9 +75,9 @@ class Biology extends PureComponent {
           try {
             const { common = '', latin = '' } = JSON.parse(name);
 
-            form.setFieldsValue({ common, latin, brief });
+            form.setFieldsValue({ common, latin, brief, speciesId });
           } catch (e) {
-            form.setFieldsValue({ common: name, latin: '', brief });
+            form.setFieldsValue({ common: name, latin: '', brief, speciesId });
           }
         },
       });

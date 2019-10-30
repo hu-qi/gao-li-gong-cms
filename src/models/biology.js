@@ -152,7 +152,6 @@ export default {
     },
 
     initBiology(state, action) {
-      debugger;
       return {
         ...state,
         biology: action.payload,
