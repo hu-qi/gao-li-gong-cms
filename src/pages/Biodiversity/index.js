@@ -269,6 +269,7 @@ class CoverCardList extends Component {
     return list ? (
       <List
         rowKey="id"
+        className={styles.biodiversityList}
         loading={loading}
         grid={{ gutter: 24, xl: 4, lg: 3, md: 3, sm: 2, xs: 1 }}
         dataSource={list.sort((a, b) => b.id - a.id)}
@@ -283,7 +284,7 @@ class CoverCardList extends Component {
           }
 
           return (
-            <List.Item>
+            <List.Item className='aaaaaa'>
               <Card
                 className={styles.card}
                 hoverable

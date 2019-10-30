@@ -14,7 +14,7 @@ const StarAnimals = ({ animals = [], history, dispatch }) => {
 
   const getUrl = urlstr => {
     try {
-      return urlstr.split(',')[0];
+      return urlstr.split(',')[0].replace('"','');
     } catch (e) {
       return urlstr;
     }
@@ -24,13 +24,13 @@ const StarAnimals = ({ animals = [], history, dispatch }) => {
     <React.Fragment>
       <PageHeaderWrapper />
       <Card bordered={false} style={{ marginTop: '1em' }} className={styles.editAnimal}>
-        <Row type="flex" justify="space-around">
+        <Row className='star-animal' type="flex" justify="space-around">
           {animals.map(animal => (
             <Col key={animal.name} onClick={() => history.push(`/starAnimals/edit/${animal.name}`)}>
               <Card
                 hoverable
                 style={{ width: 250, height: 330 }}
-                cover={<img alt="example" src={`${host}${getUrl(animal.imgUrl)}`} />}
+                cover={<img alt="example" style={{height: '100%', width: 'auto'}} src={`${host}${getUrl(animal.imgUrl)}`} />}
               >
                 <Card.Meta title={animal.name} description={animal.brief} />
               </Card>

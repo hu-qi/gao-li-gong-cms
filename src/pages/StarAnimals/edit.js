@@ -94,7 +94,7 @@ class StarAnimalEdit extends Component {
     let imgUrl = [];
 
     try {
-      imgUrl = JSON.parse(currentAnimal.imgUrl);
+      imgUrl = currentAnimal.imgUrl.split(',').map(url => url.replace('"',''));
     } catch (e) {
       imgUrl = [currentAnimal.imgUrl];
     }
