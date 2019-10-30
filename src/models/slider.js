@@ -1,4 +1,10 @@
-import { getFakeSliders, deleteFakeSliders, addRollimages, getRollimages, updateRollimages } from '@/services/api';
+import {
+  getFakeSliders,
+  addRollimages,
+  getRollimages,
+  updateRollimages,
+  deleteRollimages,
+} from '@/services/api';
 import { routerRedux } from 'dva/router';
 
 export default {
@@ -18,7 +24,7 @@ export default {
       });
     },
     *delete({ payload }, { call, put }) {
-      yield call(deleteFakeSliders, payload);
+      yield call(deleteRollimages, payload);
       yield put({
         type: 'fetch',
       });

@@ -28,16 +28,16 @@ class SliderEdit extends PureComponent {
       dispatch({
         type: 'slider/getRollimages',
         payload: {
-          id: params.id
+          id: params.id,
         },
-        callback: ( resp ) => {
-          this.setState({ imgUrl: [ resp.imgUrl ] });
+        callback: resp => {
+          this.setState({ imgUrl: [resp.imgUrl] });
 
           delete resp.imgUrl;
 
           this.props.form.setFieldsValue({
             ...resp,
-          })
+          });
         },
       });
     } else {
@@ -106,43 +106,37 @@ class SliderEdit extends PureComponent {
                     message: 'title 不能为空',
                   },
                 ],
-              })(<Input placeholder='请输入 title' />)
-              }
+              })(<Input placeholder="请输入 title" />)}
             </FormItem>
-            <FormItem {...formItemLayout} label={<FormattedMessage id="form.description.label" />}>
-              {getFieldDecorator('description', {
+            <FormItem {...formItemLayout} label={<FormattedMessage id="form.content.label" />}>
+              {getFieldDecorator('content', {
                 rules: [
                   {
                     required: true,
                     message: '描述不能为空',
                   },
                 ],
-              })(<TextArea
-                rows={4}
-                placeholder='请输入相关摘要'
-              />)
-              }
+              })(<TextArea rows={4} placeholder="请输入相关摘要" />)}
             </FormItem>
-            <FormItem {...formItemLayout} label={<FormattedMessage id="form.news.link.label" />}>
-              {getFieldDecorator('link', {
+            <FormItem {...formItemLayout} label={<FormattedMessage id="form.news.imgLink.label" />}>
+              {getFieldDecorator('imgLink', {
                 rules: [
                   {
                     type: 'url',
                     required: true,
-                    message: formatMessage({ id: 'validation.news.link.required' }),
+                    message: formatMessage({ id: 'validation.news.imgLink.required' }),
                   },
                 ],
-              })(<Input placeholder={formatMessage({ id: 'form.news.link.placeholder' })} />)}
+              })(<Input placeholder={formatMessage({ id: 'form.news.imgLink.placeholder' })} />)}
             </FormItem>
             <FormItem {...formItemLayout} label={<FormattedMessage id="form.thumbnail.label" />}>
-              {
-                imgUrl &&
+              {imgUrl && (
                 <ImgUPload
                   fileList={imgUrl}
                   limit={1}
                   onChange={imgUrl => this.setState({ imgUrl })}
                 />
-              }
+              )}
             </FormItem>
             <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
               <Button type="primary" htmlType="submit" loading={submitting}>

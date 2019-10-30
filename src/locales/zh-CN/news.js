@@ -5,7 +5,7 @@ export default {
   'form.news.description.label': '新闻摘要',
   'form.news.description.placeholder': '请输入新闻摘要',
   'validation.news.description.required': '请输入新闻摘要',
-  'form.news.link.label': '外链',
-  'form.news.link.placeholder': '请输入外部链接',
-  'validation.news.link.required': '请输入外部链接',
+  'form.news.imgLink.label': '外链',
+  'form.news.imgLink.placeholder': '请输入外部链接',
+  'validation.news.imgLink.required': '请输入外部链接',
 };

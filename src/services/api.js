@@ -364,6 +364,14 @@ export async function updateRollimages(params) {
 export async function getRollimages(params) {
   return request(`/api/rollimage/${params.id}`);
 }
+/**
+ *删除 轮播图
+ */
+export async function deleteRollimages(params) {
+  return request(`/api/rollimage/${params.id}`, {
+    method: 'DELETE',
+  });
+}
 
 /**
  * 轮播图删除
