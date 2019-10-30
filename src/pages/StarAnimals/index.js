@@ -14,7 +14,7 @@ const StarAnimals = ({ animals = [], history, dispatch }) => {
 
   const getUrl = urlstr => {
     try {
-      return JSON.parse(urlstr)[0];
+      return urlstr.split(',')[0];
     } catch (e) {
       return urlstr;
     }
