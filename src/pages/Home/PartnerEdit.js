@@ -114,7 +114,7 @@ class PartnerEdit extends PureComponent {
                 />
               )}
             </FormItem>
-            <FormItem {...formItemLayout} label={<FormattedMessage id="form.news.link.label" />}>
+            <FormItem {...formItemLayout} label={<FormattedMessage id="链接" />}>
               {getFieldDecorator('link', {
                 rules: [
                   {
@@ -123,7 +123,7 @@ class PartnerEdit extends PureComponent {
                     message: formatMessage({ id: 'validation.news.link.required' }),
                   },
                 ],
-              })(<Input placeholder={formatMessage({ id: 'form.news.link.placeholder' })} />)}
+              })(<Input placeholder={formatMessage({ id: '输入合作伙伴的链接' })} />)}
             </FormItem>
             <FormItem {...formItemLayout} label={<FormattedMessage id="form.thumbnail.label" />}>
               {imgUrl && (
