@@ -1,14 +1,14 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
-import { Form, Input, Button, Card, Icon, Upload } from 'antd';
-
-const { TextArea } = Input;
-const FormItem = Form.Item;
+import { Form, Input, Button, Card, Select } from 'antd';
 
 import ImgUPload from '@/components/ImgUpload';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import moment from 'moment';
+
+const { TextArea } = Input;
+const FormItem = Form.Item;
+const { Option } = Select;
 
 @connect(({ partner, loading }) => ({
   ...partner,
@@ -17,15 +17,18 @@ import moment from 'moment';
 @Form.create()
 class PartnerEdit extends PureComponent {
   state = {
+    // eslint-disable-next-line react/no-unused-state
     id: null,
     imgUrl: null,
   };
 
   componentDidMount() {
+    // eslint-disable-next-line react/destructuring-assignment
     const { params } = this.props.match;
-    const { dispatch } = this.props;
+    const { dispatch, form } = this.props;
     if (params.id) {
       this.setState({
+        // eslint-disable-next-line react/no-unused-state
         id: params.id,
       });
       dispatch({
@@ -37,7 +40,7 @@ class PartnerEdit extends PureComponent {
           this.setState({ imgUrl: resp.imgUrl ? [resp.imgUrl] : [] });
           delete resp.imgUrl;
 
-          this.props.form.setFieldsValue({
+          form.setFieldsValue({
             ...resp,
           });
         },
@@ -48,6 +51,7 @@ class PartnerEdit extends PureComponent {
   }
 
   handleSubmit = e => {
+    const { imgUrl } = this.state;
     const {
       dispatch,
       form,
@@ -62,7 +66,7 @@ class PartnerEdit extends PureComponent {
           payload: {
             id: params.id,
             ...values,
-            imgUrl: this.state.imgUrl[0],
+            imgUrl: imgUrl[0],
           },
         });
       }
@@ -130,10 +134,23 @@ class PartnerEdit extends PureComponent {
                 <ImgUPload
                   fileList={imgUrl}
                   limit={1}
-                  onChange={imgUrl => this.setState({ imgUrl })}
+                  onChange={url => this.setState({ imgUrl: url })}
                 />
               )}
             </FormItem>
+
+            <FormItem {...formItemLayout} label={<FormattedMessage id="form.type.label" />}>
+              {getFieldDecorator('type', {
+                rules: [{ required: true, message: '请选择伙伴类型!' }],
+                initialValue: '主办方',
+              })(
+                <Select>
+                  <Option value="主办方">主办方</Option>
+                  <Option value="支持单位">支持单位</Option>
+                </Select>
+              )}
+            </FormItem>
+
             <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
               <Button type="primary" htmlType="submit" loading={submitting}>
                 <FormattedMessage id="form.submit" />

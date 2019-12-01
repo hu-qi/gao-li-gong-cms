@@ -32,6 +32,7 @@ export default {
   'form.public.radio.private': '不公開',
   'form.publicUsers.placeholder': '公開給',
   'form.publicUsers.option.A': '同事甲',
+  'form.type.label': '類型',
   'form.publicUsers.option.B': '同事乙',
   'form.publicUsers.option.C': '同事丙',
 };
