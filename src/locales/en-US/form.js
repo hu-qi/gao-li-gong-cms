@@ -34,5 +34,6 @@ export default {
   'form.publicUsers.placeholder': 'Open to',
   'form.publicUsers.option.A': 'Colleague A',
   'form.publicUsers.option.B': 'Colleague B',
+  'form.type.label': 'Partner Type',
   'form.publicUsers.option.C': 'Colleague C',
 };

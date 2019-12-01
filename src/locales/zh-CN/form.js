@@ -39,5 +39,6 @@ export default {
   'form.publicUsers.option.C': '同事丙',
   'form.thumbnail.label': '缩略图',
   'form.description.label': '摘要',
+  'form.type.label': '伙伴类型',
   'form.description.placeholder': '请输入相关摘要',
 };
