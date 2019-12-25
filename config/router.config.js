@@ -165,6 +165,13 @@ export default [
         hideInMenu: true,
         component: './Biodiversity/Biology',
       },
+      // 高黎贡山介绍
+      {
+        path: '/background-info',
+        name: 'backgroundInfo',
+        icon: 'exception',
+        component: './BackgroundInfo/index',
+      },
       // 标签
       {
         name: 'labels',

@@ -56,6 +56,7 @@ export default {
   'menu.userManagement': '用户管理',
 
   'menu.starAnimals': '明星物种',
+  'menu.backgroundInfo': '高黎贡山介绍',
   'menu.news': '新闻管理',
   'menu.news.news-add': '新闻管理新增',
   'menu.news.news-edit': '新闻管理编辑',
