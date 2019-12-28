@@ -18,7 +18,7 @@ export default {
         payload: data,
       });
 
-      callback();
+      callback(data);
     },
 
     *updateBackgroundInfo({ payload, callback = () => void 0 }, { call }) {

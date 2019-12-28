@@ -57,6 +57,8 @@ export default {
 
   'menu.starAnimals': '明星物种',
   'menu.backgroundInfo': '高黎贡山介绍',
+  'menu.backgroundInfo.overview': '概览',
+  'menu.backgroundInfo.group': '类别',
   'menu.news': '新闻管理',
   'menu.news.news-add': '新闻管理新增',
   'menu.news.news-edit': '新闻管理编辑',

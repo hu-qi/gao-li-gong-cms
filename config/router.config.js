@@ -167,10 +167,33 @@ export default [
       },
       // 高黎贡山介绍
       {
-        path: '/background-info',
         name: 'backgroundInfo',
         icon: 'exception',
-        component: './BackgroundInfo/index',
+        path: '/background-info',
+        routes: [
+          {
+            path: '/background-info/overview',
+            name: 'overview',
+            component: './BackgroundInfo/overview',
+          },
+          // 先隐藏，/api/background-info/{name} 这个接口目前有问题
+          {
+            hideInMenu: true,
+            path: '/background-info/group',
+            name: 'group',
+            hideChildrenInMenu: true,
+            routes: [
+              {
+                path: '/background-info/group',
+                component: './BackgroundInfo/Group',
+              },
+              {
+                path: '/background-info/group/:name',
+                component: './BackgroundInfo/GroupEdit',
+              },
+            ],
+          },
+        ],
       },
       // 标签
       {

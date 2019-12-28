@@ -6,9 +6,19 @@ import debounce from 'lodash/debounce';
 import styles from './index.less';
 
 class ReachTextEditor extends React.Component {
-  state = {
-    editorState: BraftEditor.createEditorState(null),
-  };
+  handleChange = debounce(editorState => {
+    const { onChange } = this.props;
+
+    onChange(editorState.toHTML());
+  }, 200);
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      editorState: BraftEditor.createEditorState(null),
+      prevValue: props.value,
+    };
+  }
 
   componentDidMount() {
     const { value = null } = this.props;
@@ -17,11 +27,15 @@ class ReachTextEditor extends React.Component {
     this.setState({ editorState });
   }
 
-  handleChange = debounce(editorState => {
-    const { onChange } = this.props;
-
-    onChange(editorState.toHTML());
-  }, 200);
+  static getDerivedStateFromProps(props, state) {
+    if (props.value !== state.prevValue) {
+      return {
+        prevValue: props.value,
+        editorState: BraftEditor.createEditorState(props.value),
+      };
+    }
+    return null;
+  }
 
   handleEditorChange = editorState => {
     this.setState({ editorState });
