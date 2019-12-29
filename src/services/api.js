@@ -299,6 +299,25 @@ export async function setStarAnimals(params) {
 }
 
 /**
+ * 高黎贡山介绍
+ * @returns {Promise<void>}
+ */
+export async function getBackgroundInfo() {
+  return request(`/api/background-info`);
+}
+
+/**
+ * 更新高黎贡山介绍
+ * @returns {Promise<void>}
+ */
+export async function updateBackgroundInfo(params) {
+  return request(`/api/background-info`, {
+    method: 'PUT',
+    data: params,
+  });
+}
+
+/**
  * 关于我们
  * @returns {Promise<void>}
  */

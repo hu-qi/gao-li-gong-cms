@@ -1,9 +1,10 @@
 import React from 'react';
 import { Upload, Icon } from 'antd';
 
-export const host = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1'
-  ? window.location.origin
-  : '//47.96.116.169';
+export const host =
+  window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1'
+    ? window.location.origin
+    : '//47.96.116.169';
 
 class PicturesWall extends React.Component {
   handlePreview = file => {
@@ -18,22 +19,21 @@ class PicturesWall extends React.Component {
   };
 
   render() {
-    const {
-      limit,
-      fileList,
-    } = this.props;
+    const { limit, multiple = true, fileList } = this.props;
     const uploadUrl = '/api/upload/image';
     const uploadButton = (
       <div>
-        <Icon type='plus' />
-        <div className='ant-upload-text'>上传</div>
+        <Icon type="plus" />
+        <div className="ant-upload-text">上传</div>
       </div>
     );
 
     const defaultFileList = [];
 
     fileList.forEach(url => {
-      if (!url) { return; }
+      if (!url) {
+        return;
+      }
 
       defaultFileList.push({
         uid: Math.random().toString(),
@@ -44,10 +44,10 @@ class PicturesWall extends React.Component {
     });
 
     return (
-      <div className='clearfix'>
+      <div className="clearfix">
         <Upload
-          multiple
-          listType='picture-card'
+          multiple={multiple}
+          listType="picture-card"
           action={uploadUrl}
           defaultFileList={defaultFileList}
           onPreview={this.handlePreview}
