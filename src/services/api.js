@@ -178,7 +178,7 @@ export async function userDelete(params) {
  * @returns {Promise<void>}
  */
 export async function queryBiologyList(params) {
-  return request(`/api/biodiversity/list?${stringify(params)}`);
+  return request(`/api/biodiversitys/list?${stringify(params)}`);
 }
 
 /**
