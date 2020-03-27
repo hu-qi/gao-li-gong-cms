@@ -20,7 +20,6 @@ import router from 'umi/router';
 
 import Ellipsis from '@/components/Ellipsis';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import { host } from '@/components/ImgUpload/index.js';
 
 import styles from './index.less';
 

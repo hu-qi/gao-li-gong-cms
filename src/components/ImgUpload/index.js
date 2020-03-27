@@ -2,9 +2,7 @@ import React from 'react';
 import { Upload, Icon } from 'antd';
 
 export const host =
-  window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1'
-    ? window.location.origin
-    : '';
+  window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1' ? '' : '';
 
 class PicturesWall extends React.Component {
   handlePreview = file => {
