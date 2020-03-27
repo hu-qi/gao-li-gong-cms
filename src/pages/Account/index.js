@@ -26,10 +26,10 @@ const { Text } = Typography;
 @connect(models => {
   const { account, loading } = models;
 
-  return ({
+  return {
     account,
     loading: loading.models.account,
-  });
+  };
 })
 @Form.create()
 class TableList extends PureComponent {
@@ -42,7 +42,7 @@ class TableList extends PureComponent {
     {
       title: '用户',
       dataIndex: 'avatar',
-      render: url => <Avatar src={url ? `${host}${url}`: ''} shape='square' size='large' />,
+      render: url => <Avatar src={url ? `${url}` : ''} shape="square" size="large" />,
     },
     {
       title: '用户名',
@@ -65,14 +65,14 @@ class TableList extends PureComponent {
     {
       title: '微信',
       dataIndex: 'wechatId',
-      render: wechat => <a onClick={() => this.onCopyClipboard(wechat)}>{wechat}</a>
+      render: wechat => <a onClick={() => this.onCopyClipboard(wechat)}>{wechat}</a>,
     },
     {
       title: '操作',
       render: (text, record) => (
         <Fragment>
           <a onClick={() => router.push(`/account/${record.id}`)}>编辑</a>
-          <Divider type='vertical' />
+          <Divider type="vertical" />
           <a onClick={() => this.handleDelete(record)}>删除</a>
         </Fragment>
       ),
@@ -87,10 +87,7 @@ class TableList extends PureComponent {
     const {
       dispatch,
       account: {
-        pagination: {
-          size,
-          page,
-        },
+        pagination: { size, page },
       },
     } = this.props;
     const { name } = this.state;
@@ -101,11 +98,11 @@ class TableList extends PureComponent {
         page,
         size,
         name,
-      }
+      },
     });
   };
 
-  onCopyClipboard = (webchat) => {
+  onCopyClipboard = webchat => {
     const input = document.createElement('input');
     document.body.appendChild(input);
 
@@ -116,41 +113,47 @@ class TableList extends PureComponent {
       document.execCommand('copy');
 
       notification.info({
-        message: <React.Fragment>已复制微信号：<a href='javascript: void 0;'>${webchat}</a> 到粘贴板😀</React.Fragment>,
+        message: (
+          <React.Fragment>
+            已复制微信号：<a href="javascript: void 0;">${webchat}</a> 到粘贴板😀
+          </React.Fragment>
+        ),
         onClick: () => void 0,
         duration: 2,
       });
     }
 
-    input.setAttribute('style','display:none');
+    input.setAttribute('style', 'display:none');
   };
 
   handleDelete = user => {
     const {
-      props: {
-        dispatch,
-      },
+      props: { dispatch },
       fetchData,
-    }= this;
+    } = this;
 
     Modal.confirm({
-      title: <p>确定删除 <Text type='warning'>{user.name}</Text> 吗？</p>,
-      content: <Text type='danger'>删除后不可恢复</Text>,
+      title: (
+        <p>
+          确定删除 <Text type="warning">{user.name}</Text> 吗？
+        </p>
+      ),
+      content: <Text type="danger">删除后不可恢复</Text>,
       cancelText: '取消',
       okText: '确定',
       onOk: () => {
         dispatch({
           type: 'account/delete',
           payload: { id: user.id },
-          callback: ({isError}) => {
+          callback: ({ isError }) => {
             if (!isError) {
               message.success('账号删除成功！');
             } else {
-              message.warning('账号删除失败，请重试！')
+              message.warning('账号删除失败，请重试！');
             }
 
             fetchData();
-          }
+          },
         });
       },
       onCancel() {},
@@ -164,7 +167,7 @@ class TableList extends PureComponent {
       dispatch,
       account: {
         pagination: { size },
-      }
+      },
     } = this.props;
     const { name } = this.state;
 
@@ -196,19 +199,10 @@ class TableList extends PureComponent {
 
   render() {
     const {
-      account: {
-        list = [],
-        pagination: {
-          page: current,
-          size: pageSize,
-          total,
-        }
-      } = {},
+      account: { list = [], pagination: { page: current, size: pageSize, total } } = {},
       loading,
     } = this.props;
-    const {
-      name,
-    } = this.state;
+    const { name } = this.state;
     const data = {
       list,
       pagination: {
@@ -220,25 +214,25 @@ class TableList extends PureComponent {
 
     const mainSearch = (
       <section className={styles.tableList}>
-        <Tooltip title='新增用户'>
+        <Tooltip title="新增用户">
           <Button
             className={styles.newTag}
-            type='primary'
-            icon='plus'
-            shape='circle'
-            size='large'
+            type="primary"
+            icon="plus"
+            shape="circle"
+            size="large"
             onClick={() => router.push('/account/0')}
           />
         </Tooltip>
         <div style={{ textAlign: 'center' }}>
           <Input.Search
-            placeholder='请输入用户名或昵称'
-            enterButton='搜索'
-            size='large'
+            placeholder="请输入用户名或昵称"
+            enterButton="搜索"
+            size="large"
             value={name}
             onChange={e => this.handleSearchChange(e.target.value)}
             onSearch={this.handleSearchSubmit}
-            style={{width: 522}}
+            style={{ width: 522 }}
             allowClear
           />
         </div>
@@ -246,10 +240,7 @@ class TableList extends PureComponent {
     );
 
     return (
-      <PageHeaderWrapper
-        className={styles.tableList}
-        content={mainSearch}
-      >
+      <PageHeaderWrapper className={styles.tableList} content={mainSearch}>
         <Card bordered={false}>
           <StandardTable
             selectedRows={[]}

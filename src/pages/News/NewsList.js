@@ -13,15 +13,14 @@ import { host } from '@/components/ImgUpload';
   ...news,
   loading: loading.models.list,
 }))
-
 class NewsList extends PureComponent {
   state = {
     pagination: {
       current: 1,
       pageSize: 10,
-      showSizeChanger: true
-    }
-  }
+      showSizeChanger: true,
+    },
+  };
   componentDidMount() {
     const { dispatch } = this.props;
     const { pagination } = this.state;
@@ -29,7 +28,7 @@ class NewsList extends PureComponent {
       type: 'news/fetch',
       payload: {
         page: pagination.current,
-        size: pagination.pageSize
+        size: pagination.pageSize,
       },
     });
   }
@@ -43,10 +42,7 @@ class NewsList extends PureComponent {
   };
 
   delete = record => {
-    const {
-      dispatch,
-      list,
-    } = this.props;
+    const { dispatch, list } = this.props;
     const { pagination } = this.state;
 
     Modal.confirm({
@@ -58,7 +54,7 @@ class NewsList extends PureComponent {
           payload: {
             id: record.id,
             list,
-            pagination
+            pagination,
           },
         });
       },
@@ -80,14 +76,11 @@ class NewsList extends PureComponent {
   };
 
   render() {
-    const {
-      list,
-      pagination,
-    } = this.props;
+    const { list, pagination } = this.props;
     if (pagination) {
       this.setState({
-        pagination: pagination
-      })
+        pagination: pagination,
+      });
     }
 
     const dataList = list.sort((a, b) => b.id - a.id);
@@ -96,7 +89,9 @@ class NewsList extends PureComponent {
       {
         title: '缩略图',
         dataIndex: 'thumbnail',
-        render: url => <Avatar src={url ? `${host}${JSON.parse(url)[0]}`: ''} shape='square' size='large' />,
+        render: url => (
+          <Avatar src={url ? `${JSON.parse(url)[0]}` : ''} shape="square" size="large" />
+        ),
       },
       {
         title: '时间',
@@ -122,7 +117,7 @@ class NewsList extends PureComponent {
         render: link => (
           <a
             className={styles.link}
-            target='_blank'
+            target="_blank"
             style={{ wordWrap: 'break-word', wordBreak: 'break-word' }}
             href={`${link}`}
           >

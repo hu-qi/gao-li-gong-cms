@@ -222,7 +222,10 @@ class CoverCardList extends Component {
             {getFieldDecorator('name', {})(<Input placeholder="不限" />)}
           </Form.Item>
           <Form.Item label="类别">
-            {getFieldDecorator('species', {})(
+            {getFieldDecorator(
+              'species',
+              {}
+            )(
               <Select placeholder="不限" showSearch style={{ minWidth: 200, width: '100%' }}>
                 {species.map(s => (
                   <Select.Option key={s.id} value={s.title}>
@@ -233,7 +236,10 @@ class CoverCardList extends Component {
             )}
           </Form.Item>
           <Form.Item label="标签">
-            {getFieldDecorator('tag', {})(
+            {getFieldDecorator(
+              'tag',
+              {}
+            )(
               <Select placeholder="不限" showSearch style={{ minWidth: 200, width: '100%' }}>
                 {tagsGroup.map(([g, t]) => (
                   <Select.OptGroup key={g} label={g}>
@@ -258,13 +264,7 @@ class CoverCardList extends Component {
   }
 
   renderBilologyList() {
-    const {
-      biology: {
-        list,
-        species,
-      } = {},
-      loading,
-    } = this.props;
+    const { biology: { list, species } = {}, loading } = this.props;
 
     return list ? (
       <List
@@ -284,11 +284,11 @@ class CoverCardList extends Component {
           }
 
           return (
-            <List.Item className='aaaaaa'>
+            <List.Item className="aaaaaa">
               <Card
                 className={styles.card}
                 hoverable
-                cover={<img alt={name} src={`${host}${item.thumbnail}`} />}
+                cover={<img alt={name} src={`${item.thumbnail}`} />}
                 actions={[
                   <Icon type="eye" onClick={() => this.handlePreview(item)} />,
                   <Icon type="edit" onClick={() => this.handleEdit(item)} />,
@@ -320,11 +320,7 @@ class CoverCardList extends Component {
   }
 
   render() {
-    const {
-      biology: {
-        pagination: { total, page, size }
-      } = {},
-    } = this.props;
+    const { biology: { pagination: { total, page, size } } = {} } = this.props;
 
     return (
       <section className={styles.coverCardList}>

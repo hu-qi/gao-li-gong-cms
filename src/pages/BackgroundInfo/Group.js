@@ -40,7 +40,7 @@ class Group extends PureComponent {
               <Card
                 size="small"
                 hoverable
-                cover={<img alt={item.title} src={`${host}${item.imgUrl}`} />}
+                cover={<img alt={item.title} src={`${item.imgUrl}`} />}
                 actions={[<a onClick={() => this.toEditPage(item.name)}>编辑</a>]}
               >
                 <Card.Meta

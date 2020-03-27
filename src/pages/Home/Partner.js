@@ -7,7 +7,6 @@ import styles from './Slider.less';
 
 import Ellipsis from '@/components/Ellipsis';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import { host } from '@/components/ImgUpload';
 
 @connect(({ partner, loading }) => ({
   list: partner,
@@ -72,7 +71,7 @@ class Partner extends PureComponent {
                         <Avatar
                           size="large"
                           shape="circle"
-                          src={item.imgUrl ? `${host}${item.imgUrl}` : ''}
+                          src={item.imgUrl ? `${item.imgUrl}` : ''}
                         />
                       }
                       title={item.description}

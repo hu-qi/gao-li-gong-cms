@@ -7,7 +7,6 @@ import styles from './Slider.less';
 
 import Ellipsis from '@/components/Ellipsis';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import { host } from '@/components/ImgUpload';
 
 @connect(({ slider, loading }) => ({
   list: slider,
@@ -48,43 +47,37 @@ class Slider extends PureComponent {
 
     return (
       <PageHeaderWrapper>
-        <div className={styles.sliderList} style={{display: 'flex', flexWrap: 'wrap'}}>
-          {
-            ['', ...sliders].map(item =>
-              item ? (
-                <List.Item key={item.id}>
-                  <Card
-                    size='small'
-                    hoverable
-                    cover={<img alt={item.title} src={`${host}${item.imgUrl}`} />}
-                    actions={[
-                      <a onClick={() => this.toEditPage(item.id)}>编辑</a>,
-                      <Popconfirm title="确定要删除吗?" onConfirm={() => this.delete(item.id)}>
-                        <a href="javascript:;">删除</a>
-                      </Popconfirm>,
-                    ]}
-                  >
-                    <Card.Meta
-                      title={item.title}
-                      description={
-                        <Ellipsis lines={2}>
-                          {item.description}
-                        </Ellipsis>
-                      }
-                    />
-                  </Card>
-                </List.Item>
-              ) : (
-                <List.Item>
-                  <Card className='new-line'>
-                    <Button type="dashed" onClick={this.toEditPage}>
-                      <Icon type="plus" /> 新建轮播图
-                    </Button>
-                  </Card>
-                </List.Item>
-              )
+        <div className={styles.sliderList} style={{ display: 'flex', flexWrap: 'wrap' }}>
+          {['', ...sliders].map(item =>
+            item ? (
+              <List.Item key={item.id}>
+                <Card
+                  size="small"
+                  hoverable
+                  cover={<img alt={item.title} src={`${item.imgUrl}`} />}
+                  actions={[
+                    <a onClick={() => this.toEditPage(item.id)}>编辑</a>,
+                    <Popconfirm title="确定要删除吗?" onConfirm={() => this.delete(item.id)}>
+                      <a href="#">删除</a>
+                    </Popconfirm>,
+                  ]}
+                >
+                  <Card.Meta
+                    title={item.title}
+                    description={<Ellipsis lines={2}>{item.description}</Ellipsis>}
+                  />
+                </Card>
+              </List.Item>
+            ) : (
+              <List.Item>
+                <Card className="new-line">
+                  <Button type="dashed" onClick={this.toEditPage}>
+                    <Icon type="plus" /> 新建轮播图
+                  </Button>
+                </Card>
+              </List.Item>
             )
-          }
+          )}
         </div>
       </PageHeaderWrapper>
     );
