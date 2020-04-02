@@ -59,12 +59,14 @@ class Biology extends PureComponent {
         callback: ({ labels = [], imgUrl, thumbnails, name, brief, speciesId }) => {
           const miniImgList = thumbnails || [];
           const mainImgList = JSON.parse(imgUrl || '[]');
-          const labelsMapList = new Map(Object.entries(buildTagsGroup(labels)));
-          [...labelsCache.keys()].forEach(key => {
-            if (labelsMapList.has(key)) {
-              labelsCache.set(key, labelsMapList.get(key).map(l => l.id.toString()));
-            }
-          });
+          if (labels !== null) {
+            const labelsMapList = new Map(Object.entries(buildTagsGroup(labels)));
+            [...labelsCache.keys()].forEach(key => {
+              if (labelsMapList.has(key)) {
+                labelsCache.set(key, labelsMapList.get(key).map(l => l.id.toString()));
+              }
+            });
+          }
 
           this.setState({
             miniImgList,
