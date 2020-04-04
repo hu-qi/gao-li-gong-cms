@@ -202,7 +202,7 @@ class UserInfo extends React.Component {
             <Form.Item label='登录密码'>
               { form.getFieldDecorator('password', {
                 rules: [{
-                  required: true, message: '请输入你的登录密码!',
+                  required: false, message: '请输入你的登录密码!',
                 }, {
                   pattern: new RegExp('^(?=.*[A-Za-z])(?=.*\\d)(?=.*[$@$!%*#?&])[A-Za-z\\d$@$!%*#?&]{6,16}$'),
                   message: '密码必须包含至少一个数字、字母和特殊字符，长度在 6 ~ 16 位之间!',
@@ -212,7 +212,7 @@ class UserInfo extends React.Component {
             <Form.Item label='确认密码'>
               { form.getFieldDecorator('confirm', {
                 rules: [{
-                  required: true, message: '请输入确认密码!',
+                  required: false, message: '请输入确认密码!',
                 }, {
                   validator: this.compareToFirstPassword,
                 }],
