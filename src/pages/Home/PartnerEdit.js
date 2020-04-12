@@ -151,6 +151,12 @@ class PartnerEdit extends PureComponent {
               )}
             </FormItem>
 
+            <FormItem {...formItemLayout} label={<FormattedMessage id="排序" />}>
+              {getFieldDecorator('orderNo', {
+                rules: [{ type: 'string', required: true, message: '请输入整数!' }],
+              })(<Input placeholder={formatMessage({ id: '输入正整数' })} />)}
+            </FormItem>
+
             <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
               <Button type="primary" htmlType="submit" loading={submitting}>
                 <FormattedMessage id="form.submit" />
