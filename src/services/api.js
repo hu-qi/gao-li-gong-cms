@@ -85,6 +85,34 @@ export async function changePartner(params) {
   });
 }
 
+// 摄影师 start
+export async function getPhotographers() {
+  return request(`/api/biodiversity/queryContents?key=photographer`);
+}
+
+export async function getPhotographerById(params) {
+  return request(`/api/getContentById?contentId=${params.id}`);
+}
+
+export async function deletePhotographer(params) {
+  return request(`/api/deleteCms?contentId=${params.id}`, { method: 'DELETE' });
+}
+
+export async function addPhotographer(params) {
+  return request(`/api/addCms`, {
+    method: 'PUT',
+    data: params,
+  });
+}
+
+export async function changePhotographer(params) {
+  return request(`/api/updateCms`, {
+    method: 'POST',
+    data: params,
+  });
+}
+// 摄影师 end
+
 export async function getTimelines() {
   return request(`/api/timelines`);
 }

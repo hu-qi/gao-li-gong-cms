@@ -52,6 +52,9 @@ export default {
   'menu.index.partner': '合作伙伴',
   'menu.index.partner.partner-add': '合作伙伴新增',
   'menu.index.partner.partner-edit': '合作伙伴编辑',
+  'menu.index.photographer': '摄影师名单管理',
+  'menu.index.photographer.photographer-add': '摄影师新增',
+  'menu.index.photographer.photographer-edit': '摄影师编辑',
 
   'menu.userManagement': '用户管理',
 

@@ -73,6 +73,27 @@ export default [
               },
             ],
           },
+          {
+            path: '/home/photographer',
+            name: 'photographer',
+            hideChildrenInMenu: true,
+            routes: [
+              {
+                path: '/home/photographer',
+                component: './Home/Photographer',
+              },
+              {
+                path: '/home/photographer/photographer-add',
+                name: 'photographer-add',
+                component: './Home/PhotographerEdit',
+              },
+              {
+                path: '/home/photographer/photographer-edit/id/:id',
+                name: 'photographer-edit',
+                component: './Home/PhotographerEdit',
+              },
+            ],
+          },
         ],
       },
       // 新闻管理
