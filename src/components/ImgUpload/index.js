@@ -8,12 +8,10 @@ class PicturesWall extends React.Component {
   handlePreview = file => {
     const win = window.open();
     win.location.href = file.url;
-    console.log('preview', file);
   };
 
   handleChange = ({ fileList }) => {
     const { onChange } = this.props;
-    console.log('change', fileList);
 
     onChange(fileList.map(({ response }) => response));
   };
