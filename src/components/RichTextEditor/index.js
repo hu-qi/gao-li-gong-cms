@@ -19,7 +19,9 @@ class ReachTextEditor extends React.Component {
         <Upload
           multiple={false}
           action="/api/upload/image"
-          onChange={this.handleChange}
+          onChange={f => {
+            this.handleFileChange(f);
+          }}
           showUploadList={false}
         >
           <Button type="link">插入图片</Button>
@@ -54,7 +56,8 @@ class ReachTextEditor extends React.Component {
     return null;
   }
 
-  handleChange = ({ fileList }) => {
+  handleFileChange = ({ fileList }) => {
+    console.log(fileList);
     if (!fileList || !fileList.map(({ response }) => response)[0]) {
       return;
     }
@@ -73,7 +76,7 @@ class ReachTextEditor extends React.Component {
 
   handleEditorChange = editorState => {
     this.setState({ editorState });
-    this.handleChange(editorState);
+    // this.handleFileChange(editorState);
   };
 
   render() {
