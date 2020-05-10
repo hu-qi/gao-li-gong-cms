@@ -64,6 +64,7 @@ export default class AboutUs extends React.Component {
     this.setState({
       imgList: imgs
     })
+
     this.handleChange(imgs, 'logos')
   }
 
@@ -106,7 +107,6 @@ export default class AboutUs extends React.Component {
     };
 
     // if (!content) { return null; }
-
     return (
       <Spin spinning={global} delay={500}>
         <Card title="关于我们">
