@@ -55,10 +55,10 @@ class ReachTextEditor extends React.Component {
   }
 
   handleChange = ({ fileList }) => {
-    const imgUrl = fileList.map(({ response }) => response)[0];
-    if (!fileList || !imgUrl) {
+    if (!fileList || !fileList.map(({ response }) => response)[0]) {
       return;
     }
+    const imgUrl = fileList.map(({ response }) => response)[0];
     const { editorState } = this.state;
     // 编辑器插入图片
     this.setState({
