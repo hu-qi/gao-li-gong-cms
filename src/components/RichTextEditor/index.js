@@ -4,7 +4,7 @@ import BraftEditor from 'braft-editor';
 import debounce from 'lodash/debounce';
 import styles from './index.less';
 import { ContentUtils } from 'braft-utils';
-import { Upload, Icon } from 'antd';
+import { Upload, Button, Icon } from 'antd';
 
 class ReachTextEditor extends React.Component {
   handleChange = debounce(editorState => {
@@ -18,6 +18,7 @@ class ReachTextEditor extends React.Component {
       editorState: BraftEditor.createEditorState(null),
       prevValue: props.value,
     };
+    this.editorInstance = undefined;
   }
 
   componentDidMount() {
@@ -36,10 +37,9 @@ class ReachTextEditor extends React.Component {
     }
     return null;
   }
-
   handleEditorChange = editorState => {
     this.setState({ editorState });
-    this.handleChange(editorState);
+    this.handleFileChange(editorState);
   };
   beforeUpload = ({ file, fileList }) => {
     //判断图片是否上传成功
