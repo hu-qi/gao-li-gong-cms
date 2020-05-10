@@ -1,5 +1,5 @@
 import React from 'react';
-import { Upload, Button } from 'antd';
+import { Upload, Button, Icon } from 'antd';
 import 'braft-editor/dist/index.css';
 import BraftEditor from 'braft-editor';
 import { ContentUtils } from 'braft-utils';
@@ -24,7 +24,13 @@ class ReachTextEditor extends React.Component {
           }}
           showUploadList={false}
         >
-          <Button type="link">插入图片</Button>
+          <Button type="link">
+            <Icon
+              type="picture"
+              theme="outlined"
+              style={{ color: '#6a6f7b', position: 'relative', top: '3px' }}
+            />
+          </Button>
         </Upload>
       ),
     },
@@ -57,7 +63,6 @@ class ReachTextEditor extends React.Component {
   }
 
   handleFileChange = ({ fileList }) => {
-    console.log(fileList);
     if (!fileList || !fileList.map(({ response }) => response)[0]) {
       return;
     }
