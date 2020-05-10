@@ -48,7 +48,6 @@ class ReachTextEditor extends React.Component {
         ? ''
         : 'http://static.wildgaoligong.com';
     if (file.status === 'uploading') {
-      this.setState({ spinning: true });
     }
     //上传成功后的回调
     if (file.status === 'done') {
@@ -59,48 +58,13 @@ class ReachTextEditor extends React.Component {
             url: host + file.response,
           },
         ]),
-        spinning: false,
       });
     }
-    console.log(file);
   };
   render() {
     const { editorState } = this.state;
-    const controls = [
-      'undo',
-      'redo',
-      'separator',
-      'font-size',
-      'line-height',
-      'letter-spacing',
-      'separator',
-      'text-color',
-      'bold',
-      'italic',
-      'underline',
-      'strike-through',
-      'separator',
-      'superscript',
-      'subscript',
-      'remove-styles',
-      'emoji',
-      'separator',
-      'text-indent',
-      'text-align',
-      'separator',
-      'headings',
-      'list-ul',
-      'list-ol',
-      'blockquote',
-      'code',
-      'separator',
-      'link',
-      'separator',
-      'hr',
-      'separator',
-      'separator',
-      'clear',
-    ];
+    //隐藏原来的上传
+    const excludeControls = ['media'];
     const uploadUrl = '/api/upload/image';
     // 添加需要展示的扩展控件
     const extendControls = [
@@ -132,7 +96,7 @@ class ReachTextEditor extends React.Component {
         <BraftEditor
           value={editorState}
           onChange={this.handleEditorChange}
-          controls={controls}
+          excludeControls={excludeControls}
           extendControls={extendControls}
         />
       </section>
