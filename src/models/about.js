@@ -4,35 +4,41 @@ export default {
   namespace: 'aboutUs',
 
   state: {
-    content: '',
+    // content: '',
+    aboutUs: {
+      nameLeft: '',
+      nameRight: '',
+      contentLeft: '',
+      contentRight: '',
+      description: '',
+      logos: [],
+    }
   },
 
   reducers: {
-    save(state, { payload }) {
+    save(state, action) {
       return {
         ...state,
-        ...payload,
+        aboutUs: action.payload,
       };
     },
   },
 
   effects: {
-    *fetch(action, { call, put }) {
-      const { data: content = '' } = yield call(getAboutUs);
+    *fetch({ payload, callback = () => void 0}, { call, put }) {
+      const { data = {} } = yield call(getAboutUs, payload);
 
       yield put({
         type: 'save',
-        payload: { content },
+        payload: data,
       });
+      callback(data);
     },
 
-    *update({ payload: content }, { call, put }) {
-      const {} = yield call(setAboutUs, content);
+    *update({ payload, callback = () => void 0  }, { call, put }) {
+      yield call(setAboutUs, payload)
 
-      yield put({
-        type: 'save',
-        payload: { content },
-      });
+      callback();
     }
   },
 };
