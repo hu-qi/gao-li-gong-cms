@@ -4,7 +4,7 @@ import BraftEditor from 'braft-editor';
 import debounce from 'lodash/debounce';
 import styles from './index.less';
 import { ContentUtils } from 'braft-utils';
-import { Upload, Button, Icon } from 'antd';
+import { Upload, Icon } from 'antd';
 
 class ReachTextEditor extends React.Component {
   handleChange = debounce(editorState => {
@@ -46,7 +46,7 @@ class ReachTextEditor extends React.Component {
     const host =
       window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1'
         ? ''
-        : 'http://admin.wildgaoligong.com';
+        : 'http://static.wildgaoligong.com';
     if (file.status === 'uploading') {
     }
     //上传成功后的回调
@@ -65,6 +65,42 @@ class ReachTextEditor extends React.Component {
     const { editorState } = this.state;
     //隐藏原来的上传
     // const excludeControls = ['media'];
+
+    const controls = [
+      'undo',
+      'redo',
+      'separator',
+      'font-size',
+      'line-height',
+      'letter-spacing',
+      'separator',
+      'text-color',
+      'bold',
+      'italic',
+      'underline',
+      'strike-through',
+      'separator',
+      'superscript',
+      'subscript',
+      'remove-styles',
+      'emoji',
+      'separator',
+      'text-indent',
+      'text-align',
+      'separator',
+      'headings',
+      'list-ul',
+      'list-ol',
+      'blockquote',
+      'code',
+      'separator',
+      'link',
+      'separator',
+      'hr',
+      'separator',
+      'separator',
+      'clear',
+    ];
     const uploadUrl = '/api/upload/image';
     // 添加需要展示的扩展控件
     const extendControls = [
@@ -78,9 +114,14 @@ class ReachTextEditor extends React.Component {
             showUploadList={false}
             onChange={this.beforeUpload}
           >
-            <Button className="control-item button upload-button" data-title="插入图片">
+            {/* 这里的按钮最好加上type="button"，以避免在表单容器中触发表单提交，用Antd的Button组件则无需如此 */}
+            <button
+              type="button"
+              className="control-item button upload-button"
+              data-title="插入图片"
+            >
               <Icon type="picture" theme="filled" />
-            </Button>
+            </button>
           </Upload>
         ),
       },
@@ -91,7 +132,7 @@ class ReachTextEditor extends React.Component {
         <BraftEditor
           value={editorState}
           onChange={this.handleEditorChange}
-          q
+          controls={controls}
           extendControls={extendControls}
         />
       </section>
