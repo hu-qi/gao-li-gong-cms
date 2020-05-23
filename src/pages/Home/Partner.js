@@ -8,6 +8,16 @@ import styles from './Slider.less';
 import Ellipsis from '@/components/Ellipsis';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 
+const tabList = [
+  {
+    key: 'partner',
+    tab: '支持单位',
+  },
+  {
+    key: 'sponsor',
+    tab: '主办方',
+  }
+];
 @connect(({ partner, loading }) => ({
   list: partner,
   loading: loading.models.list,
@@ -20,12 +30,13 @@ class Partner extends PureComponent {
     });
   }
 
-  delete = id => {
+  delete = (id, type) => {
     const { dispatch } = this.props;
     dispatch({
       type: 'partner/delete',
       payload: {
         id: id,
+        type: type
       },
     });
   };
@@ -38,16 +49,54 @@ class Partner extends PureComponent {
     router.push(`/home/partner/partner-edit/id/${param}`);
   };
 
+  state = {
+    activeTabKey: tabList[0].key,
+    // searchVal: null,
+    // newTag: {
+    //   name: '',
+    //   type: '物种分类',
+    //   backgroundColor: '#000',
+    // },
+  };
+  handleTabChange = activeTabKey => {
+    const { dispatch } = this.props;
+    this.setState({
+      activeTabKey,
+      // searchVal: null,
+    });
+    switch (activeTabKey) {
+      case 'partner':
+        dispatch({
+          type: 'partner/fetch',
+        });
+        break;
+      case 'sponsor':
+        dispatch({
+          type: 'partner/fetchSponsorList',
+        });
+        break;
+      default:
+        break;
+    }
+  };
+
   render() {
     const {
       list: { list },
       loading,
     } = this.props;
+    const { activeTabKey, searchVal } = this.state;
     const partners = list.sort((a, b) => b.id - a.id);
 
     return (
-      <PageHeaderWrapper>
-        <div className={styles.cardList}>
+      <PageHeaderWrapper
+        tabList={tabList}
+        tabActiveKey={activeTabKey}
+        onTabChange={this.handleTabChange}
+      >
+        <div className={styles.cardList} 
+          tabActiveKey={activeTabKey}
+          onTabChange={this.handleTabChange}>
           <List
             rowKey="id"
             loading={loading}
@@ -61,7 +110,7 @@ class Partner extends PureComponent {
                     className={styles.card}
                     actions={[
                       <a onClick={() => this.toEditPage(item.id)}>编辑</a>,
-                      <Popconfirm title="确定要删除吗?" onConfirm={() => this.delete(item.id)}>
+                      <Popconfirm title="确定要删除吗?" onConfirm={() => this.delete(item.id, item.type)}>
                         <a href="javascript:;">删除</a>
                       </Popconfirm>,
                     ]}

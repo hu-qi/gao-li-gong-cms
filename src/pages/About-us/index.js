@@ -16,8 +16,8 @@ const FormItem = Form.Item;
 }))
 export default class AboutUs extends React.Component {
   state = {
-    content: '',
-    imgList: []
+    imgLeft: '',
+    imgRight: ''
   };
 
   componentDidMount() {
@@ -29,19 +29,17 @@ export default class AboutUs extends React.Component {
     dispatch({
       type: 'aboutUs/fetch',
       payload: {},
-      callback: ({ nameLeft, nameRight, contentLeft, contentRight, description, logos }) => {
-        const imgList = logos || [];
- 
+      callback: ({ nameLeft, nameRight, contentLeft, contentRight, logoLeft, logoRight}) => {
+        this.setState({ 
+          imgLeft: [logoLeft],
+          imgRight: [logoRight]
+        });
         form.setFieldsValue({
           nameLeft,
           nameRight,
           contentLeft,
           contentRight,
-          description,
         });
-        this.setState({
-          imgList
-        })
       }
     });
   }
@@ -59,18 +57,40 @@ export default class AboutUs extends React.Component {
       }
     })
   }
-  handleUploadChange = (fileList) => {
-    const imgs = fileList.filter(f => f);
-    this.setState({
-      imgList: imgs
-    })
+  handleUploadChange = (file, type) => {
+    switch (type) {
+      case 'left':
+        this.setState({
+          imgLeft: file
+        })
+        this.handleChange(file[0], 'logoLeft')
+      break;
+      case 'right':
+        this.setState({
+          imgRight: file
+        })
+        this.handleChange(file[0], 'logoRight')
+      break;
+      default:
+        void 0;
+    }
+  }
 
-    this.handleChange(imgs, 'logos')
+  beforeUpload = (file) => {
+    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+    if (!isJpgOrPng) {
+      message.error('You can only upload JPG/PNG file!');
+    }
+    const isLt2M = file.size / 1024 / 1024 < 2;
+    if (!isLt2M) {
+      message.error('Image must smaller than 2MB!');
+    }
+    return isJpgOrPng && isLt2M;
   }
 
   prompt = debounce(e => {
     const { dispatch, form, aboutUs: { aboutUs }, history } = this.props;
-    const { content, imgList } = this.state;
+    const { imgLeft, imgRight } = this.state;
 
     // e.preventDefault();
     e.persist()
@@ -81,11 +101,20 @@ export default class AboutUs extends React.Component {
           payload: {
             ...aboutUs,
           },
-          callback: () => history.push('/about-us')
+          callback: () => {
+            // history.push('/about-us')
+            message.success('保存成功');
+            window.scrollTo(0, 0);
+          }
         });
       }
     })
   }, 500);
+  getBase64 = (img, callback) => {
+    const reader = new FileReader();
+    reader.addEventListener('load', () => callback(reader.result));
+    reader.readAsDataURL(img);
+  }
 
   render() {
     const {
@@ -93,7 +122,7 @@ export default class AboutUs extends React.Component {
       loading: { global },
       form
     } = this.props;
-    const {imgList} = this.state;
+    const {imgLeft, imgRight} = this.state;
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },
@@ -106,7 +135,6 @@ export default class AboutUs extends React.Component {
       },
     };
 
-    // if (!content) { return null; }
     return (
       <Spin spinning={global} delay={500}>
         <Card title="关于我们">
@@ -154,34 +182,37 @@ export default class AboutUs extends React.Component {
             </FormItem>
             <FormItem {...formItemLayout} label={
               <span>
-                logos&nbsp;
-                      <Tooltip title={`最多可上传20张图片`}>
+                logoLeft&nbsp;
+                  <Tooltip title={`只能上传1张图片`}>
                   <Icon type="question-circle-o" />
                 </Tooltip>
               </span>
             }>
-              {
+              {imgLeft && (
                 <ImgUPload
-                  fileList={imgList}
-                  limit={'20'}
-                  onChange={imgs => this.handleUploadChange(imgs)}
-                />
-              }
+                fileList={imgLeft}
+                limit={1}
+                onChange={imgUrl => this.handleUploadChange(imgUrl, 'left')}
+              />
+              )}
             </FormItem>
-           
-            <FormItem
-              {...formItemLayout}
-              label={
-                <span>
-                  详情描述&nbsp;
-                  <Tooltip title="Ctrl + S 保存当前编辑进度">
-                    <Icon type="question-circle-o" />
-                  </Tooltip>
-                </span>
-              }
-            >
-              <RichTextEditor value={aboutUs.description || ''} onChange={e => this.handleChange( e, 'description')} />
+            <FormItem {...formItemLayout} label={
+              <span>
+                logoRight&nbsp;
+                  <Tooltip title={`只能上传1张图片`}>
+                  <Icon type="question-circle-o" />
+                </Tooltip>
+              </span>
+            }>
+              {imgRight && (
+                <ImgUPload
+                fileList={imgRight}
+                limit={1}
+                onChange={imgUrl => this.handleUploadChange(imgUrl, 'right')}
+              />
+              )}
             </FormItem>
+      
             <FormItem {...formItemLayout} colon={false} label={<></>}>
               <Button style={{ marginTop: 16 }} type={'primary'}  htmlType="button" onClick={this.prompt}>保存</Button>
             </FormItem>

@@ -6,6 +6,7 @@ import {
   deletePartner,
   addPartner,
   changePartner,
+  getSponsorList
 } from '@/services/api';
 
 export default {
@@ -28,6 +29,18 @@ export default {
         });
       }
     },
+    *fetchSponsorList({ payload }, { call, put }) {
+      const response = yield call(getSponsorList, payload);
+      if (response.isError) {
+        message.error(response.error.message);
+      } else {
+        const data = response.data;
+        yield put({
+          type: 'setSponsorList',
+          payload: Array.isArray(data) ? data : [],
+        });
+      }
+    },
     *get({ payload, callback = () => void 0 }, { call, put }) {
       const response = yield call(getPartnerById, payload);
       if (response.isError) {
@@ -46,9 +59,20 @@ export default {
         message.error(response.error.message);
       } else {
         message.success('删除成功');
-        yield put({
-          type: 'fetch',
-        });
+        switch (payload.type) {
+          case '支持单位':
+            yield put({
+              type: 'fetch',
+            });
+            break;
+          case '主办方':
+            yield put({
+              type: 'fetchSponsorList',
+            });
+            break;       
+          default:
+            break;
+        }
       }
     },
     *add({ payload }, { call, put }) {
@@ -73,6 +97,12 @@ export default {
 
   reducers: {
     queryList(state, action) {
+      return {
+        ...state,
+        list: action.payload,
+      };
+    },
+    setSponsorList(state, action) {
       return {
         ...state,
         list: action.payload,

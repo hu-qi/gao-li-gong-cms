@@ -29,6 +29,7 @@ class FilterCardList extends PureComponent {
 
     onRef(this);
     this.setState({ tabActiveKey }, this.fetchData);
+
   }
 
   componentWillReceiveProps(props) {
@@ -46,11 +47,19 @@ class FilterCardList extends PureComponent {
     const { dispatch, searchVal: name } = this.props;
     const { tabActiveKey } = this.state;
     const { tab: type } = tabList.find(({ key }) => key === tabActiveKey) || {};
+    if (type == '物种多样性大类') {
+      dispatch({
+        type: 'tags/fetchSpecies',
+        payload: { type, name},
+      });
+    } else {
+      dispatch({
+        type: 'tags/fetch',
+        payload: { type, name },
+      });
+    }
+    console.log(type, this.state, this.props)
 
-    dispatch({
-      type: 'tags/fetch',
-      payload: { type, name },
-    });
   }
 
   @Debounce(2000)
@@ -175,6 +184,7 @@ class FilterCardList extends PureComponent {
       tags: { list },
       loading,
     } = this.props;
+    const { tabActiveKey } = this.state;
 
     return (
       <div className={styles.filterCardList}>
@@ -194,8 +204,8 @@ class FilterCardList extends PureComponent {
                       shape='round'
                       style={{background: item.backgroundColor}}
                       type='primary'
-                    >
-                      {item.name}
+                    > 
+                      {item.name} {item.title}
                     </Button>}
                 />
               </Card>

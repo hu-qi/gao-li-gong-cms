@@ -62,6 +62,9 @@ export async function deleteFakeVideos(params) {
 export async function getPartners() {
   return request(`/api/partners/list`);
 }
+export async function getSponsorList() {
+  return request(`/api/partners/sponsorList`);
+}
 
 export async function getPartnerById(params) {
   return request(`/api/partner/${params.id}`);

@@ -4,14 +4,14 @@ export default {
   namespace: 'aboutUs',
 
   state: {
-    // content: '',
     aboutUs: {
       nameLeft: '',
       nameRight: '',
       contentLeft: '',
       contentRight: '',
       description: '',
-      logos: [],
+      logoLeft: '',
+      logoRight: '',
     }
   },
 
