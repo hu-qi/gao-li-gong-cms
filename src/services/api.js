@@ -376,7 +376,17 @@ export async function setAboutUs(params) {
 export async function fakeAccountLogin(params) {
   return request(`/api/users/list?${stringify(params)}`);
 }
-
+/**
+ * 登录-暂时用用户详情接口 mock
+ * @param params
+ * @returns {Promise<void>}
+ */
+export async function accountLogin(params) {
+  return request(`/api/login`, {
+    method: 'POST',
+    data: params,
+  });
+}
 /**
  * 轮播图 列表
  * @returns {Promise<*>}

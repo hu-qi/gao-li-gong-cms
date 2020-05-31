@@ -72,4 +72,44 @@ const request = extend({
   // mode: 'no-cors',
 });
 
+// request拦截器, 改变url 或 options.
+request.interceptors.request.use(async (url, options) => {
+  let token = localStorage.getItem("token");
+  if (token) {
+    const headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'token': token
+    };
+    return (
+      {
+        url: url,
+        options: { ...options, headers: headers },
+      }
+    );
+  } else {
+    const headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'token': token
+    };
+    return (
+      {
+        url: url,
+        options: { ...options },
+      }
+    );
+  }
+
+})
+
+// response拦截器, 处理response
+request.interceptors.response.use((response, options) => {
+  let token = response.headers.get("token");
+  if (token) {
+    localStorage.setItem("token", token);
+  }
+  return response;
+});
+
 export default request;

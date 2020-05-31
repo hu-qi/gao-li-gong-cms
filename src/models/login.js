@@ -1,6 +1,6 @@
 import { routerRedux } from 'dva/router';
 import { stringify } from 'qs';
-import { fakeAccountLogin } from '@/services/api';
+import { fakeAccountLogin, accountLogin } from '@/services/api';
 import { setAuthority } from '@/utils/authority';
 import { getPageQuery } from '@/utils/utils';
 import { reloadAuthorized } from '@/utils/Authorized';
@@ -14,7 +14,7 @@ export default {
   },
 
   effects: {
-    *login({ payload }, { call, put }) {
+    *fakeLogin({ payload }, { call, put }) {
       const { userName: name, password } = payload;
       const {
         data: { dateList = [] },
@@ -55,14 +55,25 @@ export default {
         yield put(routerRedux.replace(redirect || '/'));
       }
     },
+    *login({payload}, {call, put}) {
+      const response = yield call(accountLogin, payload);
+      if (response.isError) {
+        message.error(response.error.message);
+      } else {
+        yield put({
+          type: 'loginStatus',
+          payload: response.data
+        });
+        reloadAuthorized();
+        yield put(routerRedux.push('/'));
+      }
 
+      callback(response.data);
+    },
     *logout(_, { put }) {
       yield put({
-        type: 'changeLoginStatus',
-        payload: {
-          status: false,
-          currentAuthority: 'guest',
-        },
+        type: 'loginStatus',
+        payload: {},
       });
       reloadAuthorized();
       // redirect
@@ -77,6 +88,28 @@ export default {
         );
       }
     },
+    // *logout(_, { put }) {
+    //   yield put({
+    //     type: 'changeLoginStatus',
+    //     payload: {
+    //       status: false,
+    //       currentAuthority: 'guest',
+    //     },
+    //   });
+    //   reloadAuthorized();
+    //   // redirect
+    //   if (window.location.pathname !== '/user/login') {
+    //     yield put(
+    //       routerRedux.replace({
+    //         pathname: '/user/login',
+    //         search: stringify({
+    //           redirect: window.location.href,
+    //         }),
+    //       })
+    //     );
+    //   }
+
+    // },
   },
 
   reducers: {
@@ -87,6 +120,20 @@ export default {
         status: payload.status,
         type: payload.type,
         currentUser: payload.user,
+      };
+    },
+    loginStatus(state, action) {
+      let _user = "admin";
+      let token = action.payload.token
+      if (token) {
+        localStorage.setItem("token", token);
+      } else {
+        localStorage.removeItem("token")
+      }
+      // setAuthority(_user);//设置权限  
+      return {
+        ...state,
+        ...action.payload,
       };
     },
   },
