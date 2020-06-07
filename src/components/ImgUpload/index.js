@@ -48,6 +48,9 @@ class PicturesWall extends React.Component {
           listType="picture-card"
           action={uploadUrl}
           defaultFileList={defaultFileList}
+          headers={{
+            token: localStorage.getItem('token')
+          }}
           onPreview={this.handlePreview}
           onChange={this.handleChange}
         >

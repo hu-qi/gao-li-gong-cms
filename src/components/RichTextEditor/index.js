@@ -77,6 +77,9 @@ class ReachTextEditor extends React.Component {
             action={uploadUrl}
             showUploadList={false}
             onChange={this.beforeUpload}
+            headers={{
+              token: localStorage.getItem('token')
+            }}
           >
             <Button className="control-item button upload-button" data-title="插入图片">
               <Icon type="picture" theme="filled" />

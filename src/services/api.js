@@ -309,6 +309,16 @@ export async function putLabel(params) {
 export async function getSpecies() {
   return request('/api/species');
 }
+/**
+ * 物种类别  改
+ * @returns {Promise<void>}
+ */
+export async function postSpecies(params) {
+  return request('/api/species/update', {
+    method: 'POST',
+    data: params,
+  });
+}
 
 /**
  * 明星物种列表
@@ -345,6 +355,27 @@ export async function updateBackgroundInfo(params) {
   return request(`/api/background-info`, {
     method: 'PUT',
     data: params,
+  });
+}
+
+/**
+ * 高黎贡山介绍子页面
+ * @returns {Promise<void>}
+ */
+export async function getBackgroundInfoEle(params) {
+  let param = encodeURI(params.name);
+  return request(`/api/background-info/${param}`);
+}
+
+/**
+ * 更新高黎贡山介绍子页面
+ * @returns {Promise<void>}
+ */
+export async function updateBackgroundInfoEle(params) {
+  let param = encodeURI(params.name);
+  return request(`/api/background-info/${param}`, {
+    method: 'PUT',
+    data: params.content,
   });
 }
 

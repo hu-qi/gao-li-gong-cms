@@ -143,6 +143,7 @@ class Biology extends PureComponent {
 
   handleUploadChange = (fileList, type) => {
     const imgs = fileList.filter(f => f);
+
     switch (type) {
       case TypeMap.MAIN:
         this.setState({

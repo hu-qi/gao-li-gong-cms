@@ -1,4 +1,4 @@
-import { queryLabelList, postLabel, delLabel, putLabel, getSpecies  } from '@/services/api';
+import { queryLabelList, postLabel, delLabel, putLabel, getSpecies, postSpecies  } from '@/services/api';
 
 export default {
   namespace: 'tags',
@@ -56,6 +56,15 @@ export default {
 
       callback();
     },
+    *updateSpecies({ payload, callback = () => void 0}, {call, put}) {
+      yield call(postSpecies, payload);
+      yield put({
+        type: 'fetchSpecies',
+        payload: {type: payload.type}
+      });
+
+      callback();
+    }
   },
 
   reducers: {

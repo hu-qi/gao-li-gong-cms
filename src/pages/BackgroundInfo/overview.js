@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import { connect } from 'dva';
 import { Button, Card, Form, Icon, Tooltip, message } from 'antd';
+import router from 'umi/router';
 import cloneDeep from 'lodash/cloneDeep';
 import debounce from 'lodash/debounce';
 import last from 'lodash/last';
@@ -15,6 +16,9 @@ import RichTextEditor from '@/components/RichTextEditor';
   backgroundInfo,
 }))
 class BackgroundInfo extends PureComponent {
+  state = {
+    mainImageUrl: null
+  }
   handleSubmit = debounce(e => {
     const { dispatch, form, backgroundInfo, history } = this.props;
 
@@ -25,10 +29,11 @@ class BackgroundInfo extends PureComponent {
           type: 'backgroundInfo/updateBackgroundInfo',
           payload: {
             ...backgroundInfo,
+            mainImageUrl: this.state.mainImageUrl[0]
           },
           callback: () => {
             message.info('保存成功！');
-            history.push('/home/slider');
+            history.push('/background-info/overview');
           },
         });
       }
@@ -41,6 +46,16 @@ class BackgroundInfo extends PureComponent {
     dispatch({
       type: 'backgroundInfo/fetchBackgroundInfo',
       payload: {},
+      callback: (data) => {
+        this.setState({
+          mainImageUrl: data.mainImageUrl?[data.mainImageUrl]: []
+        })
+        delete data.mainImageUrl
+
+        form.setFieldsValue({
+          ...data,
+        });
+      }
     });
   }
 
@@ -58,6 +73,7 @@ class BackgroundInfo extends PureComponent {
 
   handleUploadChange = (fileList, type) => {
     const imgs = fileList.filter(f => f);
+
     this.handleChange(JSON.stringify(imgs), type);
   };
 
@@ -93,8 +109,8 @@ class BackgroundInfo extends PureComponent {
       },
       wrapperCol: {
         xs: { span: 24 },
-        sm: { span: 15 },
-        md: { span: 15 },
+        sm: { span: 16 },
+        md: { span: 16 },
       },
     };
 
@@ -110,27 +126,25 @@ class BackgroundInfo extends PureComponent {
     const backgroundInfo = cloneDeep(_backgroundInfo);
 
     if (!backgroundInfo) return <PageLoading />;
+    const { mainImageUrl } = this.state;
 
-    let mainImageUrl = [];
-
-    try {
-      mainImageUrl = JSON.parse(backgroundInfo.mainImageUrl);
-    } catch (e) {
-      mainImageUrl = [backgroundInfo.mainImageUrl];
-    }
-
+    console.log('mainImageUrl', backgroundInfo.mainImageUrl)
     return (
       <React.Fragment>
         <PageHeaderWrapper />
         <Card bordered={false} style={{ marginTop: '1em' }} key={name}>
           <Form style={{ marginTop: 8 }}>
-            <Form.Item {...formItemLayout} label={labelTip(imgLim.mini, '背景图片')}>
-              <ImgUPload
-                key="mainImageUrl"
-                fileList={mainImageUrl}
-                limit={imgLim.mini}
-                onChange={fileList => this.handleUploadChange(fileList, 'mainImageUrl')}
-              />
+            <Form.Item {...formItemLayout} label={labelTip(1, '背景图片')}>
+              {mainImageUrl && 
+                  <ImgUPload
+                  key="mainImageUrl"
+                  fileList={mainImageUrl}
+                  multiple={false}
+                  limit={1}
+                  onChange={mainImageUrl => this.setState({ mainImageUrl })}
+                />
+              }
+
             </Form.Item>
             <Form.Item
               {...formItemLayout}
@@ -153,16 +167,20 @@ class BackgroundInfo extends PureComponent {
               <Form.Item
                 key={group.name}
                 {...formItemLayout}
-                label={labelTip(imgLim.mini, `${group.name}封面图`)}
+                label={labelTip(1, `${group.name}封面图`)}
               >
                 <ImgUPload
                   multiple={false}
                   fileList={[group.imgUrl]}
-                  limit={imgLim.mini}
+                  limit={1}
                   onChange={fileList =>
                     this.handleGroupUploadChange(fileList, backgroundInfo.children, group)
                   }
                 />
+                <Button type="default" htmlType="button" style={{position:'absolute',top: 0,left: 400}} onClick={() => {
+                  console.log('子页面编辑', group.name)
+                  router.push(`/background-info/name/${group.name}`)
+                }}>子页面编辑</Button> 
               </Form.Item>
             ))}
 

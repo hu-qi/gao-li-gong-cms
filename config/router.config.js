@@ -193,9 +193,19 @@ export default [
         path: '/background-info',
         routes: [
           {
+            path: '/background-info',
+            redirect: '/background-info/overview',
+          },
+          {
             path: '/background-info/overview',
             name: 'overview',
             component: './BackgroundInfo/overview',
+          },
+          {
+            hideInMenu: true,
+            path: '/background-info/name/:name',
+            // name: 'elementedit',
+            component: './BackgroundInfo/EleEdit',
           },
           // 先隐藏，/api/background-info/{name} 这个接口目前有问题
           {

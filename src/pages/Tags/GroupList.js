@@ -63,22 +63,27 @@ class FilterCardList extends PureComponent {
   }
 
   @Debounce(2000)
-  handleChangeColor = (e, tag) => {
+  handleChangeColor = (e, tag, type) => {
     const { dispatch } = this.props;
     const {
       rgb: { r, g, b, a},
     } = e;
 
     dispatch({
-      type: 'tags/update',
+      type: type==='biodiversity'?'tags/updateSpecies':'tags/update',
       payload: { ...tag, backgroundColor: `rgba(${r}, ${g}, ${b}, ${a})` },
     });
   };
 
-  handleChangeName = tag => {
+  handleChangeName = (tag, type) => {
     const { dispatch } = this.props;
-    const { name } = tag;
-    let newName = name;
+    const { name, title } = tag;
+    let newName='';
+    if(type==='biodiversity') {
+      newName = title;
+    } else {
+      newName = name;
+    }
     const changeName = name => void (newName = name);
 
     Modal.confirm({
@@ -87,10 +92,19 @@ class FilterCardList extends PureComponent {
       content: <Input defaultValue={newName} onChange={e => void changeName(newName = e.target.value)} placeholder='不能为空！' allowClear />,
       okText: '确认',
       cancelText: '取消',
-      onOk: () => dispatch({
-        type: 'tags/update',
-        payload: { ...tag, name: newName },
-      }),
+      onOk: () => {
+        if (type==='biodiversity'){
+          dispatch({
+            type: 'tags/updateSpecies',
+            payload: { ...tag, title: newName },
+          })
+        }else {
+          dispatch({
+            type: 'tags/update',
+            payload: { ...tag, name: newName },
+          })
+        }
+      },
     });
   };
 
@@ -137,7 +151,7 @@ class FilterCardList extends PureComponent {
   };
 
 
-  handleChange = (e, tag) => {
+  handleChange = (e, tag, type) => {
     const { icon: changeType } = e.target.dataset;
 
     switch (changeType) {
@@ -145,7 +159,7 @@ class FilterCardList extends PureComponent {
         void 0;
         break;
       case operateType.edit:
-        this.handleChangeName(tag);
+        this.handleChangeName(tag, type);
         break;
       case operateType.shift:
         this.handleChangeType(tag);
@@ -158,7 +172,7 @@ class FilterCardList extends PureComponent {
     }
   };
 
-  renderOperate(tag) {
+  renderOperate(tag, type) {
     return (
       [
         <Popover
@@ -166,15 +180,15 @@ class FilterCardList extends PureComponent {
           content={
             <ChromePicker
               color={tag.backgroundColor}
-              onChangeComplete={e => this.handleChangeColor(e, tag)}
+              onChangeComplete={e => this.handleChangeColor(e, tag, type)}
             />
           }
         >
           <div data-icon={operateType.bg}><Icon type={operateType.bg} /></div>
         </Popover>,
         <div data-icon={operateType.edit}><Icon type={operateType.edit} /></div>,
-        <div data-icon={operateType.shift}><Icon type={operateType.shift} /></div>,
-        <div data-icon={operateType.delete}><Icon type={operateType.delete} /></div>,
+        <div className={type==='biodiversity'?'disIcon':null} data-icon={operateType.shift}><Icon type={operateType.shift} /></div>,
+        <div className={type==='biodiversity'?'disIcon':null} data-icon={operateType.delete}><Icon type={operateType.delete} /></div>,
       ]
     );
   }
@@ -196,7 +210,7 @@ class FilterCardList extends PureComponent {
           dataSource={list}
           renderItem={item => (
             <List.Item key={item.id}>
-              <Card actions={this.renderOperate(item)} onClick={e => this.handleChange(e, item)}>
+              <Card actions={this.renderOperate(item, tabActiveKey)} onClick={e => this.handleChange(e, item, tabActiveKey)}>
                 <Card.Meta
                   avatar={
                     <Button

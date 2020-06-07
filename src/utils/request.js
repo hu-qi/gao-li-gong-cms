@@ -88,17 +88,18 @@ request.interceptors.request.use(async (url, options) => {
       }
     );
   } else {
-    const headers = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'token': token
-    };
-    return (
-      {
-        url: url,
-        options: { ...options },
-      }
-    );
+    router.push('/user/login');
+    // const headers = {
+    //   'Content-Type': 'application/json',
+    //   'Accept': 'application/json',
+    //   'token': token
+    // };
+    // return (
+    //   {
+    //     url: url,
+    //     options: { ...options },
+    //   }
+    // );
   }
 
 })
