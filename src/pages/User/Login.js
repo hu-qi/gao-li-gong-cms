@@ -90,17 +90,17 @@ class LoginPage extends Component {
             this.renderMessage(formatMessage({ id: 'app.login.message-invalid-credentials' }))}
           <UserName
             name="loginname"
-            placeholder={`用户名或昵称`}
+            placeholder={`登录名`}
             rules={[
               {
                 required: true,
-                message: '请输入用户名或昵称',
+                message: '请输入登录名',
               },
             ]}
           />
           <Password
             name="password"
-            placeholder={`手机号、email或微信ID任意匹配即可`}
+            placeholder={`请输入密码`}
             rules={[
               {
                 required: true,

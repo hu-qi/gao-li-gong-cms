@@ -60,6 +60,7 @@ class UserInfo extends React.Component {
       callback(_account) {
         const {
           name,
+          loginname,
           nickname,
           phone,
           mail,
@@ -69,6 +70,7 @@ class UserInfo extends React.Component {
 
         form.setFieldsValue({
           name,
+          loginname,
           nickname,
           phone,
           mail,
@@ -165,6 +167,15 @@ class UserInfo extends React.Component {
                   pattern: /^[^\d]+.{4,}/
                 }],
               })(<Input placeholder='请输入用户名' allowClear />) }
+            </Form.Item>
+            <Form.Item label='登录名'>
+              { form.getFieldDecorator('loginname', {
+                rules: [{
+                  required: true,
+                  max: 50,
+                  whitespace: true,
+                }],
+              })(<Input placeholder='请输入登录名' allowClear />) }
             </Form.Item>
             <Form.Item label='昵称'>
               { form.getFieldDecorator('nickname', {

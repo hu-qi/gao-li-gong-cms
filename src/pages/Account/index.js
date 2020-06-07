@@ -49,6 +49,10 @@ class TableList extends PureComponent {
       dataIndex: 'name',
     },
     {
+      title: '登录名',
+      dataIndex: 'loginname',
+    },
+    {
       title: '昵称',
       dataIndex: 'nickname',
     },
